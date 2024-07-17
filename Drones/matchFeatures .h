@@ -44,6 +44,6 @@ public:
 	std::vector<PointMatch> knn_matches, int k);
 	void knnSearch(cv::Mat descriptors1, cv::Mat descriptors2,cv::Mat& indices,cv::Mat& dists,int knn, SearchParams searchParams);
     std::vector<PointMatch> matchFilter(std::vector<std::vector<PointMatch>> knn_matches);
-	//find naerst neighbors for point returns map<indx,distance>
+	//find naerst neighbors for point returns map<indx,distance
    void findNeighbors();
 };
