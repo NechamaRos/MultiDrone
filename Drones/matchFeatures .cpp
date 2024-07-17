@@ -67,7 +67,7 @@ void MatchFeaturers::findNeighbors()
     vector<HashTable<DataType>> ::const_iterator table = tables.begin();
     vector<HashTable<DataType>>::const_iterator table_end = tables.end();
     //iterator on table
-    HashTable<DataType> myTable;
+  //  HashTable<DataType> myTable;
 
     for (; table != table_end; ++table) {
         size_t key = 0;// tables.getKey(vec);
