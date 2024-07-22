@@ -5,6 +5,5 @@ using namespace std;
 int main() {
 	string n = "nechami";
 	string cy = "someOne";
-
-	return 0;
+	return cy.size();
 }
