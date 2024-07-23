@@ -16,6 +16,7 @@ EllipticCurve::EllipticCurve(cpp_int a, cpp_int b, cpp_int p)
     cpp_int Gy("0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8");
     Point g(Gx, Gy);
 
+
     this->a = a;
     this->b = b;
     this->p = p;
@@ -41,14 +42,14 @@ EllipticCurve::EllipticCurve()
 }
 
 bool EllipticCurve::isOnCurve(const Point& P) const {
-
-    if (P.isInfinity()) return true;//???
+    if (P.isInfinity()) return true;
     cpp_int lhs = mod(P.getY() * P.getY(), p);
     cpp_int rhs = mod(P.getX() * P.getX() * P.getX() + a * P.getX() + b, p);
-    if (!lhs == rhs) {
-        Logger::getInstance().log("isOnCurve: the point  is not on the curve");
+    bool onCurve = lhs == rhs;
+    if (!onCurve) {
+        Logger::getInstance().log("isOnCurve: The point is not on the curve. LHS: " + lhs.str() + ", RHS: " + rhs.str());
     }
-    return lhs == rhs;
+    return onCurve;
 }
 
 Point EllipticCurve::add(const Point& P, const Point& Q) const
@@ -69,15 +70,15 @@ Point EllipticCurve::add(const Point& P, const Point& Q) const
     try {
         if (P.getX() == Q.getX()) {
             if (P.getY() != Q.getY() || P.getY() == 0) {
-                return Point(0, 0); // הנקודה באינסוף
+                return Point(0, 0); // נקודה באינסוף
             }
-            cpp_int num = 3 * P.getX() * P.getX() + a;
-            cpp_int denom = 2 * P.getY();
+            cpp_int num = mod(3 * P.getX() * P.getX() + a, p);
+            cpp_int denom = mod(2 * P.getY(), p);
             lambda = mod(num * modInverse(denom, p), p);
         }
         else {
-            cpp_int num = Q.getY() - P.getY();
-            cpp_int denom = Q.getX() - P.getX();
+            cpp_int num = mod(Q.getY() - P.getY(), p);
+            cpp_int denom = mod(Q.getX() - P.getX(), p);
             lambda = mod(num * modInverse(denom, p), p);
         }
     }
@@ -103,8 +104,7 @@ Point EllipticCurve::add(const Point& P, const Point& Q) const
     return R;
 }
 
-Point EllipticCurve::multiply(const Point& P, cpp_int scalar) const
-{
+Point EllipticCurve::multiply(const Point& P, cpp_int scalar) const {
     if (!isOnCurve(P)) {
         Logger::getInstance().log("EllipticCurve::multiply: The point is not on the curve");
         throw std::runtime_error("The point is not on the curve");
@@ -117,7 +117,7 @@ Point EllipticCurve::multiply(const Point& P, cpp_int scalar) const
     Point Q = P;
     cpp_int k = scalar;
 
-    while (k != 0) {
+    while (k > 0) {
         if (k % 2 == 1) {
             R = add(R, Q);
         }

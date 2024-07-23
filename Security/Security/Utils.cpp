@@ -2,10 +2,28 @@
 #include <cstdlib>
 #include <algorithm> // הכנסה של הקובץ המתאים
 #include <random>
+#include <sstream>
+#include <iomanip>
+
+std::string ciphertextToHexString(const std::vector<unsigned char>& ciphertext) {
+    std::stringstream ss;
+    for (unsigned char c : ciphertext) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(c);
+    }
+    return ss.str();
+}
+
+cpp_int generateSecureRandomNumber(const cpp_int& min, const cpp_int& max) {
+    // בדיקה שmin <= max
+    return rand() % (max - 1) + 1;
+
+}
 
 
 cpp_int mod(cpp_int a, cpp_int b) {
-    if (b < 0) b = -b;
+    if (b <= 0) {
+        throw std::invalid_argument("Modulus must be positive");
+    }
     cpp_int result = a % b;
     if (result < 0) result += b;
     return result;

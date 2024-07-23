@@ -7,11 +7,13 @@ KeyPair::KeyPair(const EllipticCurve& curve) {
     privateKey = generateRandomPrivateKey(curve.getN());
 
     try {
-        publicKey = curve.multiply(curve.getG(), privateKey);
+        publicKey = curve.multiply(curve.getG(), 10);
+        Logger::getInstance().log("KeyPair :pk.getX(): " + to_string(publicKey.getX()));
     }
     catch (const std::runtime_error& e) {
         Logger::getInstance().log(e.what());
-        std::cerr << "Error: " << e.what() << std::endl;
+        throw std::runtime_error( e.what() );
+        
     }
 }
 
