@@ -14,7 +14,7 @@ KeyPair::KeyPair(const EllipticCurve& curve) {
         Logger::getInstance().log(e.what());
         throw std::runtime_error( e.what() );
         
-    }
+    } 
 }
 
 cpp_int KeyPair::getPrivateKey() const {

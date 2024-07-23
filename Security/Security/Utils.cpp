@@ -18,7 +18,7 @@ cpp_int generateSecureRandomNumber(const cpp_int& min, const cpp_int& max) {
     return rand() % (max - 1) + 1;
 
 }
-
+ 
 
 cpp_int mod(cpp_int a, cpp_int b) {
     if (b <= 0) {

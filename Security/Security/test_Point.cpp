@@ -39,3 +39,4 @@ TEST_CASE("Point inverse method") {
     CHECK(inv.getX() == x);
     CHECK(inv.getY() == -y);
 }
+ 

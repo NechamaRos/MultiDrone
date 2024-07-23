@@ -17,7 +17,7 @@ public:
 	cpp_int getX() const {
 		return x;
 	}
-	cpp_int getY() const {
+	cpp_int getY() const { 
 		return y;
 	}
 	bool operator==(const Point& other) const;

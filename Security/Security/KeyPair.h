@@ -15,6 +15,6 @@ public:
     KeyPair(const EllipticCurve& curve);
     cpp_int getPrivateKey() const;
     Point getPublicKey() const;
-};
+}; 
 
 #endif // KEY_PAIR_H

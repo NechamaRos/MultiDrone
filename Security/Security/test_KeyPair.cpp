@@ -30,7 +30,7 @@ TEST_CASE("KeyPair Constructor") {
 
     SUBCASE("encrypt") {
         
-
+         
 
         KeyPair keyPair(curve);
         ECC ecc(curve);

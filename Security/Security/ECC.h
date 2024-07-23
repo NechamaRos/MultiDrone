@@ -26,7 +26,7 @@ public:
 };
 
 #endif // ECC_H
-
+ 
 template<typename T>
 inline EncryptionResult ECC::encrypt(const T* data, size_t dataSize, const Point& publicKey) const {
     if (data == nullptr || dataSize <= 0) {

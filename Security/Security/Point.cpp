@@ -29,4 +29,4 @@ bool Point::operator!=(const Point& other) const
 }
 Point Point::inverse() const {
 	return Point(x, -y);
-}
+} 

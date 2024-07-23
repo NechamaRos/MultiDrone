@@ -73,3 +73,4 @@ TEST_CASE("Multiply Point by Scalar") {
     CHECK(curve.isOnCurve(R));
 
 }
+ 

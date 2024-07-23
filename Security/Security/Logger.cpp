@@ -14,7 +14,7 @@ Logger::Logger() : logFile_("log.txt", std::ios_base::app) {
         throw std::runtime_error("Unable to open log file");
     }
 }
-
+ 
 Logger::~Logger() {
     if (logFile_.is_open()) {
         logFile_.close();

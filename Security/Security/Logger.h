@@ -21,3 +21,4 @@ private:
     std::ofstream logFile_;
     std::mutex mutex_;
 };
+ 

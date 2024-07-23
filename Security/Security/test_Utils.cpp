@@ -17,7 +17,7 @@ TEST_CASE("Testing modInverse function") {
 }
 
 TEST_CASE("Testing gcd function") {
-    CHECK(gcd(54, 24) == 6);
+    CHECK(gcd(54, 24) == 6); 
     CHECK(gcd(48, 18) == 6);
     CHECK(gcd(101, 103) == 1);
 }

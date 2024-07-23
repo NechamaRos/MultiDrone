@@ -14,3 +14,4 @@ cpp_int gcd(cpp_int a, cpp_int b);
 cpp_int generateRandomPrivateKey(cpp_int p);
 
 #endif // UTILS_H
+ 
