@@ -1,6 +1,6 @@
 #include "VecMessage.h"
-#include "CRCalgoritm.h"
-#include "Convert.h"
+#include "../Validation/CRCalgoritm.h"
+#include "../Validation/Convert.h"
 
 vector<uint8_t> VecMessage::getreminder(int,  vector<uint8_t>& key)
 {

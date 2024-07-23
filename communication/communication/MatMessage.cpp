@@ -1,5 +1,5 @@
 #include "MatMessage.h"
-#include "CRCalgoritm.h"
+#include "../Validation/CRCalgoritm.h"
 
 void MatMessage::copyCol(vector<uint8_t>& arr, int numCol) {
 	int len = this->message.size();
