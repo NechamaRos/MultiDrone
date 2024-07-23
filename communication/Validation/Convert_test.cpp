@@ -1,6 +1,6 @@
 #pragma once
 #include "Convert.h"
-#include "doctest.h"
+#include "../communication/doctest.h"
 
 
 Convert convert;

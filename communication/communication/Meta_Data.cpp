@@ -1,7 +1,7 @@
 #include "Meta_Data.h"
-#include "VecValidation.h"
-#include "MatValidation.h"
-#include "D3Validation.h"
+#include "../Validation/VecValidation.h"
+#include "../Validation/MatValidation.h"
+#include "../Validation/D3Validation.h"
 
 template<typename Base, typename T>
 inline bool instanceof(T* t) {

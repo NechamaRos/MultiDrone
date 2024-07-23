@@ -1,4 +1,4 @@
-#include "doctest.h"
+#include "../communication/doctest.h"
 #include "Validation.h"
 
 TEST_CASE("Constructor") {
