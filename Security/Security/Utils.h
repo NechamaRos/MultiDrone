@@ -6,7 +6,7 @@ using namespace boost::multiprecision;
 #include <string>
 
 // הכרזה על הפונקציה
-std::string ciphertextToHexString(const std::vector<unsigned char>& ciphertext);
+
 cpp_int generateSecureRandomNumber(const cpp_int& min, const cpp_int& max);
 cpp_int mod(cpp_int a, cpp_int b);
 cpp_int modInverse(cpp_int a, cpp_int b);
