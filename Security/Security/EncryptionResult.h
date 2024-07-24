@@ -10,3 +10,4 @@ struct EncryptionResult {
 };
 
 #endif // ENCRYPTIONRESULT_H
+ 

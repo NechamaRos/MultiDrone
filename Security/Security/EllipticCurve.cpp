@@ -40,7 +40,7 @@ EllipticCurve::EllipticCurve()
     this->p = cpp_int("0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f");
     this->N = cpp_int("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
 }
-
+ 
 bool EllipticCurve::isOnCurve(const Point& P) const {
     if (P.isInfinity()) return true;
     cpp_int lhs = mod(P.getY() * P.getY(), p);

@@ -29,7 +29,7 @@ public:
     }
     cpp_int getP() const {
         return p;
-    }
+    } 
     Point getG() const {
         return G;
     }
