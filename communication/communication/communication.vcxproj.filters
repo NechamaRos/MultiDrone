@@ -30,33 +30,6 @@
     <ClCompile Include="communication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Validation\Convert_test.cpp">
-      <Filter>Test\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\CRCalgoritm_test.cpp">
-      <Filter>Test\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\Validation_test.cpp">
-      <Filter>Test\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\Convert.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\CRCalgoritm.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\D3Validation.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\MatValidation.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\Validation.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Validation\VecValidation.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
     <ClCompile Include="D3Message.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,26 +60,35 @@
     <ClCompile Include="VecMessage_test.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\Validation\Convert.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\CRCalgoritm.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\D3Validation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\MatValidation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Validation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\VecValidation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Convert_test.cpp">
+      <Filter>Test\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\CRCalgoritm_test.cpp">
+      <Filter>Test\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Validation_test.cpp">
+      <Filter>Test\Validation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Validation\Convert.h">
-      <Filter>Header Files\Validation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Validation\CRCalgoritm.h">
-      <Filter>Header Files\Validation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Validation\D3Validation.h">
-      <Filter>Header Files\Validation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Validation\MatValidation.h">
-      <Filter>Header Files\Validation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Validation\Validation.h">
-      <Filter>Header Files\Validation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Validation\VecValidation.h">
-      <Filter>Header Files\Validation</Filter>
-    </ClInclude>
     <ClInclude Include="D3Message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -127,6 +109,24 @@
     </ClInclude>
     <ClInclude Include="doctest.h">
       <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\Convert.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\CRCalgoritm.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\D3Validation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\MatValidation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\Validation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\VecValidation.h">
+      <Filter>Header Files\Validation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
