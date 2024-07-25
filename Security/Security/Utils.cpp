@@ -1,17 +1,17 @@
 #include "Utils.h"
 #include <cstdlib>
-#include <algorithm> // הכנסה של הקובץ המתאים
+#include <algorithm> // Include the appropriate header
 #include <random>
 #include <sstream>
 #include <iomanip>
 
-// פונקציה ליצירת מספר אקראי בטוח בין המינימום למקסימום
+// Function to generate a secure random number between min and max
 cpp_int generateSecureRandomNumber(const cpp_int& min, const cpp_int& max) {
-    // בדיקה ש-min <= max
+    // Check that min <= max
     return rand() % (max - 1) + 1;
 }
 
-// פונקציה לחישוב מודולו (שארית) בין שני מספרים
+// Function to compute the modulo (remainder) of two numbers
 cpp_int mod(cpp_int a, cpp_int b) {
     if (b <= 0) {
         throw std::invalid_argument("Modulus must be positive");
@@ -21,7 +21,7 @@ cpp_int mod(cpp_int a, cpp_int b) {
     return result;
 }
 
-// פונקציה לחישוב המודולו ההפכי של מספר
+// Function to compute the modular inverse of a number
 cpp_int modInverse(cpp_int a, cpp_int m) {
     cpp_int m0 = m, t, q;
     cpp_int x0 = 0, x1 = 1;
@@ -38,7 +38,7 @@ cpp_int modInverse(cpp_int a, cpp_int m) {
     return x1;
 }
 
-// פונקציה לחישוב המחלק המשותף הגדול ביותר של שני מספרים
+// Function to compute the greatest common divisor (GCD) of two numbers
 cpp_int gcd(cpp_int a, cpp_int b) {
     while (b != 0) {
         cpp_int t = b;
@@ -48,7 +48,7 @@ cpp_int gcd(cpp_int a, cpp_int b) {
     return a;
 }
 
-// פונקציה ליצירת מפתח פרטי אקראי בטווח [1, n-1]
+// Function to generate a random private key in the range [1, n-1]
 cpp_int generateRandomPrivateKey(cpp_int n) {
     return rand() % (n - 1) + 1;
 }
