@@ -9,7 +9,7 @@ class MatValidation :public Validation
 	vector< vector< vector<uint8_t>>> validationData;
 public:
 
-	MatValidation(const vector<uint8_t>& key) :Validation(key)
+	MatValidation(const vector<uint8_t>& key) :Validation(key,matValidation)
 	{
 	}
 	void setValidationData(vector< vector <vector<uint8_t>>>& validationData)override { this->validationData = validationData; }

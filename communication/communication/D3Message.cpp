@@ -16,7 +16,7 @@ bool D3Message::checkMAt(int height, int width, const vector<vector<uint8_t>>& m
 }
 
 D3Message::D3Message(const vector<vector<vector<uint8_t>>>& message)throw(logic_error)
-	: message(message)
+	:Message(d3Message), message(message)
 {
 	int len = message.size();
 	int height = message[0].size();
