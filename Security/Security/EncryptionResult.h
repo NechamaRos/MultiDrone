@@ -2,12 +2,17 @@
 #define ENCRYPTIONRESULT_H
 
 #include <vector>
-#include "Point.h" // אם אתה צריך להגדיר את סוג ה-Point
+#include "Point.h" 
 
 struct EncryptionResult {
     std::vector<unsigned char> ciphertext;
-    Point R; // ודא שה-Point מוגדר כאן או כלול בקובץ זה
+    Point R;
 };
+//
+//struct DecryptionResult {
+//    std::vector<unsigned char> ciphertext;
+//    Point R;
+//};
 
 #endif // ENCRYPTIONRESULT_H
  
