@@ -1,26 +1,28 @@
 #include "Data.h"
 
-
-
-template<typename Base, typename T>
-inline bool instanceof(T* t) {
-	return dynamic_cast<Base*>(t)!=nullptr;
-}
 Message* copyMessage(Message* mes) {
-	if (instanceof<VecMessage, Message>(mes)) {
+	switch (mes->getType())
+	{
+	case vecMessage:{
 		VecMessage* v = dynamic_cast<VecMessage*>(mes);
 		auto m = v->getMessage();
 		return new VecMessage(m);
+		break;
 	}
-	else if (instanceof<MatMessage, Message>(mes)) {
+	case matMessage:{
 		MatMessage* v = dynamic_cast<MatMessage*>(mes);
 		auto m = v->getMessage();
 		return new MatMessage(m);
+		break;
 	}
-	else {
+	case d3Message:{
 		D3Message* v = dynamic_cast<D3Message*>(mes);
 		auto m = v->getMessage();
 		return new D3Message(m);
+		break;
+	}
+	default:
+		break;
 	}
 }
 
@@ -56,29 +58,46 @@ Data& Data::operator=(Data& data)
 	return *this;
 }
 
+void addTheValidation(Message* m, Validation* v) {
+	try {
+		switch (v->getType())
+		{
+		case vecValidation: {
+			VecValidation* vv = dynamic_cast<VecValidation*>(v);
+			VecMessage* vm = dynamic_cast<VecMessage*>(m);
+			auto reminderValue = vm->getreminder(0, vv->key);
+			vv->setValidationData(reminderValue);
+			break;
+		}
+		case matValidation: {
+			MatValidation* vv = dynamic_cast<MatValidation*>(v);
+			MatMessage* vm = dynamic_cast<MatMessage*>(m);
+			auto reminderValue = vm->getreminder(0, 0, vv->key);
+			vv->setValidationData(reminderValue);
+			break;
+		}
+		case d3Validation: {
+			D3Validation* vv = dynamic_cast<D3Validation*>(v);
+			D3Message* vm = dynamic_cast<D3Message*>(m);
+			auto reminderValue = vm->getreminder(0, 0, 0, vv->key);
+			vv->setValidationData(reminderValue);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	catch (exception& e) {
+		throw e;
+	}
+}
+
 void Data::send()
 {	
 	Message* m = this->message;
 	Validation* v = this->metaData.getValidation();
 	try {
-		if (instanceof<VecValidation>(v)) {
-			VecValidation* vv = dynamic_cast<VecValidation*>(v);
-			VecMessage* vm = dynamic_cast<VecMessage*>(m);
-			auto reminderValue = vm->getreminder(0, vv->key);
-			vv->setValidationData(reminderValue);
-		}
-		else if (instanceof<MatValidation>(v)) {
-			MatValidation* vv = dynamic_cast<MatValidation*>(v);
-			MatMessage* vm = dynamic_cast<MatMessage*>(m);
-			auto reminderValue = vm->getreminder(0, 0, vv->key);
-			vv->setValidationData(reminderValue);
-		}
-		else {
-			D3Validation* vv = dynamic_cast<D3Validation*>(v);
-			D3Message* vm = dynamic_cast<D3Message*>(m);
-			auto reminderValue = vm->getreminder(0, 0, 0, vv->key);
-			vv->setValidationData(reminderValue);
-		}
+		addTheValidation(m, v);
 		cout << "send!!!" << endl;
 	}
 	catch (exception& e) {
@@ -86,69 +105,60 @@ void Data::send()
 	}
 }
 
+void checkTheValidation(Message* m, Validation* v)throw (logic_error){
+	try {
+		switch (v->getType())
+		{
+		case vecValidation: {
+			VecValidation* vv = dynamic_cast<VecValidation*>(v);
+			VecMessage* vm = dynamic_cast<VecMessage*>(m);
+			if (vv->getValidationData().empty()) {
+				throw logic_error("the data validation is empty");
+			}
+			vm->checkInReceive(vv->getValidationData(), vv->key);
+			break;
+		}
+		case matValidation: {
+			MatValidation* vv = dynamic_cast<MatValidation*>(v);
+			MatMessage* vm = dynamic_cast<MatMessage*>(m);
+			if (vv->getValidationData().empty()) {
+				throw logic_error("the data validation is empty");
+			}
+			vm->checkInReceive(vv->getValidationData(), vv->key);
+			break;
+		}
+		case d3Validation: {
+			D3Validation* vv = dynamic_cast<D3Validation*>(v);
+			D3Message* vm = dynamic_cast<D3Message*>(m);
+			if (vv->getValidationData().empty()) {
+				throw logic_error("the data validation is empty");
+			}
+			vm->checkInReceive(vv->getValidationData(), vv->key);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	catch (runtime_error error)
+	{
+		cout << error.what() << endl;
+	}
+	catch (logic_error e) {
+		throw e;
+	}
+}
+
 void Data::receive()throw (logic_error)
 {
 	Message* m = this->message;
 	Validation* v = this->metaData.getValidation();
-
-	if (instanceof<VecValidation>(v)) {
-		VecValidation* vv = dynamic_cast<VecValidation*>(v);
-		VecMessage* vm = dynamic_cast<VecMessage*>(m);
-		try
-		{
-			if (vv->getValidationData().empty()) {
-				throw logic_error("the data validation is empty");
-			}
-			vm->checkInReceive(vv->getValidationData(), vv->key);
-			cout << "receive!!!" << endl;
-		}
-		catch (runtime_error error)
-		{
-
-			cout << error.what() << endl;
-		}
-		catch (logic_error e) {
-			throw e;
-		}
+	try{
+		checkTheValidation(m, v);
+		cout << "receive!!!" << endl;
 	}
-	else if (instanceof<MatValidation>(v)) {
-		MatValidation* vv = dynamic_cast<MatValidation*>(v);
-		MatMessage* vm = dynamic_cast<MatMessage*>(m);
-		try
-		{
-			if (vv->getValidationData().empty()) {
-				throw logic_error("the data validation is empty");
-			}
-			vm->checkInReceive(vv->getValidationData(), vv->key);
-			cout << "receive!!!" << endl;
-
-		}
-		catch (runtime_error error)
-		{
-			cout << error.what() << endl;
-		}
-		catch (logic_error e) {
-			throw e;
-		}
-	}
-	else {
-		D3Validation* vv = dynamic_cast<D3Validation*>(v);
-		D3Message* vm = dynamic_cast<D3Message*>(m);
-		try
-		{
-			if (vv->getValidationData().empty()) {
-				throw logic_error("the data validation is empty");
-			}
-			vm->checkInReceive(vv->getValidationData(), vv->key);
-			cout << "receive!!!" << endl;
-		}
-		catch (runtime_error error)
-		{
-			cout << error.what() << endl;
-		}
-		catch (logic_error e) {
-			throw e;
-		}
+	catch (logic_error e) {
+		throw e;
 	}
 }
 
@@ -158,19 +168,19 @@ bool Data::checkData(Meta_Data& metaData, Message* message)
 	Message* m = message;
 	Validation* v = metaData.getValidation();
 
-	if (instanceof<VecValidation, Validation>(v) && instanceof<VecMessage,Message>(m)) {
+	if (v->getType() == vecValidation && m->getType()== vecMessage){
 		VecMessage* vm = dynamic_cast<VecMessage*>(m);
 		if (v->key.size()-1 <= log2(vm->getMessage().size())) {
 			return true;
 		}
 	}
-	if (instanceof<MatValidation>(v) && instanceof<MatMessage>(m)) {
+	if (v->getType() == matValidation && m->getType() == matMessage) {
 		MatMessage* vm = dynamic_cast<MatMessage*>(m);
 		if ((v->key.size()-1)*(vm->getMessage().size() + vm->getMessage()[0].size()) <= log2(vm->getMessage().size()* vm->getMessage()[0].size())) {
 			return true;
 		}
 	}
-	if (instanceof<D3Validation>(v) && instanceof<D3Message>(m)) {
+	if (v->getType() == d3Validation && m->getType() == d3Message) {
 		D3Message* vm = dynamic_cast<D3Message*>(m);
 		if ((v->key.size() - 1) * (vm->getMessage()[0][0].size() + vm->getMessage()[0].size())*vm->getMessage().size() <= log2(vm->getMessage().size() * vm->getMessage()[0].size()* vm->getMessage()[0][0].size())) {
 			return true;
