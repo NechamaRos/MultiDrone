@@ -3,25 +3,29 @@
 #include "../Validation/MatValidation.h"
 #include "../Validation/D3Validation.h"
 
-template<typename Base, typename T>
-inline bool instanceof(T* t) {
-	return dynamic_cast<Base*>(t) != nullptr;
-}
 Validation* copyValidation(Validation* mes) {
-	if (instanceof<VecValidation, Validation>(mes)) {
+	switch (mes->getType())
+	{
+	case vecValidation: {
 		VecValidation* v = dynamic_cast<VecValidation*>(mes);
 		auto m = v->key;
 		return new VecValidation(m);
+		break;
 	}
-	else if (instanceof<MatValidation, Validation>(mes)) {
+	case matValidation: {
 		MatValidation* v = dynamic_cast<MatValidation*>(mes);
 		auto m = v->key;
 		return new MatValidation(m);
+		break;
 	}
-	else {
+	case d3Validation: {
 		D3Validation* v = dynamic_cast<D3Validation*>(mes);
 		auto m = v->key;
 		return new D3Validation(m);
+		break;
+	}
+	default:
+		break;
 	}
 }
 Meta_Data::Meta_Data(Validation* validation)

@@ -14,3 +14,9 @@ vector<uint8_t> Message::getreminder(int, vector<uint8_t>&)
 {
     return vector<uint8_t>();
 }
+
+
+Message::Message(const MessageType& type)
+    : type(type)
+{
+}

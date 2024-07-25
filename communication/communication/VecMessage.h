@@ -9,7 +9,7 @@ class VecMessage:public Message
 public:
 
 	VecMessage(const vector<char>& message)
-		: message(message)
+		:Message(vecMessage), message(message)
 	{
 	}
 
