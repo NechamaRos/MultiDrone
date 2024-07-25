@@ -1,3 +1,4 @@
+constexpr auto TO_RICICLE = true;
 #include "Data.h"
 
 Message* copyMessage(Message* mes) {
@@ -105,7 +106,7 @@ void Data::send()
 	}
 }
 
-void checkTheValidation(Message* m, Validation* v)throw (logic_error){
+void checkTheValidation(Message* m, Validation* v)throw (logic_error,runtime_error){
 	try {
 		switch (v->getType())
 		{
@@ -142,11 +143,14 @@ void checkTheValidation(Message* m, Validation* v)throw (logic_error){
 	}
 	catch (runtime_error error)
 	{
-		cout << error.what() << endl;
+		throw error;
 	}
 	catch (logic_error e) {
 		throw e;
 	}
+}
+void ricicle() {
+	cout << "ricicle!!!" << endl;
 }
 
 void Data::receive()throw (logic_error)
@@ -156,6 +160,11 @@ void Data::receive()throw (logic_error)
 	try{
 		checkTheValidation(m, v);
 		cout << "receive!!!" << endl;
+	}
+	catch (runtime_error e) {
+		if (TO_RICICLE) {
+			ricicle();
+		}
 	}
 	catch (logic_error e) {
 		throw e;
