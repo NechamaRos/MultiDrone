@@ -11,7 +11,7 @@ class MatMessage:public Message
 public:
 
 	MatMessage(const vector<vector<uint8_t>>& message)
-		: message(message)
+		:Message(matMessage), message(message)
 	{
 		int height = message.size();
 		int width = message[0].size();
