@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="RescueTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="CompressionTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="HuffmanCompression.cpp">
+      <Filter>Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="HuffmanRescue.cpp">
+      <Filter>Rescue</Filter>
+    </ClCompile>
+    <ClCompile Include="HuffmanNode.cpp">
+      <Filter>Stracts</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Stracts</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageConversionTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageConversions.cpp">
+      <Filter>Conversions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="doctest.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffmanCompression.h">
+      <Filter>Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffmanRescue.h">
+      <Filter>Rescue</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffmanNode.h">
+      <Filter>Stracts</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Stracts</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageConversions.h">
+      <Filter>Conversions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Compression">
+      <UniqueIdentifier>{7204bc28-2278-47c9-b6fb-2af281b9ec36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rescue">
+      <UniqueIdentifier>{e8a39125-c8cd-4bdb-b7b3-158ede15df6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{5e89906b-6be3-4220-a7c7-27da33b99301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stracts">
+      <UniqueIdentifier>{43bb1f54-a98b-4c16-ad31-d7338dbdbeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Conversions">
+      <UniqueIdentifier>{0cf4dd96-17e4-47e9-b457-993d62f28cd4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\CMakeLists.txt" />
+  </ItemGroup>
+</Project>

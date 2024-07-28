@@ -25,6 +25,9 @@
     <Filter Include="Test\Validation">
       <UniqueIdentifier>{8dfbaf11-f5ef-407c-80bb-48e7fd1f1900}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data_Compression">
+      <UniqueIdentifier>{848d3b08-ff51-4b3f-b4a6-84b996dc25a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="communication.cpp">
@@ -87,6 +90,30 @@
     <ClCompile Include="..\Validation\Validation_test.cpp">
       <Filter>Test\Validation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Data_Comperession\CompressionTests.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\HuffmanCompression.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\HuffmanNode.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\HuffmanRescue.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\ImageConversions.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\ImageConversionTests.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\main.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\RescueTests.cpp">
+      <Filter>Data_Compression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3Message.h">
@@ -128,5 +155,45 @@
     <ClInclude Include="..\Validation\VecValidation.h">
       <Filter>Header Files\Validation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Data_Comperession\doctest.h">
+      <Filter>Data_Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\HuffmanCompression.h">
+      <Filter>Data_Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\HuffmanNode.h">
+      <Filter>Data_Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\HuffmanRescue.h">
+      <Filter>Data_Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\Image.h">
+      <Filter>Data_Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\ImageConversions.h">
+      <Filter>Data_Compression</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Data_Comperession\Data_Comperession.vcxproj">
+      <Filter>Data_Compression</Filter>
+    </None>
+    <None Include="..\Data_Comperession\Data_Comperession.vcxproj.filters">
+      <Filter>Data_Compression</Filter>
+    </None>
+    <None Include="..\Data_Comperession\Data_Comperession.vcxproj.user">
+      <Filter>Data_Compression</Filter>
+    </None>
+    <None Include="..\Data_Comperession\Data_Compression">
+      <Filter>Data_Compression</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Data_Comperession\Data_Comperession.vcxproj.filters(1).txt">
+      <Filter>Data_Compression</Filter>
+    </Text>
+    <Text Include="..\Data_Comperession\Data_Comperession.vcxproj.filters.txt">
+      <Filter>Data_Compression</Filter>
+    </Text>
   </ItemGroup>
 </Project>
