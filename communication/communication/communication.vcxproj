@@ -127,6 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Data_Comperession\CompressionTests.cpp" />
+    <ClCompile Include="..\Data_Comperession\HuffmanCompression.cpp" />
+    <ClCompile Include="..\Data_Comperession\HuffmanNode.cpp" />
+    <ClCompile Include="..\Data_Comperession\HuffmanRescue.cpp" />
+    <ClCompile Include="..\Data_Comperession\ImageConversions.cpp" />
+    <ClCompile Include="..\Data_Comperession\ImageConversionTests.cpp" />
+    <ClCompile Include="..\Data_Comperession\main.cpp" />
+    <ClCompile Include="..\Data_Comperession\RescueTests.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -149,6 +157,12 @@
     <ClCompile Include="VecMessage_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Data_Comperession\doctest.h" />
+    <ClInclude Include="..\Data_Comperession\HuffmanCompression.h" />
+    <ClInclude Include="..\Data_Comperession\HuffmanNode.h" />
+    <ClInclude Include="..\Data_Comperession\HuffmanRescue.h" />
+    <ClInclude Include="..\Data_Comperession\Image.h" />
+    <ClInclude Include="..\Data_Comperession\ImageConversions.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
@@ -162,6 +176,16 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="Meta_Data.h" />
     <ClInclude Include="VecMessage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Data_Comperession\Data_Comperession.vcxproj" />
+    <None Include="..\Data_Comperession\Data_Comperession.vcxproj.filters" />
+    <None Include="..\Data_Comperession\Data_Comperession.vcxproj.user" />
+    <None Include="..\Data_Comperession\Data_Compression" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Data_Comperession\Data_Comperession.vcxproj.filters(1).txt" />
+    <Text Include="..\Data_Comperession\Data_Comperession.vcxproj.filters.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
