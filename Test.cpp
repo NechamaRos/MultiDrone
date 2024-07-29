@@ -42,39 +42,39 @@ std::vector<std::vector<int>> matToVector(const cv::Mat& mat) {
 //
 //
 ////void resize(const Mat& src, Mat& dst, Size dsize, int interpolation) {
-////    // áãé÷ú úğàéí î÷ãéîéí (ìîùì, ùäúîåğä äî÷åøéú àéğä øé÷ä)
+////    // Ã¡Ã£Ã©Ã·Ãº ÃºÃ°Ã Ã©Ã­ Ã®Ã·Ã£Ã©Ã®Ã©Ã­ (Ã¬Ã®Ã¹Ã¬, Ã¹Ã¤ÃºÃ®Ã¥Ã°Ã¤ Ã¤Ã®Ã·Ã¥Ã¸Ã©Ãº Ã Ã©Ã°Ã¤ Ã¸Ã©Ã·Ã¤)
 ////    CV_Assert(!src.empty());
 ////
-////    // éöéøú äúîåğä äçãùä áâåãì äøöåé
+////    // Ã©Ã¶Ã©Ã¸Ãº Ã¤ÃºÃ®Ã¥Ã°Ã¤ Ã¤Ã§Ã£Ã¹Ã¤ Ã¡Ã¢Ã¥Ã£Ã¬ Ã¤Ã¸Ã¶Ã¥Ã©
 ////    dst.create(dsize, src.type());
 ////
-////    // çéùåá âåøîé ÷ğä äîéãä
+////    // Ã§Ã©Ã¹Ã¥Ã¡ Ã¢Ã¥Ã¸Ã®Ã© Ã·Ã°Ã¤ Ã¤Ã®Ã©Ã£Ã¤
 ////    float fx = (float)dsize.width / src.cols;
 ////    float fy = (float)dsize.height / src.rows;
 ////
-////    // àéèøöéä òì ëì ôé÷ñì áúîåğä äçãùä
+////    // Ã Ã©Ã¨Ã¸Ã¶Ã©Ã¤ Ã²Ã¬ Ã«Ã¬ Ã´Ã©Ã·Ã±Ã¬ Ã¡ÃºÃ®Ã¥Ã°Ã¤ Ã¤Ã§Ã£Ã¹Ã¤
 ////    for (int y = 0; y < dst.rows; ++y) {
 ////        for (int x = 0; x < dst.cols; ++x) {
-////            // çéùåá ä÷åàåøãéğèåú áúîåğä äî÷åøéú
+////            // Ã§Ã©Ã¹Ã¥Ã¡ Ã¤Ã·Ã¥Ã Ã¥Ã¸Ã£Ã©Ã°Ã¨Ã¥Ãº Ã¡ÃºÃ®Ã¥Ã°Ã¤ Ã¤Ã®Ã·Ã¥Ã¸Ã©Ãº
 ////            float srcX = x / fx;
 ////            float srcY = y / fy;
 ////
-////            // áçéøú ùéèú äàéğèøôåìöéä äîúàéîä
+////            // Ã¡Ã§Ã©Ã¸Ãº Ã¹Ã©Ã¨Ãº Ã¤Ã Ã©Ã°Ã¨Ã¸Ã´Ã¥Ã¬Ã¶Ã©Ã¤ Ã¤Ã®ÃºÃ Ã©Ã®Ã¤
 ////            switch (interpolation) {
 ////            case INTER_NEAREST:
-////                // àéğèøôåìöéä ä÷øåáä áéåúø
+////                // Ã Ã©Ã°Ã¨Ã¸Ã´Ã¥Ã¬Ã¶Ã©Ã¤ Ã¤Ã·Ã¸Ã¥Ã¡Ã¤ Ã¡Ã©Ã¥ÃºÃ¸
 ////                dst.at<uchar>(y, x) = src.at<uchar>(cvRound(srcY), cvRound(srcX));
 ////                break;
-////                // ... î÷øéí ğåñôéí ìùéèåú àéğèøôåìöéä àçøåú
+////                // ... Ã®Ã·Ã¸Ã©Ã­ Ã°Ã¥Ã±Ã´Ã©Ã­ Ã¬Ã¹Ã©Ã¨Ã¥Ãº Ã Ã©Ã°Ã¨Ã¸Ã´Ã¥Ã¬Ã¶Ã©Ã¤ Ã Ã§Ã¸Ã¥Ãº
 ////            }
 ////        }
 ////    }
 ////}
 //
 ////TEST_CASE("check the image size") {
-////    Mat img1 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\1.jpg", IMREAD_GRAYSCALE);
-////    Mat img2 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\2.jpg", IMREAD_GRAYSCALE);
-////    Mat img3 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\1.jpg", IMREAD_GRAYSCALE);
+////    Mat img1 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\1.jpg", IMREAD_GRAYSCALE);
+////    Mat img2 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\2.jpg", IMREAD_GRAYSCALE);
+////    Mat img3 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\1.jpg", IMREAD_GRAYSCALE);
 ////
 ////   
 ////    resize(img1, img1, img1.size() / 3);
@@ -84,8 +84,8 @@ std::vector<std::vector<int>> matToVector(const cv::Mat& mat) {
 ////    CHECK_FALSE(img1.size() == img3.size());
 ////}
 //TEST_CASE("input is not empty") {
-//   Mat img1 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\1.jpg", IMREAD_GRAYSCALE);
-//   Mat img2 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\2.jpg", IMREAD_GRAYSCALE);
+//   Mat img1 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\1.jpg", IMREAD_GRAYSCALE);
+//   Mat img2 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\2.jpg", IMREAD_GRAYSCALE);
 //   std::vector<KeyPoint> keypoints1, keypoints2;
 //   Mat descriptors1, descriptors2;
 //   detectAndComputeFeatures(img1, keypoints1, descriptors1);
@@ -109,7 +109,7 @@ std::vector<std::vector<int>> matToVector(const cv::Mat& mat) {
 //
 //
 //TEST_CASE("matches same picture") {
-//    Mat img1 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\1.jpg", IMREAD_GRAYSCALE);
+//    Mat img1 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\1.jpg", IMREAD_GRAYSCALE);
 //
 //    std::vector<KeyPoint> keypoints1;
 //    Mat descriptors1;
@@ -117,7 +117,7 @@ std::vector<std::vector<int>> matToVector(const cv::Mat& mat) {
 //    FlannBasedMatcher matcher(new flann::LshIndexParams(20, 10, 2)); // Example FLANN parameters
 //    std::vector<std::vector<DMatch>> knn_matches;
 //    matcher.knnMatch(descriptors1, descriptors1, knn_matches, 2);
-//    // ñéğåï äúàîåú èåáåú (KNN)
+//    // Ã±Ã©Ã°Ã¥Ã¯ Ã¤ÃºÃ Ã®Ã¥Ãº Ã¨Ã¥Ã¡Ã¥Ãº (KNN)
 //    std::vector<DMatch> good_matches;
 //    for (int i = 0; i < knn_matches.size(); ++i) {
 //        if (knn_matches[i][0].distance < 0.7 * knn_matches[i][1].distance) {
@@ -130,97 +130,10 @@ std::vector<std::vector<int>> matToVector(const cv::Mat& mat) {
 //        //CHECK_NE(match.queryIdx, match.trainIdx);
 //    }
 //}
-//
-//TEST_CASE("matches opencv few images") {
-//   
-//    for (int i = 1; i <10; ++i)
-//    {
-//        stringstream s;
-//        s << i << ".jpg";
-//        Mat img = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\" + s.str());
-//
-//        if (img.empty())
-//        {
-//            
-//            cout << "Can't read image '" << i << "\n";
-//           
-//        }
-//
-//    std::vector<KeyPoint> keypoints1;
-//    Mat descriptors1;
-//    detectAndComputeFeatures(img, keypoints1, descriptors1);
-//    FlannBasedMatcher matcher(new flann::LshIndexParams(20, 10, 2)); // Example FLANN parameters
-//    std::vector<std::vector<DMatch>> knn_matches;
-//    matcher.knnMatch(descriptors1, descriptors1, knn_matches, 2);
-//    // ñéğåï äúàîåú èåáåú (KNN)
-//    std::vector<DMatch> good_matches;
-//    for (int i = 0; i < knn_matches.size(); ++i) {
-//        if (knn_matches[i][0].distance < 0.7 * knn_matches[i][1].distance) {
-//            good_matches.push_back(knn_matches[i][0]);
-//        }
-//    }
-//    cout << i+ "=>begin\n";
-//    for (size_t i = 0; i < good_matches.size(); i++) {
-//        DMatch match = good_matches[i];
-//        CHECK_EQ(match.queryIdx, match.trainIdx);
-//        //CHECK_NE(match.queryIdx, match.trainIdx);
-//
-//    }
-//    cout <<i+ "= >end\n";
-//    }
-//}
-//
-//
-//
-//TEST_CASE("MATCHES with our code") {
-//    // Load the first image
-//    Mat img1 = imread("image_1.jpg", IMREAD_GRAYSCALE);
-//    if (img1.empty()) {
-//        std::cout << "Could not open or find image1!\n" << std::endl;
-//       
-//    }
-//    resize(img1, img1, img1.size() / 5);
-//
-//    // Load the second image
-//    Mat img2 = imread("image_1.jpg", IMREAD_GRAYSCALE);
-//    if (img2.empty()) {
-//        std::cout << "Could not open or find image2!\n" << std::endl;
-//        
-//    }
-//    resize(img2, img2, img2.size() / 5);
-//
-//    // Vectors to store keypoints for each image
-//    std::vector<KeyPoint> keypoints1, keypoints2;
-//
-//    // Matrices to store descriptors for each image
-//    Mat descriptors1, descriptors2;
-//
-//    // Detect keypoints and compute descriptors for the first image
-//    detectAndComputeFeatures(img1, keypoints1, descriptors1);
-//
-//    // Detect keypoints and compute descriptors for the second image
-//    detectAndComputeFeatures(img2, keypoints2, descriptors2);
-//
-//    std::vector<std::vector<int>> descriptors1_ = matToVector(descriptors1);
-//    std::vector<std::vector<int>> descriptors2_ = matToVector(descriptors2);
-//
-//    MatchFeaturers matcher1;
-//    std::vector<PointMatch> knn_matches_ = matcher1.knnMatch(descriptors1_, descriptors2_, 1);
-//
-//    // Filter matches
-//    //std::vector<PointMatch> good_matches = matcher1.matchFilter(knn_matches_);
-//
-//    // Drawing the good matches
-//    std::vector<DMatch> good_dmatches;
-//    for (const auto& match : knn_matches_) {
-//        good_dmatches.push_back(DMatch(match.queryIdx, match.trainIdx, match.distance));
-//    }
-//    for (size_t i = 0; i < good_dmatches.size(); i++) {
-//        DMatch match = good_dmatches[i];
-//        CHECK_EQ(match.queryIdx, match.trainIdx);
-//        //CHECK_NE(match.queryIdx, match.trainIdx);
-//    }
-//}
+
+
+
+
     
 TEST_CASE("equals the results") {
     for (int i = 1; i < 11;i+=2)
@@ -228,7 +141,7 @@ TEST_CASE("equals the results") {
         // Load the first image
         stringstream s;
         s << i << ".jpg";
-        Mat img1 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\" + s.str(),IMREAD_GRAYSCALE);
+        Mat img1 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\" + s.str(),IMREAD_GRAYSCALE);
 
         if (img1.empty()) {
             std::cout << "Could not open or find image!\n" << std::endl;
@@ -238,7 +151,7 @@ TEST_CASE("equals the results") {
         // Load the second image
         stringstream s2;
         s2 << i+1 << ".jpg";
-        Mat img2 = imread("C:\\Users\\win\\Pictures\\ôø÷èé÷åí\\pictures\\" + s2.str(),IMREAD_GRAYSCALE);
+        Mat img2 = imread("C:\\Users\\win\\Pictures\\Ã´Ã¸Ã·Ã¨Ã©Ã·Ã¥Ã­\\pictures\\" + s2.str(),IMREAD_GRAYSCALE);
         if (img2.empty()) {
             std::cout << "Could not open or find image!\n" << std::endl;
         }
@@ -264,7 +177,7 @@ TEST_CASE("equals the results") {
         cout << "good without filter\n" << knn_matches.size()<<"\n";
         for (const auto& matches : knn_matches) {
             if (matches.size() > 1) {
-                // áãé÷ú éçñ äîøç÷éí áéï ääúàîä äøàùåğä ìùğééä
+                // Ã¡Ã£Ã©Ã·Ãº Ã©Ã§Ã± Ã¤Ã®Ã¸Ã§Ã·Ã©Ã­ Ã¡Ã©Ã¯ Ã¤Ã¤ÃºÃ Ã®Ã¤ Ã¤Ã¸Ã Ã¹Ã¥Ã°Ã¤ Ã¬Ã¹Ã°Ã©Ã©Ã¤
                 if (matches[0].distance < 0.7 * matches[1].distance) {
                     good.push_back(matches[0]);
                 }
@@ -336,24 +249,7 @@ TEST_CASE("equals the results") {
 
 
 
-    //int equal = 0;
-    //for (size_t i = 0; i < knn_matches.size(); i++) {
-    //    for (size_t j = 0; j < knn_matches[i].size(); j++) {
-    //        DMatch match = knn_matches[i][j];
-    //        if (match.queryIdx == match.trainIdx) {
-    //            equal++;
-    //            CHECK_EQ(match.queryIdx, match.trainIdx);
-    //        }
-    //        else {
-    //            CHECK_NE(match.queryIdx, match.trainIdx);
-    //            cout << "finish";
-
-    //        }
-    //       // CHECK(match.queryIdx == match.trainIdx);
-    //        //CHECK_EQ(match.queryIdx, match.trainIdx);
-
-    //    }
-    //}
+    
     
 
 
