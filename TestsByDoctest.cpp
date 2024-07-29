@@ -203,17 +203,17 @@ extern "C" {
 
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 3);
 
-		RemoveRangeFromLoadingRanges(TestControlBlock[8]);
+		RemoveRangeFromLoadingRangesAPI(TestControlBlock[8]);
 		CHECK_FALSE(IsRangeInLoadingAPI(TestControlBlock[8]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[8]) ==-1);
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 2);
 
-		RemoveRangeFromLoadingRanges(TestControlBlock[7]);
+		RemoveRangeFromLoadingRangesAPI(TestControlBlock[7]);
 		CHECK_FALSE(IsRangeInLoadingAPI(TestControlBlock[7]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[7]) == -1);
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 0);
 
-		RemoveRangeFromLoadingRanges(TestControlBlock[9]);
+		RemoveRangeFromLoadingRangesAPI(TestControlBlock[9]);
 		CHECK_FALSE(IsRangeInLoadingAPI(TestControlBlock[9]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[9]) == -1);
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 0);

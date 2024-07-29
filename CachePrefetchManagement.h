@@ -105,8 +105,7 @@ void UpCounterUseOfSeqsOthers(int index);
 //function that return the index of the empty place of loadingArray
 int GetNextEmptyIndexOfRangesInLoadingArray();
 
-//function that get range to remove, find it and delete it from loadingArray
-void RemoveRangeFromLoadingRanges(Range_t rangeForRemove);
+
 
 //function that find the index of range in loadingArray
 int FindRangeInLoadingRangesArray(Range_t rangeForRemove);

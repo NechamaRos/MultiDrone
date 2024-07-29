@@ -356,7 +356,6 @@ void ReadingAhead(SeqRangeInfo_t* seq)
 	AddRangeToLoadingRangeArray(r);
 	SendLoadingRangeToAPI(r);
 
-	//RemoveRangeFromLoadingRanges(r);
 }
 
 #pragma region RangesInLoadingArray Functions
@@ -381,7 +380,7 @@ bool IsRangeInLoadingAPI(Range_t rangeForSearch) {
 }
 
 //remove loaded range from loadingArray
-void RemoveRangeFromLoadingRanges(Range_t rangeForRemove) {
+void RemoveRangeFromLoadingRangesAPI(Range_t rangeForRemove) {
 	int index = FindRangeInLoadingRangesArray(rangeForRemove);
 	if (index != -1)
 		prefetchSeqCollection_CB->RangesInLoadingArray[index] = GetDefaultRange();
