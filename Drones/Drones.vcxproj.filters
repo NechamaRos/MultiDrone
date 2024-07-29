@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="BlendImage">
+      <UniqueIdentifier>{9595212f-f265-4c4f-9171-a83866edab6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="First.cpp">
@@ -24,11 +27,11 @@
     <ClCompile Include="matchFeatures .cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="matchFeaturesMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HashTable.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blend.cpp">
+      <Filter>BlendImage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

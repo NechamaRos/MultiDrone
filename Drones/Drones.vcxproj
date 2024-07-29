@@ -135,11 +135,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="blend.cpp" />
     <ClCompile Include="First.cpp" />
     <ClCompile Include="FlannMatcher.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="matchFeatures .cpp" />
-    <ClCompile Include="matchFeaturesMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h" />
