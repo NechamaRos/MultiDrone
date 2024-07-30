@@ -127,7 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cache_Mng.c" />
+    <ClCompile Include="Doctest.cpp" />
     <ClCompile Include="main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\code\2407\Cache_Mng\Cache_Mng\Cache_Mng.h" />
+    <ClInclude Include="..\..\code\2407\Cache_Mng\Cache_Mng\Cache_Mng_API.h" />
+    <ClInclude Include="doctest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
