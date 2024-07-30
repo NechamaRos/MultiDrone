@@ -1,0 +1,3 @@
+/mnt/c/Users/Admin/Desktop/חוי/חוי לימודים/MultiDrone/communication/build/CMakeFiles/communication.dir
+/mnt/c/Users/Admin/Desktop/חוי/חוי לימודים/MultiDrone/communication/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Admin/Desktop/חוי/חוי לימודים/MultiDrone/communication/build/CMakeFiles/rebuild_cache.dir
