@@ -4,13 +4,39 @@
 #include <random>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/random.hpp>
+using namespace std;
+using namespace boost::multiprecision;
 
-// Function to generate a secure random number between min and max
 cpp_int generateSecureRandomNumber(const cpp_int& min, const cpp_int& max) {
-    // Check that min <= max
-    return rand() % (max - 1) + 1;
-}
+    std::random_device rd; // To obtain a random seed
+    std::mt19937_64 gen(rd()); // Mersenne Twister generator
 
+    // Number of bytes required
+    size_t numBytes = (max.backend().size() * sizeof(uint64_t));
+
+    std::vector<uint8_t> bytes(numBytes);
+
+    // Generate random bytes
+    for (size_t i = 0; i < numBytes; ++i) {
+        bytes[i] = static_cast<uint8_t>(gen());
+    }
+
+    // Convert bytes to cpp_int
+    cpp_int randomNumber;
+    for (size_t i = 0; i < numBytes; ++i) {
+        randomNumber <<= 8;
+        randomNumber += bytes[i];
+    }
+
+    // Ensure the number is within the range [min, max]
+    cpp_int range = max - min + 1;
+    randomNumber = min + (randomNumber % range);
+
+    return randomNumber;
+}
 // Function to compute the modulo (remainder) of two numbers
 cpp_int mod(cpp_int a, cpp_int b) {
     if (b <= 0) {
