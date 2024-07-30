@@ -16,7 +16,7 @@ vector<uint8_t> VecMessage::getreminder(int,  vector<uint8_t>& key)
 
 }
 
-void VecMessage::checkInReceive(vector<uint8_t>& valiDationData, vector<uint8_t>& key)throw (runtime_error)
+void VecMessage::checkInReceive(vector<uint8_t>& valiDationData, vector<uint8_t>& key)
 {
     Convert cn;
     vector<uint8_t> vec = cn.convertCharVecToUint8(this->message);

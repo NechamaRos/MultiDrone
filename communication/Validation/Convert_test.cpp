@@ -1,4 +1,3 @@
-#pragma once
 #include "Convert.h"
 #include "../communication/doctest.h"
 

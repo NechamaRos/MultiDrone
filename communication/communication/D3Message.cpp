@@ -15,7 +15,7 @@ bool D3Message::checkMAt(int height, int width, const vector<vector<uint8_t>>& m
 	return false;
 }
 
-D3Message::D3Message(const vector<vector<vector<uint8_t>>>& message)throw(logic_error)
+D3Message::D3Message(const vector<vector<vector<uint8_t>>>& message)
 	:Message(d3Message), message(message)
 {
 	int len = message.size();
@@ -29,7 +29,7 @@ D3Message::D3Message(const vector<vector<vector<uint8_t>>>& message)throw(logic_
 	}
 }
 
-vector<vector<vector<vector<uint8_t>>>> D3Message::getreminder(int, int, int, vector<uint8_t>& key)throw (exception)
+vector<vector<vector<vector<uint8_t>>>> D3Message::getreminder(int, int, int, vector<uint8_t>& key)
 {
 	int rows = this->message.size();
 	vector<vector<vector<vector<uint8_t>>>> reminder(rows);
@@ -49,7 +49,7 @@ vector<vector<vector<vector<uint8_t>>>> D3Message::getreminder(int, int, int, ve
 	
 }
 
-void D3Message::checkInReceive(vector<vector<vector<vector<uint8_t>>>>& valiDationData, vector<uint8_t>& key)throw (runtime_error)
+void D3Message::checkInReceive(vector<vector<vector<vector<uint8_t>>>>& valiDationData, vector<uint8_t>& key)
 {
 	int size = this->message.size();
 	for (int i = 0; i < size; i++) {
