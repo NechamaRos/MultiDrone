@@ -4,6 +4,8 @@
 #include <string>
 #include <thread> 
 #include <stdlib.h>
+#include <fstream>
+#include <Windows.h>
 
 class Image
 {
@@ -84,9 +86,17 @@ public:
 				delete[] data;
 			}
 			else
-				*refCount--;
+				(*refCount)--;
 		}
 	}
+
+
+	static Image readImage(std::string filename);
+
+	static void DisplayImage(const Image& img);
+
+	static void writeImage(const std::string& filename, const Image& image);
+
 
 	void copy/*AndWrite*/(Image img);
 
