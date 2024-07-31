@@ -2,11 +2,11 @@
 #include <iostream>
 #include "API.h"
 
-unsigned char* GenerateKey(size_t length = 16) { // 128 ביטים = 16 בתים (characters)
+unsigned char* GenerateKey(size_t length = 16) {
     const string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()";
     random_device rd;
     mt19937 generator(rd());
-    uniform_int_distribution<> distribution(0, characters.size() - 1);
+    uniform_int_distribution<size_t> distribution(0, characters.size() - 1);
     unsigned char* key = new unsigned char[length];
     for (size_t i = 0; i < length; ++i) {
         key[i] = characters[distribution(generator)];

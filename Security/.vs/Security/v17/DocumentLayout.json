@@ -1,7 +1,28 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\doctest.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\doctest.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\AES.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\API.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\AES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +30,72 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "API.cpp",
+              "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.cpp",
+              "RelativeDocumentMoniker": "Security\\API.cpp",
+              "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.cpp",
+              "RelativeToolTip": "Security\\API.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-07-29T19:32:54.764Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "doctest.h",
+              "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\doctest.h",
+              "RelativeDocumentMoniker": "Security\\doctest.h",
+              "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\doctest.h",
+              "RelativeToolTip": "Security\\doctest.h",
+              "ViewState": "AQIAAAUNAAAAAAAAAAAQwBgNAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-07-29T06:31:57.152Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AES.cpp",
+              "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.cpp",
+              "RelativeDocumentMoniker": "Security\\AES.cpp",
+              "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.cpp",
+              "RelativeToolTip": "Security\\AES.cpp",
+              "ViewState": "AQIAACcAAAAAAAAAAAAAACsAAABbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-07-28T19:37:13.801Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AES.h",
+              "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.h",
+              "RelativeDocumentMoniker": "Security\\AES.h",
+              "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.h",
+              "RelativeToolTip": "Security\\AES.h",
+              "ViewState": "AQIAAAUBAAAAAAAAAAAAABAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-07-28T19:34:01.543Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "tests.cpp",
+              "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp",
+              "RelativeDocumentMoniker": "Security\\tests.cpp",
+              "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp",
+              "RelativeToolTip": "Security\\tests.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAABLAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-07-28T19:28:23.493Z",
+              "EditorCaption": ""
             }
           ]
         }

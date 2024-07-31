@@ -19,16 +19,16 @@ AES::AES(const AESKeyLength keyLength)
         this->NK = 8;
         this->NR = 14;
         break;
+    default:
+        throw invalid_argument("invalid AES key length");
     }
-    //default:
-
 }
 unsigned char* AES::EncryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv) {
     CheckLength(inLen);
     unsigned char* out = new unsigned char[inLen];
     unsigned char block[blockBytesLen];
     unsigned char* roundKeys = new unsigned char[4 * NB * (NR + 1)];
-    //KeyExpansion(key, roundKeys);
+    KeyExpansion(key, roundKeys);
     memcpy(block, iv, blockBytesLen);
     for (unsigned int i = 0; i < inLen; i += blockBytesLen)
     {
@@ -38,7 +38,6 @@ unsigned char* AES::EncryptCBC(const unsigned char in[], unsigned int inLen, con
 
     }
     delete[] roundKeys;
-    //std::memcpy(out, in, inLen); // לדוגמה בלבד, יש לממש הצפנה בפועל
     return out;
 }
 
@@ -49,7 +48,7 @@ unsigned char* AES::EncryptECB(const unsigned char in[], unsigned int inLen, con
     unsigned char* block=new unsigned char[blockBytesLen];
     unsigned char* roundKeys = new unsigned char[4 * NB * (NR + 1)];
     KeyExpansion(key, roundKeys);
-    for (int i = 0; i < inLen; i+=blockBytesLen)
+    for (unsigned int i = 0; i < inLen; i+=blockBytesLen)
     {
         EncryptBlock(in + i, out + i, roundKeys);
     }
@@ -79,7 +78,7 @@ void AES::KeyExpansion(const unsigned char key[], unsigned char w[])
     API::writeLog("AES::KeyExpansion");
     unsigned char temp[4];
     unsigned char rcon[4];
-    int i = 0;
+    unsigned int i = 0;
     while (i<4*NK)
     {
         w[i] = key[i];
@@ -109,7 +108,7 @@ void AES::KeyExpansion(const unsigned char key[], unsigned char w[])
         w[i + 3] = w[i + 3 - 4 * NK] ^ temp[3];
         i += 4;
     }
-    for (int j = 0; j < 4 * NB * (NR + 1); j++) {
+    for (unsigned int j = 0; j < 4 * NB * (NR + 1); j++) {
         printf("%02x ", w[j]);
     }
     printf("\n");
@@ -135,7 +134,6 @@ void AES::SubWord(unsigned char* a)
 void AES::XorWords(unsigned char* a, unsigned char* b, unsigned char* c)
 {
     API::writeLog("AES::XorWords");
-    int i;
     for (int i = 0; i < 4; i++)
     {
         c[i] = a[i] ^ b[i];
@@ -149,7 +147,7 @@ void AES::XorWords(unsigned char* a, unsigned char* b, unsigned char* c)
 void AES::Rcon(unsigned char* a, unsigned int n)
 {
     unsigned char c = 1;
-    for (int i = 0; i < n - 1; i++)
+    for (unsigned int i = 0; i < n - 1; i++)
     {
         c = xtime(c);
     }
