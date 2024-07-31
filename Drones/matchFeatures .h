@@ -17,15 +17,6 @@ struct PointMatch
 	int trainIdx;
 	float distance;
 };
-
-//Search behavior, such as speed, accuracy and order of results.
-struct SearchParams
-{
-	int checks = 32;
-	float eps = 0;
-	bool sorted = true;
-};
-
 class MatchFeaturers:public HashTable
 {
 private:
@@ -36,7 +27,7 @@ private:
 
 public:
 	std::vector<std::vector<PointMatch>> knnMatch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, int k);
-	void knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn, SearchParams searchParams);
+	void knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn);
 	std::vector<PointMatch> matchFilter(const std::vector<std::vector<PointMatch>>& knn_matches);
 	void findNeighbors(const std::vector<int>& vec, ResultSet& result, const std::vector<std::vector<int>>& descriptors2);
 	std::pair<std::vector<int>, std::vector<int>>setForHomorgraphy(std::vector<PointMatch>good_matches);

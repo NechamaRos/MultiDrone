@@ -37,7 +37,7 @@ std::vector<std::vector<PointMatch>> MatchFeaturers::knnMatch(const std::vector<
 }
 //@params 2 vectors of key point ,dists for storing the distance,
 //indices for index,k find the k nearest neighbor
-void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn, SearchParams searchParams) {
+void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn) {
     
     //build hash table with descrip2 stores the vecs
         for (int i=0; i<table_number; i++) {
