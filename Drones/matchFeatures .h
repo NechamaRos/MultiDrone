@@ -30,7 +30,7 @@ private:
 public:
 	std::vector<std::vector<PointMatch>> knnMatch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, int k);
 	void knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn);
-	std::vector<PointMatch> matchFilter(const std::vector<std::vector<PointMatch>>& knn_matches);
+	//std::vector<PointMatch> matchFilter(const std::vector<std::vector<PointMatch>>& knn_matches);
 	void findNeighbors(const std::vector<int>& vec, ResultSet& result, const std::vector<std::vector<int>>& descriptors2);
 	std::pair<std::vector<int>, std::vector<int>>setForHomorgraphy(std::vector<PointMatch>good_matches);
 };
