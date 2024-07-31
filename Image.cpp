@@ -1,6 +1,26 @@
 #include "Image.h"
 using namespace std;
 
+Image Image::row(int y) const
+{
+	Image img(width, 1, channels);
+	for (int j = 0; j < width - 1; j++)
+	{
+		img.setAllPixel(0, j, getAllPixel(j, y));
+	}
+	return img;
+}
+
+Image Image::col(int x) const
+{
+	Image img(1, x, channels);
+	for (int i = 0; i < height - 1; i++)
+	{
+		img.setAllPixel(i, 0, getAllPixel(x, i));
+	}
+	return img;
+}
+
 tuple<int, int> Image::getSize()
 {
 	return make_tuple(width, height);
@@ -260,6 +280,7 @@ void Image::writeImage(const std::string& filename, const Image& image)
 	bmpFile.close();
 }
 
+
 void Image::copy(Image img)
 {
 	if (width != img.width || height != img.height || ROI != img.ROI || channels != img.channels)
@@ -282,6 +303,60 @@ void Image::copy2(Image img)
 void Image::waitKey(int delay)
 {
 	this_thread::sleep_for(std::chrono::seconds(delay));
+}
+
+void Image::resize(const Image& src, Image& dst, tuple<int, int> const size)
+{
+	Image image = src;
+
+	int oldWidth = src.width;
+	int oldHeight = src.height;
+	int newWidth = get<0>(size);
+	int newHeight = get<1>(size);
+	Image resImage(newWidth, newHeight);
+
+	for (int y = 0; y < newHeight; ++y) {
+		for (int x = 0; x < newWidth; ++x) {
+			float gx = ((float)(x + 0.5) / newWidth) * oldWidth - 0.5;
+			float gy = ((float)(y + 0.5) / newHeight) * oldHeight - 0.5;
+
+			int gxi = static_cast<int>(gx);
+			int gyi = static_cast<int>(gy);
+
+			float c00r = image.getPixelCH(gyi, gxi, 0);
+			float c00g = image.getPixelCH(gyi, gxi, 1);
+			float c00b = image.getPixelCH(gyi, gxi, 2);
+
+			float c10r = (gxi + 1 < oldWidth) ? image.getPixelCH(gyi, gxi + 1, 0) : c00r;
+			float c10g = (gxi + 1 < oldWidth) ? image.getPixelCH(gyi, gxi + 1, 1) : c00g;
+			float c10b = (gxi + 1 < oldWidth) ? image.getPixelCH(gyi, gxi + 1, 2) : c00b;
+
+			float c01r = (gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi, 0) : c00r;
+			float c01g = (gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi, 1) : c00g;
+			float c01b = (gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi, 2) : c00b;
+
+			float c11r = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi + 1, 0) : c00r;
+			float c11g = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi + 1, 1) : c00g;
+			float c11b = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi + 1, 2) : c00b;
+
+			float wx = gx - gxi;
+			float wy = gy - gyi;
+
+			uint8_t r = (1 - wx) * (1 - wy) * c00r + wx * (1 - wy) * c10r + (1 - wx) * wy * c01r + wx * wy * c11r;
+			uint8_t g = (1 - wx) * (1 - wy) * c00g + wx * (1 - wy) * c10g + (1 - wx) * wy * c01g + wx * wy * c11g;
+			uint8_t b = (1 - wx) * (1 - wy) * c00b + wx * (1 - wy) * c10b + (1 - wx) * wy * c01b + wx * wy * c11b;
+
+			vector<uint8_t> pixel = { r, g, b };
+
+			resImage.setAllPixel(y, x, pixel);
+		}
+	}
+	dst = resImage;
+}
+
+int Image::total()
+{
+	return width * height;
 }
 
 
