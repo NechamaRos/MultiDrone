@@ -30,7 +30,7 @@ int main() {
     resize(img1, img1, img1.size()/5);
 
     // Load the second image
-    Mat img2 = imread("3.png", IMREAD_GRAYSCALE);
+    Mat img2 = imread("image_2.jpg", IMREAD_GRAYSCALE);
     if (img2.empty()) {
         std::cout << "Could not open or find image2!" << std::endl;
         return -1;
@@ -54,7 +54,10 @@ int main() {
      //Perform matching
     FlannBasedMatcher matcher(new flann::LshIndexParams(20, 10, 2));
     std::vector<std::vector<DMatch>> knn_matches;
+    std::vector<std::vector<DMatch>> s;
+
     matcher.knnMatch(descriptors1, descriptors2, knn_matches, 2);
+
     std::vector<DMatch> good;
 
     for (const auto& matches : knn_matches) {
@@ -65,16 +68,44 @@ int main() {
             }
         }
     }
+    
         Mat res;
     drawMatches(img1, keypoints1, img2, keypoints2, good, res);
     imwrite("open cv.jpg", res);
 
     MatchFeaturers matcher1;
-    std::vector<std::vector<PointMatch>> knn_matches_ = matcher1.knnMatch(descriptors1_, descriptors2_, 2);
+    MatchFeaturers matcher2;
+
+    std::vector<std::vector<PointMatch>> knn_matches_ = matcher1.knnMatch(descriptors2_, descriptors1_, 2);
+    std::vector<std::vector<PointMatch>> knn_matches_for_filter = matcher2.knnMatch(descriptors1_, descriptors2_, 2);
+
     std::vector<PointMatch> good_dmatches;
 
+
+    //for (const auto& knn_matches_inner : knn_matches_) {
+    //    for (const auto& query : knn_matches_inner) {
+    //        bool found = false;
+    //        for (const auto& filter_inner : knn_matches_for_filter) {
+    //            auto it = std::find_if(filter_inner.begin(), filter_inner.end(), [&query](const PointMatch& m) {
+    //                return query.queryIdx == m.trainIdx && query.trainIdx == m.queryIdx;
+    //                });
+    //            if (it != filter_inner.end()) {
+    //                good_dmatches.push_back(query);
+    //                found = true;
+    //                break; // If found in one of the inner vectors, no need to check further
+    //            }
+    //        }
+    //        if (found) {
+    //            break;
+    //        }
+    //    }
+    //}
+
+   // return good_dmatches;
+
+
     for (const auto& matches : knn_matches_) {
-       // good.push_back(matches[0]);
+       
         if (matches.size() > 1) {
             // Checking the distance ratio between the first match and the second
             if (matches[0].distance < 0.7 * matches[1].distance) {
@@ -87,7 +118,7 @@ int main() {
     for (const auto& match : good_dmatches) {
         dmatch.push_back(DMatch(match.queryIdx, match.trainIdx, match.distance));
     }
-
+    
     Mat result;
     drawMatches(img1, keypoints1, img2, keypoints2, dmatch, result);
 
@@ -99,3 +130,4 @@ int main() {
 
     return 0;
 }
+

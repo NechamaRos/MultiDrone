@@ -6,20 +6,22 @@ using namespace std;
 //this function initialized data for the search
 std::vector<std::vector<PointMatch>> MatchFeaturers::knnMatch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, int k) {
    
+    this->descriptors_1 = descriptors1;
+    this->descriptors_2 = descriptors2;
     //vector to store index of descript2
-    std::vector<std::vector<int>> indices(descriptors1.size(), std::vector<int>(k));
+    std::vector<std::vector<int>> indices(descriptors_1.size(), std::vector<int>(k));
     //vector to store distence between the vectors
-    std::vector<std::vector<float>> dists(descriptors1.size(), std::vector<float>(k));
+    std::vector<std::vector<float>> dists(descriptors_1.size(), std::vector<float>(k));
 
     SearchParams searchParams;
     //check vector is not empty
-    if (descriptors1.empty() || descriptors2.empty())
+    if (descriptors_1.empty() || descriptors_2.empty())
         return std::vector<std::vector<PointMatch>>();
     //send to the searchfunction
-    knnSearch(descriptors1, descriptors2, indices, dists, k, searchParams);
+    knnSearch(descriptors_1, descriptors_2, indices, dists, k, searchParams);
 
     //store the indc and dist that is now full in poinMacth vec
-    for (size_t i = 0; i < descriptors1.size(); ++i) {
+    for (size_t i = 0; i < descriptors_1.size(); ++i) {
         std::vector<PointMatch> matches;
         for (int j = 0; j < k; ++j) {
             PointMatch point;
@@ -41,10 +43,10 @@ void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1
         for (int i=0; i<table_number; i++) {
             //Each bucket has keys and each key has its nearest neighbors  
                 Bucket bucket;
-            for (int row = 0; row < descriptors2.size(); row++)
+            for (int row = 0; row < descriptors_2.size(); row++)
             {
                 //send to hash func to get key
-                size_t key = getKey(descriptors2[row]);
+                size_t key = getKey(descriptors_2[row]);
                 //insert to current key in map
                 bucket[key].push_back(row);
             }
@@ -53,16 +55,16 @@ void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1
     }
 
     //fill mask for quick finding of key
-        fill_xor_mask(0, descriptors2[0].size(), 2, xor_masks);
+        fill_xor_mask(0, descriptors_2[0].size(), 2, xor_masks);
 
     //find neighbors for descrip1
-    for (size_t i = 0; i < descriptors1.size(); ++i)
+    for (size_t i = 0; i < descriptors_1.size(); ++i)
     {
         //stores the k nearest neighbors
         ResultSet resultSet(knn);
 
         //find k nearest neighbors
-        findNeighbors(descriptors1[i], resultSet , descriptors2);
+        findNeighbors(descriptors_1[i], resultSet , descriptors_2);
 
         std::vector<int> resultIndices = resultSet.getIndices();
         std::vector<float> resultDistances = resultSet.getDistances();
@@ -125,4 +127,15 @@ void MatchFeaturers::findNeighbors(const std::vector<int>& vec, ResultSet& resul
         ind++;
 
     }
+}
+
+std::pair<std::vector<int>, std::vector<int>> MatchFeaturers::setForHomorgraphy(std::vector<PointMatch> good_matches)
+{
+    std::pair<std::vector<int>, std::vector<int>>pairs;
+    for (auto match : good_matches)
+    {
+        pairs.first = descriptors_1[match.queryIdx];
+        pairs.second = descriptors_2[match.trainIdx];
+    }
+    return pairs;
 }

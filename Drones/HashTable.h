@@ -10,10 +10,7 @@ protected:
 	int table_number=20;
 	int key_size=10;
 	int multi_probe_level=2;
-	//what hash table?
-	typedef int DataType;
-	// What is stored in the hash 
-	typedef uint8_t Featuretype;
+	
 	// key type from which we can get a bucket back in an hash table
 	typedef unsigned int BucketKey;
 	//a bucken in a hash table
