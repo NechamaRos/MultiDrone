@@ -17,6 +17,7 @@ struct PointMatch
 	int trainIdx;
 	float distance;
 };
+
 class MatchFeaturers:public HashTable
 {
 private:
