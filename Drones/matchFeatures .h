@@ -4,7 +4,6 @@
 #include <cmath>
 #include <string>
 #include <stdint.h>
-//#include <opencv2/opencv.hpp>
 #include <any>
 #include <map>
 #include "HashTable.h"
@@ -20,8 +19,8 @@ struct PointMatch
 class MatchFeaturers:public HashTable
 {
 private:
-	std::vector<std::vector<int>> descriptors_1;
-	std::vector<std::vector<int>> descriptors_2;
+    std::vector<std::vector<int>> descriptors_1;
+    std::vector<std::vector<int>> descriptors_2;
     std::vector<PointMatch>good_matches;
     std::vector<std::vector<PointMatch>> knn_matches;
 public:
