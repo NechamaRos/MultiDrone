@@ -18,6 +18,7 @@ struct PointMatch
 	float distance;
 };
 
+
 class MatchFeaturers:public HashTable
 {
 private:
