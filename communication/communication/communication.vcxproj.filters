@@ -25,6 +25,15 @@
     <Filter Include="Test\Validation">
       <UniqueIdentifier>{8dfbaf11-f5ef-407c-80bb-48e7fd1f1900}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Recovery">
+      <UniqueIdentifier>{7368165a-d8dc-433f-bf77-0433154e15ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Recovery">
+      <UniqueIdentifier>{adbb0fe5-1c25-4569-a38d-d7cc6bb9793a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\RecoveryTests">
+      <UniqueIdentifier>{b8addc33-cbfa-4570-a96a-2a1c0ff0963e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="communication.cpp">
@@ -87,6 +96,48 @@
     <ClCompile Include="..\Validation\Validation_test.cpp">
       <Filter>Test\Validation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Recovery\DataHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\TextHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\BWImageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\ColorImageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\ConvertDataTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\Polynom.cpp">
+      <Filter>Source Files\Recovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\ReedSoloEncode.cpp">
+      <Filter>Source Files\Recovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\ReedSolomon.cpp">
+      <Filter>Source Files\Recovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\UsePoly.cpp">
+      <Filter>Source Files\Recovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\EncodeTest.cpp">
+      <Filter>Test\RecoveryTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\PolynimTest.cpp">
+      <Filter>Test\RecoveryTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\UsePolynomTest.cpp">
+      <Filter>Test\RecoveryTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\GaliosField.cpp">
+      <Filter>Source Files\Recovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Recovery\GaliosFieldTest.cpp">
+      <Filter>Test\RecoveryTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3Message.h">
@@ -127,6 +178,33 @@
     </ClInclude>
     <ClInclude Include="..\Validation\VecValidation.h">
       <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\DataHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\TextHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\BWImageHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\ColorImageHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\GaloisField.h">
+      <Filter>Header Files\Recovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\Polynom.h">
+      <Filter>Header Files\Recovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\ReedSoloEncode.h">
+      <Filter>Header Files\Recovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\ReedSolomon.h">
+      <Filter>Header Files\Recovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Recovery\UsePoly.h">
+      <Filter>Header Files\Recovery</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
