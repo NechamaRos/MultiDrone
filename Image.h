@@ -25,7 +25,7 @@ public:
 	}
 
 	//c'tor
-	Image(int w, int h, int c, std::vector<uint8_t> const& _data = {})
+	Image(int w, int h, int c=3, std::vector<uint8_t> const& _data = {})
 	{
 		if (c != 1 && c != 3)
 			throw std::exception("The channels must be 1 or 3");
@@ -37,7 +37,7 @@ public:
 		refCount = new int;
 		*refCount = 1;
 		ROI = width;
-		data = new uint8_t[(w * 2) * h * c];
+		data = new uint8_t[(w + 2) * h * c];
 		if (!_data.empty())
 			memcpy(data, _data.data(), (width + 2) * height * channels);
 	}
@@ -104,14 +104,25 @@ public:
 
 	static void waitKey(int delay = 0);
 
+	static void resize(const Image& src, Image& dst, std::tuple<int, int> const size);
+
+	int total();
+
 	std::tuple<int, int> getSize();
 
 
 	std::vector<uint8_t> getAllPixel(int i, int j) const;
+
 	uint8_t& getPixelCH(int i, int j, int c);
+
 	void setAllPixel(int i, int j, const std::vector<uint8_t>& pixel);
+
 	void setPixelCH(int i, int j, int c, int value);
 
+
+	Image row(int y) const;
+
+	Image col(int x) const;
 
 	bool empty();
 
