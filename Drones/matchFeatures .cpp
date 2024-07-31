@@ -13,12 +13,11 @@ std::vector<std::vector<PointMatch>> MatchFeaturers::knnMatch(const std::vector<
     //vector to store distence between the vectors
     std::vector<std::vector<float>> dists(descriptors_1.size(), std::vector<float>(k));
 
-    SearchParams searchParams;
     //check vector is not empty
     if (descriptors_1.empty() || descriptors_2.empty())
         return std::vector<std::vector<PointMatch>>();
     //send to the searchfunction
-    knnSearch(descriptors_1, descriptors_2, indices, dists, k, searchParams);
+    knnSearch(descriptors_1, descriptors_2, indices, dists, k);
 
     //store the indc and dist that is now full in poinMacth vec
     for (size_t i = 0; i < descriptors_1.size(); ++i) {
@@ -129,13 +128,17 @@ void MatchFeaturers::findNeighbors(const std::vector<int>& vec, ResultSet& resul
     }
 }
 
-std::pair<std::vector<int>, std::vector<int>> MatchFeaturers::setForHomorgraphy(std::vector<PointMatch> good_matches)
+//@params goodmataches after filter
+//return a vector of pairs for storing matching key point set for homorgraphy
+std::vector<std::pair<std::vector<int>, std::vector<int>>> MatchFeaturers::setForHomorgraphy(std::vector<PointMatch> good_matches)
 {
-    std::pair<std::vector<int>, std::vector<int>>pairs;
+    std::pair<std::vector<int>, std::vector<int>>pair;
+    std::vector<std::pair<std::vector<int>, std::vector<int>>>pairs;
     for (auto match : good_matches)
     {
-        pairs.first = descriptors_1[match.queryIdx];
-        pairs.second = descriptors_2[match.trainIdx];
+        pair.first = descriptors_1[match.queryIdx];
+        pair.second = descriptors_2[match.trainIdx];
+        pairs.push_back(pair);
     }
     return pairs;
 }
