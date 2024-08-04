@@ -90,7 +90,7 @@ TEST_CASE("TransferData::sendData function") {
 
 }
 
-TEST_CASE("TransferData::SendsAsynchronously function") {
+TEST_CASE("TransferData::sendsAsynchronously function") {
     TransferData td;
     std::string data = "Test data for async send";
     Meta_Data metaData(&vv4);
@@ -99,49 +99,41 @@ TEST_CASE("TransferData::SendsAsynchronously function") {
     size_t numThreads = 2;
 
     SUBCASE("Successful asynchronous send") {
-        CHECK_NOTHROW(td.SendsAsynchronously(data, metaData, numChunks, chunk_size, numThreads));
+        CHECK_NOTHROW(td.sendsAsynchronously(data, metaData, numChunks, chunk_size, numThreads));
     }
 
     SUBCASE("Asynchronous send with failure") {
         // Simulate failure by sending empty data
         std::string failingData = "";
 
-        CHECK_THROWS_AS(td.SendsAsynchronously(failingData, metaData, numChunks, chunk_size, numThreads), std::runtime_error);
+        CHECK_THROWS_AS(td.sendsAsynchronously(failingData, metaData, numChunks, chunk_size, numThreads), std::runtime_error);
     }
 }
 
-TEST_CASE("TransferData::SendsSynchronously function") {
+TEST_CASE("TransferData::sendsSynchronously function") {
     TransferData td;
     std::string data = "Test data for sync send";
     Meta_Data metaData(&vv4);
 
     SUBCASE("Successful synchronous send") {
-        CHECK_NOTHROW(td.SendsSynchronously(data, metaData));
+        CHECK_NOTHROW(td.sendsSynchronously(data, metaData));
     }
 
     SUBCASE("Synchronous send with exception") {
-        CHECK_THROWS_AS(td.SendsSynchronously("", metaData), std::runtime_error);
+        CHECK_THROWS_AS(td.sendsSynchronously("", metaData), std::runtime_error);
     }
 }
 
 TEST_CASE("TransferData::choosing_an_option_to_transfer function") {
     TransferData td;
 
-    SUBCASE("Choose synchronous transfer option") {
-        // Redirect cin for testing
-        std::istringstream input("1");
-        std::cin.rdbuf(input.rdbuf());
-
-        int option = td.choosing_an_option_to_transfer();
-        CHECK(option == 1);
-    }
 
     SUBCASE("Choose asynchronous transfer option") {
         // Redirect cin for testing
         std::istringstream input("2");
         std::cin.rdbuf(input.rdbuf());
 
-        int option = td.choosing_an_option_to_transfer();
+        int option = OPTION_TO_SEND;
         CHECK(option == 2);
     }
 }

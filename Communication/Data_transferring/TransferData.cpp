@@ -70,7 +70,7 @@ bool TransferData::sendData(const string& data, const Meta_Data& metaData) {
     }
 }
 
-void TransferData::SendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
+void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
 {
     if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
@@ -103,7 +103,7 @@ void TransferData::SendsAsynchronously(const string& dataAsStr, const Meta_Data&
     waiting(futures);
 }
 
-void TransferData::SendsSynchronously(const string& dataAsStr, const Meta_Data& metaData)
+void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData)
 {
     if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
@@ -111,19 +111,6 @@ void TransferData::SendsSynchronously(const string& dataAsStr, const Meta_Data& 
     this->sendData(dataAsStr, metaData);
 }
 
-int TransferData::choosing_an_option_to_transfer() {
-    int option;
-    cout << "Enter your option:" << endl << "enter 1 to synchronous transfer"
-        << endl << "enter 2 to Asynchronous transfer" << endl;
-    cin >> option;
-    while (option != 1 && option != 2)
-    {
-        cout << "enter again!!!\n your option:" << endl << "enter 1 to synchronous transfer"
-            << endl << "enter 2 to Asynchronous transfer" << endl;
-        cin >> option;
-    }
-    return option;
-}
 void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData)
 {
     //count of threads.
@@ -139,11 +126,11 @@ void TransferData::preparingTheDataForTransferring(const string& dataAsStr, cons
     size_t numChunks = (str_size + chunk_size - 1) / chunk_size;
 
     //choose the obtion to send Async / sync
-    int option = this->choosing_an_option_to_transfer();
+    size_t option = OPTION_TO_SEND;
     if (option == 1)
     {
-        SendsSynchronously(dataAsStr, metaData);
+        sendsSynchronously(dataAsStr, metaData);
     }
     else
-        SendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores);
+        sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores);
 }
