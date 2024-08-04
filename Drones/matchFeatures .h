@@ -8,7 +8,7 @@
 #include <map>
 #include "HashTable.h"
 #include <algorithm>
-
+//
 // for each point from what img and the poin distance distance
 struct PointMatch
 {
@@ -16,14 +16,24 @@ struct PointMatch
 	int trainIdx;
 	float distance;
 };
+<<<<<<< HEAD
+class MatchFeaturers :public HashTable
+=======
 class MatchFeaturers:public HashTable
+>>>>>>> 9d6d83fd4b5b648a2a8391592fe10d0694fd55b6
 {
 private:
 	std::vector<std::vector<int>> descriptors_1;
 	std::vector<std::vector<int>> descriptors_2;
+<<<<<<< HEAD
+	std::vector<std::vector<PointMatch>> knn_matches;
+public:
+	std::vector<PointMatch>good_matches;
+=======
     std::vector<PointMatch>good_matches;
     std::vector<std::vector<PointMatch>> knn_matches;
 public:
+>>>>>>> 9d6d83fd4b5b648a2a8391592fe10d0694fd55b6
 	std::vector<std::pair<std::vector<int>, std::vector<int>>>keyPointPaires;
 	std::vector<std::vector<PointMatch>> knnMatch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, int k);
 	void knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn);
