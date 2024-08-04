@@ -74,6 +74,19 @@ void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1
         }
     }
 }
+std::vector<PointMatch> MatchFeaturers::matchFilter(const std::vector<std::vector<PointMatch>>& knn_matches)
+{
+    for (const auto& matches : knn_matches) {
+
+        if (matches.size() > 1) {
+            // Checking the distance ratio between the first match and the second
+            if (matches[0].distance < 0.7 * matches[1].distance) {
+                good_matches.push_back(matches[0]);
+            }
+        }
+    }
+    return good_matches;
+}
 //@params x=vec1[i] ^ vec2[i]
 //counts the number of bits whose value is 1 in the binary expression .
 //return count of bits 1;
