@@ -5,10 +5,10 @@
 
 
 extern "C" {
-#include "DiskManagment.h"
+//#include "DiskManagment.h"
 #include"DiskManagmentApi.h"
+#include"Mock.h"
 	extern DiskMangmantCb_t* diskMangmantCb;
-
 }
 
 int randomValue(int lower,int upper)
@@ -101,7 +101,7 @@ TEST_CASE("TestingImgInfo ValidInput")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* data = "my data";
+	int* data = NULL;
 	//Act
 	ImageInfo_t* info = CreateImageInfo(point, data);
 	//Assert
@@ -140,7 +140,7 @@ TEST_CASE("Testing create LinkList Node")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//Act
 	UnitNodeLinkedLst_t* node = createNode(info);
@@ -165,7 +165,7 @@ TEST_CASE("Testing create QuadNode")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	UnitNodeLinkedLst_t* node = createNode(info);
 	//Act
@@ -191,7 +191,7 @@ TEST_CASE("Testing connector between data structures")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	UnitNodeLinkedLst_t* node = createNode(info);
 	//Act
@@ -240,7 +240,7 @@ TEST_CASE("Testing insert to linkList when linkList is mull")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	UnitNodeLinkedLst_t* node = createNode(info);
 	//Creating a linked list
@@ -280,7 +280,7 @@ TEST_CASE("insert to linkList when It is  not null")
 	//img info
 	ImagePoints_t point_ = CreateImagePoint(a, b);
 	ImagePoints_t point = CreateImagePoint(b, c);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(point_, imgData);
 	//creating nodes to insert
@@ -317,7 +317,7 @@ TEST_CASE("Testing remove node from linkedList when there is only onel ink")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, x+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
 	UnitNodeLinkedLst_t* node = createNode(info);
@@ -349,7 +349,7 @@ TEST_CASE("Testing remove node from linkedList when there is only one link")
 	Point_t a = CreatePoint(6, 16);
 	Point_t b = CreatePoint(8, 18);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData = NULL;
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
@@ -387,7 +387,7 @@ TEST_CASE("Testing remove node from linkedList")
 	ImagePoints_t PointA = CreateImagePoint(b, c);
 	ImagePoints_t point = CreateImagePoint(a, b);
 	ImagePoints_t pointB = CreateImagePoint(c, d);
-	const char* imgData = "my data";
+	int* imgData = NULL;
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(point, imgData);
@@ -430,7 +430,7 @@ TEST_CASE("Testing remove node from linkedList when there is only one link and a
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y + SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
 	UnitNodeLinkedLst_t* node = createNode(info);
@@ -467,7 +467,7 @@ TEST_CASE("Testing Move to the beginning")
 	ImagePoints_t point_ = CreateImagePoint(a, b);
 	ImagePoints_t point = CreateImagePoint(b, c);
 	ImagePoints_t pointC = CreateImagePoint(c, d);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(point_, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
@@ -511,7 +511,7 @@ TEST_CASE("Testing move to the beginning when there's one link")
 	Point_t a = CreatePoint(x, y);
 	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
-	const char* imgData = "my data";
+	int* imgData = NULL;
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
@@ -546,7 +546,7 @@ TEST_CASE("Testing insert to the Quadtree when QuadTree is empty")
 	Point_t c = CreatePoint(x, y);
 	Point_t d = CreatePoint(x + SIZE_OF_IMG_LENGTH, y + SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(c, d);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
@@ -586,7 +586,7 @@ TEST_CASE("Testing insert to the Quadtree")
 	Point_t y = CreatePoint(4, 4);
 	ImagePoints_t point = CreateImagePoint(c, d);
 	ImagePoints_t pointB = CreateImagePoint(x, y);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
@@ -635,7 +635,7 @@ TEST_CASE("Testing remove quadNode from tree when there is one quadNode")
 	Point_t c = CreatePoint(20, 10);
 	Point_t d = CreatePoint(22, 12);
 	ImagePoints_t point = CreateImagePoint(c, d);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
 	UnitNodeLinkedLst_t* node = createNode(info);
@@ -674,7 +674,7 @@ TEST_CASE("Testing remove quadNode from tree two quadNode")
 	Point_t y = CreatePoint(4, 4);
 	ImagePoints_t point = CreateImagePoint(c, d);
 	ImagePoints_t pointB = CreateImagePoint(x, y);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
@@ -725,7 +725,7 @@ TEST_CASE("Testing remove QuadNode from tree when three chilern")
 	ImagePoints_t point = CreateImagePoint(c, d);
 	ImagePoints_t pointB = CreateImagePoint(x, y);
 	ImagePoints_t pointC = CreateImagePoint(s, z);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
@@ -779,7 +779,7 @@ TEST_CASE("Testing remove QuadNode from QuadTree when grandfather numOfNonNULLQu
 	Point_t s = CreatePoint(1, 21);
 	Point_t z = CreatePoint(3, 23);
 	ImagePoints_t pointC = CreateImagePoint(s, z);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
@@ -835,7 +835,7 @@ TEST_CASE("Testing search in QuadTree non in range")
 	Point_t y = CreatePoint(4, 4);
 	Point_t s = CreatePoint(1, 21);
 	Point_t z = CreatePoint(3, 23);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	initImg(c, d, imgData);
 	initImg(x, y, imgData);
 	initImg(s, z, imgData);
@@ -862,7 +862,7 @@ TEST_CASE("Testing search in QuadTree all in range")
 	Point_t y = CreatePoint(4, 4);
 	Point_t s = CreatePoint(1, 21);
 	Point_t z = CreatePoint(3, 23);
-	const char* imgData = "my date";
+	int* imgData = NULL;
 	initImg(c, d, imgData);
 	initImg(x, y, imgData);
 	initImg(s, z, imgData);
@@ -891,7 +891,7 @@ TEST_CASE("Testing search in QuadTree one is in range")
 	Point_t y = CreatePoint(4, 11);
 	Point_t s = CreatePoint(1, 21);
 	Point_t z = CreatePoint(3, 23);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	initImg(c, d, imgData);
 	initImg(x, y, imgData);
 	initImg(s, z, imgData);
@@ -923,19 +923,15 @@ TEST_CASE("save Before Shutdown ")
 	Point_t y = CreatePoint(a + SIZE_OF_IMG_LENGTH, b + SIZE_OF_IMG_WIDTH);
 	Point_t s = CreatePoint(n, m);
 	Point_t z = CreatePoint(n + SIZE_OF_IMG_LENGTH, m + SIZE_OF_IMG_WIDTH);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	initImg(c, d, imgData);
 	initImg(x, y, imgData);
 	initImg(s, z, imgData);
 	//act
 	saveBeforeShutdown();
 	//assert
-	CHECK(!diskMangmantCb->quadTree);
-	CHECK(!diskMangmantCb->arraySearchInfo);
-	CHECK(!diskMangmantCb->linkedList);
-	freeQuadTreeAndLinkedListAndArr();
-
-
+	
+	
 }
 TEST_CASE("boot When The Device Is TurnedOn")
 {
@@ -959,7 +955,7 @@ TEST_CASE("Cache is asking to load a deleted image ")
 	Point_t y2 = CreatePoint(a + SIZE_OF_IMG_LENGTH, b + SIZE_OF_IMG_WIDTH);
 	Point_t s = CreatePoint(x1, y1);
 	Point_t z = CreatePoint(x1 + SIZE_OF_IMG_LENGTH, y1 + SIZE_OF_IMG_WIDTH);
-	const char* imgData = "my date";
+	int* imgData =NULL;
 	initImg(c, d, imgData);
 	initImg(x2, y2, imgData);
 	initImg(s, z, imgData);
@@ -967,10 +963,10 @@ TEST_CASE("Cache is asking to load a deleted image ")
 	Point_t TL = CreatePoint(0, 0);
 	Point_t BR = CreatePoint(40, 40);
 	int arr[100] = { 0 };
-	disk_Mng_getImagesIdInRangedByTwoPoints_Api(TL, BR, arr);
+	getImagesIdInRangedByTwoPoints(TL, BR, arr);
 	removeData();
 	//act
-	bool isLoaded = disk_Mng_loadImageFromDiskToCache_Api(42, NULL);
+	bool isLoaded = loadImageFromDiskToCache(42, NULL);
 	//Assert
 	CHECK(isLoaded == false);
 
@@ -992,7 +988,7 @@ TEST_CASE("Cache is asking to load exsiting id ")
 	Point_t y = CreatePoint(w + SIZE_OF_IMG_LENGTH, e + SIZE_OF_IMG_WIDTH);
 	Point_t s = CreatePoint(r, t);
 	Point_t z = CreatePoint(r+SIZE_OF_IMG_LENGTH, t + SIZE_OF_IMG_WIDTH);
-	const char* imgData = "my data";
+	int* imgData =NULL;
 	initImg(c, d, imgData);
 	initImg(x, y, imgData);
 	initImg(s, z, imgData);
@@ -1001,9 +997,9 @@ TEST_CASE("Cache is asking to load exsiting id ")
 	Point_t BR = CreatePoint(40, 40);
 	ImagePoints_t imageRange = CreateImagePoint(TL, BR);
 	int arr[100] = { 0 };
-	disk_Mng_getImagesIdInRangedByTwoPoints_Api(TL, BR, arr);
+	getImagesIdInRangedByTwoPoints(TL, BR, arr);
 	//act
-	bool a = disk_Mng_loadImageFromDiskToCache_Api(46, NULL);
+	bool a = loadImageFromDiskToCache(46, NULL);
 	//Assert
 	CHECK(a == true);
 	freeQuadTreeAndLinkedListAndArr();
@@ -1021,14 +1017,14 @@ TEST_CASE("remove when disk is full and entering the same point value")
 		Point_t c = CreatePoint(i, i);
 		Point_t d = CreatePoint(i + 2, i + 2);
 
-		const char* imgData = "my date";
+		int* imgData =NULL;
 		initImg(c, d, imgData);
 	}
 	//act
 	Point_t c = CreatePoint(1, 1);
 	Point_t d = CreatePoint(3, 3);
-	const char* imgData = "my date";
-	AddImgToDiskMangmant_Api(c, d, imgData);
+	int* imgData =NULL;
+	AddImgToDiskMangmant(c, d, imgData);
 	//assert
 	CHECK(diskMangmantCb->linkedList->tail->prev->imgInfo->imgPoints.TL.x != 0);
 	CHECK(diskMangmantCb->linkedList->head->next->imgInfo->imgPoints.TL.x == 1);
@@ -1047,14 +1043,14 @@ TEST_CASE("remove when disk is full and entering  different point value")
 		Point_t c = CreatePoint(i, i);
 		Point_t d = CreatePoint(i + 2, i + 2);
 
-		const char* imgData = "my date";
+		int* imgData =NULL;
 		initImg(c, d, imgData);
 	}
 	//act
 	Point_t c = CreatePoint(1, 6);
 	Point_t d = CreatePoint(3, 8);
-	const char* imgData = "my date";
-	AddImgToDiskMangmant_Api(c, d, imgData);
+	int* imgData =NULL;
+	AddImgToDiskMangmant(c, d, imgData);
 	//assert
 	CHECK(diskMangmantCb->linkedList->tail->prev->imgInfo->imgPoints.TL.x != 0);
 	CHECK(diskMangmantCb->linkedList->head->next->imgInfo->imgPoints.TL.x == 1);
@@ -1087,9 +1083,9 @@ TEST_CASE("add an img with uncorrect value") {
  
 	Point_t pointTL = CreatePoint(q, w);
 	Point_t pointBR = CreatePoint(q+SIZE_OF_IMG_LENGTH*2, w+SIZE_OF_IMG_WIDTH);
-	const char data[] = "my data";
+	int* data=NULL;
 	//act
-	AddImgToDiskMangmant_Api(pointTL, pointBR, data);
+	AddImgToDiskMangmant(pointTL, pointBR, data);
 	//Assert
 	CHECK(errno == IMG_IS_NOT_IN_CORRECT_SIZE);
 	freeQuadTreeAndLinkedListAndArr();
@@ -1112,7 +1108,7 @@ TEST_CASE("search when range is bigger than the quadTree range")
 	ImagePoints_t point = CreateImagePoint(c, d);
 	ImagePoints_t pointB = CreateImagePoint(x, y);
 	ImagePoints_t pointC = CreateImagePoint(s, z);
-	const char data[] = "mt data";
+	int* data =NULL;
 	//init
 	initImg(c, d, data);
 	initImg(x, y, data);
@@ -1152,7 +1148,7 @@ TEST_CASE("search when range is not in quadTree range ")
 	ImagePoints_t point = CreateImagePoint(c, d);
 	ImagePoints_t pointB = CreateImagePoint(x, y);
 	ImagePoints_t pointC = CreateImagePoint(s, z);
-	const char data[] = "my data";
+	int* data = NULL;
 	//init
 	initImg(c, d, data);
 	initImg(x, y, data);

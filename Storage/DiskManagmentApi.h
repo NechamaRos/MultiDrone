@@ -1,22 +1,26 @@
 #pragma once
-#include"DiskManagment.h"
+#include<stdbool.h>
+typedef struct Point_s {
+    int x;
+    int y;
+} Point_t;
 
-bool disk_Mng_loadImageFromDiskToCache_Api(int id, int* addrassToLoading);
-int disk_Mng_getImagesIdInRangedByTwoPoints_Api(Point_t topLeft, Point_t bottomRight, int* arrayOfImagesId);
-void AddImgToDiskMangmant_Api(Point_t TL, Point_t BR, const char* imgData);
+//gets a imgId of a img to load and a address 
+//and loads the img data to address
+bool loadImageFromDiskToCache(int imgId, int* addrassToLoading);
+
+//gets a range by tl ,br and return all the img ids in the range in the arr that was sent  
+int getImagesIdInRangedByTwoPoints(Point_t topLeft, Point_t bottomRight, int* arrayOfImagesId);
+
+//gets img info and adds the img to the disk and to the data struct
+void AddImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData);
+
+//save the data struct before shutdown
 void saveBeforeShutdown();
+
+//Boot when the device is turned on
 void bootWhenTheDeviceIsTurnedOn();
 
 
 
 
-//Api implementeded
-void saveTheQuadTreeToDisk_Api(QuadTree_t* pointerToQuadTreeTable);
-void saveTheLinkedListToDisk_Api(LinkedList_t* pointerToLinkedListTable);
-bool loadImageToCache_Api(int* diskAddress, int* cachAddress);
-void DeleteImageFromDisk_Api(int* diskAdress);
-int* AddImgToDisk_Api(Point_t TL, Point_t BR, char* imgData, int imgId);
-void wirteFlushFlag(int num);
-int readFlushFlag();
-QuadTree_t* LoadTheQuadTree_Api();
-LinkedList_t* LoadTheLinkedlist_Api();

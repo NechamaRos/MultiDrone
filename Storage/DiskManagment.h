@@ -1,18 +1,16 @@
 #pragma once
-#pragma once
-//#include "DiskManagment.c"
-#include <stdbool.h>
+#include"DiskManagmentApi.h"
 #include <string.h>
 #include <stdio.h>
 #include<errno.h>
 
+
+//The initialization variables can change as needed
 #define SIZE_OF_IMG_LENGTH 2
 #define SIZE_OF_IMG_WIDTH 2
 #define SIZE_OF_CACHE 15
-typedef struct Point_s {
-    int x;
-    int y;
-} Point_t;
+
+
 
 typedef struct ImagePoints_s {
     Point_t TL;
@@ -25,11 +23,13 @@ typedef struct ImageInfo_s {
     int* disk_ptr;
 } ImageInfo_t;
 
+
+//one node of the linked List that contains next, prev 
+//and all the img info and a ptr to tne place in the quad tree
 typedef struct UnitNodeLinkedLst_s {
-    // int id;
     struct UnitNodeLinkedLst_s* next;
     struct UnitNodeLinkedLst_s* prev;
-    ImageInfo_t* imgInfo;//צריך לעשות מצביע???
+    ImageInfo_t* imgInfo;
     struct  QuadNode_s* positionOnTree_ptr;
 }UnitNodeLinkedLst_t;
 
@@ -47,8 +47,8 @@ typedef struct QuadNode_s {
 
 //The tree is built from a quad tree and a quad node
 // so that a quad tree contains the subrange of the space
-// and has two options: either the quad node is not equal to NULL or the pointers to the quad tree
-// or at least one of the pointers is not equal to NULL
+// and has two options: either the quad node is not equal to NULL 
+// or at least one of the pointers to the quad tree  is not equal to NULL
 
 typedef struct QuadTree_s {
     Point_t TL;
@@ -65,7 +65,7 @@ typedef struct QuadTree_s {
 typedef struct DiskMangmantStructCb_s {
     QuadTree_t* quadTree;
     LinkedList_t* linkedList;
-    ImageInfo_t* arraySearchInfo[100];
+    ImageInfo_t* arraySearchInfo[SIZE_OF_CACHE];
     int lengthOfArraySearchInfo;
 
 } DiskMangmantCb_t;
@@ -76,17 +76,17 @@ typedef enum {
     ALLOCATE_ERROR,
     IMG_IS_NOT_IN_CORRECT_SIZE
 }Exception;
+
 //init function
 Point_t CreatePoint(int x, int y);
 ImagePoints_t CreateImagePoint(Point_t TL, Point_t BR);
-ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, const char* imgData);
+ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData);
 bool isCorrectPoints(Point_t TL, Point_t BR);
 bool isCorrectSize(Point_t TL, Point_t BR);
-void initImg(Point_t TL, Point_t BR, const char* imgData);
+void initImg(Point_t TL, Point_t BR, int* imgData);
 void initDiskMangmantCb();
-void printLinkList(FILE* file);
+
 //linkedList
-//UnitNodeLinkedLst_t* InsertCreateNode(ImageInfo_t imgInfo, LinkedList_t* linkedList);
 UnitNodeLinkedLst_t* createNode(ImageInfo_t* imgInfo);
 void insertToLinkList(UnitNodeLinkedLst_t* node);
 LinkedList_t* createLinkedList();
@@ -103,9 +103,7 @@ void connectBetweenDatStructures(UnitNodeLinkedLst_t* nodePtr, QuadNode_t* quadN
 QuadTree_t* createQuadTree(Point_t TL, Point_t BR);
 void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, int* count, int* idArray);
 void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree);
-void printSearchResult(int* length);
 bool removeQuadNodeFromTree(QuadNode_t* quadNode);
-void printQuadTree(int depth, QuadTree_t* quadTree, FILE* file);
 void freeQuadTreeAndLinkedListAndArr();
 
 

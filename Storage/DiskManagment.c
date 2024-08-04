@@ -1,8 +1,9 @@
-#include "DiskManagment.h"
+#include"Mock.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
 #include "DiskManagmentApi.h"
+//#include"DiskManagment.h"
 
 static int count = 0;
 #define DISK_SIZE 20
@@ -92,7 +93,7 @@ bool isCorrectSize(Point_t TL, Point_t BR)
     return false;
 }
 
-ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, const char* imgData)//
+ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData)//
 {
     ImageInfo_t* img = (ImageInfo_t*)malloc(sizeof(ImageInfo_t));
 
@@ -635,10 +636,10 @@ void moveToTheBeginning(UnitNodeLinkedLst_t* nodePtr)
 
 }
 
-bool disk_Mng_loadImageFromDiskToCache_Api(int id, int* addrassToLoading)
+bool loadImageFromDiskToCache(int imgId, int* addrassToLoading)
 {
     for (int i = 0; i < diskMangmantCb->lengthOfArraySearchInfo; i++) {
-        if (diskMangmantCb->arraySearchInfo[i]->imgId == id) {
+        if (diskMangmantCb->arraySearchInfo[i]->imgId == imgId) {
             return loadImageToCache_Api(diskMangmantCb->arraySearchInfo[i]->disk_ptr, addrassToLoading);
 
         }
@@ -646,14 +647,15 @@ bool disk_Mng_loadImageFromDiskToCache_Api(int id, int* addrassToLoading)
     return false;
 }
 
-int disk_Mng_getImagesIdInRangedByTwoPoints_Api(Point_t topLeft, Point_t bottomRight, int* arrayOfImagesId)
+int getImagesIdInRangedByTwoPoints(Point_t topLeft, Point_t bottomRight, int* arrayOfImagesId)
 {
     diskMangmantCb->lengthOfArraySearchInfo = 0;
     searchImgsAtQuadTreeByRange(diskMangmantCb->quadTree, topLeft, bottomRight, &diskMangmantCb->lengthOfArraySearchInfo, arrayOfImagesId);
     return diskMangmantCb->lengthOfArraySearchInfo;
 }
 
-void AddImgToDiskMangmant_Api(Point_t TL, Point_t BR, const char* imgData)
+
+void AddImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData)
 {
     //chack if it out the range
     if (!isCorrectPoints(TL, BR))
@@ -678,6 +680,8 @@ void AddImgToDiskMangmant_Api(Point_t TL, Point_t BR, const char* imgData)
     initImg(TL, BR, imgData);//create and insert
 }
 
+
+
 void saveBeforeShutdown()
 {
     saveTheQuadTreeToDisk_Api(diskMangmantCb->quadTree);
@@ -700,25 +704,26 @@ void bootWhenTheDeviceIsTurnedOn()
 
 void saveTheQuadTreeToDisk_Api(QuadTree_t* pointerToQuadTreeTable)
 {
-    FILE* file = fopen("..\\diskMoceFolder\\DiskQuedTree.txt", "w");
-    //if didn't succsess to open
-    if (!file)
+    FILE* file;
+    errno_t err = fopen_s(&file, ".\\diskMoceFolder\\DiskQuedTree.txt", "w");
+    //if didn't succeed to open
+    if (err != 0)
     {
-        printf("the file didnt open try again ---------------Exceptin");
+        printf("The file didn't open, try again ---------------Exception\n");
         return;
     }
     printQuadTree(1, pointerToQuadTreeTable, file);
     fclose(file);
-
 }
 
 void saveTheLinkedListToDisk_Api(LinkedList_t* pointerToLinkedListTable)
 {
-    FILE* file = fopen("..\\diskMoceFolder\\DisklinkedList.txt", "w");
-    //if didn't succsess to open
-    if (!file)
+    FILE* file;
+    errno_t err = fopen_s(&file, ".\\diskMoceFolder\\DisklinkedList.txt", "w");
+    // If failed to open the file
+    if (err != 0)
     {
-        printf("the file didnt open try again ---------------Exceptin");
+        printf("The file didn't open, try again ---------------Exception\n");
         return;
     }
     printLinkList(file);
@@ -742,9 +747,10 @@ int* AddImgToDisk_Api(Point_t TL, Point_t BR, char* imgData, int imgId)
     errno_t err;
 
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, "..\\diskMoceFolder\\Disk.txt", "a");
+    err = fopen_s(&file, ".\\diskMoceFolder\\Disk.txt", "a");
     if (err != 0) {
         // Print an error message using perror or fprintf
+
         printf("the file didnt open try again ---------------Exceptin");
         return;
     }
@@ -765,7 +771,7 @@ void wirteFlushFlag(int num)
     errno_t err;
 
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, "..\\diskMoceFolder\\FlagFlush.txt", "w");
+    err = fopen_s(&file, ".\\diskMoceFolder\\FlagFlush.txt", "w");
     if (err != 0) {
         // Print an error message using perror or fprintf
         printf("the file didnt open try again ---------------Exceptin");
@@ -786,7 +792,7 @@ int readFlushFlag()
     errno_t err;
 
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, "..\\diskMoceFolder\\FlagFlush.txt", "w");
+    err = fopen_s(&file, ".\\diskMoceFolder\\FlagFlush.txt", "w");
     if (err != 0) {
         // Print an error message using perror or fprintf
         printf("the file didnt open try again ---------------Exceptin");
@@ -886,7 +892,7 @@ void throwExceptiontoFile(Exception exception) {
     errno_t err;
 
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, "..\\diskMoceFolder\\Exceptions.txt", "a");
+    err = fopen_s(&file, ".\\diskMoceFolder\\Exceptions.txt", "a");
     if (err != 0) {
         // Print an error message using perror or fprintf
         printf("the file didnt open try again ---------------Exceptin");
@@ -912,7 +918,7 @@ void freeQuadTreeAndLinkedListAndArr() {
     free(diskMangmantCb);
 }
 
-void initImg(Point_t TL, Point_t BR, const char* imgData)
+void initImg(Point_t TL, Point_t BR, int* imgData)
 {
     ImagePoints_t tlrb = CreateImagePoint(TL, BR);
     ImageInfo_t* imgInfo = CreateImageInfo(tlrb, imgData);
