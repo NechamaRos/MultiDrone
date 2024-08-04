@@ -34,14 +34,14 @@ inline std::vector<size_t> HashTable::generateRandomMask(size_t feature_size, un
 }
 void HashTable::fill_xor_mask(int key, int lowest_index, unsigned int level, std::vector<size_t>& xor_masks)
 {
-        xor_masks.push_back(key);
-        if (level == 0) return;
-        for (int index = lowest_index - 1; index >= 0; --index) {
-            // Create a new key
-            int new_key = key | (1 << index);
-            fill_xor_mask(new_key, index, level - 1, xor_masks);
-        }
-    
+    xor_masks.push_back(key);
+    if (level == 0) return;
+    for (int index = lowest_index - 1; index >= 0; --index) {
+        // Create a new key
+        int new_key = key | (1 << index);
+        fill_xor_mask(new_key, index, level - 1, xor_masks);
+    }
+
 }
 size_t HashTable::getKey(std::vector<int> descrip)
 {
@@ -104,24 +104,22 @@ size_t HashTable::getKey(std::vector<int> descrip)
 void ResultSet::addPoint(float distance, int index)
 {
     //add point to result only if distance less then worst distance and sorts for next time.
-        auto it=std::find_if(results.begin(), results.end(), [distance](std::pair<float, int>& val) {
-            return val.first == distance; });
-        if (it == results.end()) {
-            if (results.size() < capacity)
-                results.push_back(std::make_pair(distance, index));
-            else
-            {
-                if (results[results.size() - 1].first > distance)
-                    results[results.size() - 1] = std::make_pair(distance, index);
-            }
-        
+    auto it = std::find_if(results.begin(), results.end(), [distance](std::pair<float, int>& val) {
+        return val.first == distance; });
+    if (it == results.end()) {
+        if (results.size() < capacity)
+            results.push_back(std::make_pair(distance, index));
+        else
+        {
+            if (results[results.size() - 1].first > distance)
+                results[results.size() - 1] = std::make_pair(distance, index);
+        }
+
         std::sort(results.begin(), results.end(), [](const std::pair<float, int>& a, const std::pair<float, int>& b) {
             return a.first < b.first;
             });
         worst_dist = results.back().first;
-        }
-        
-   
     }
 
 
+}
