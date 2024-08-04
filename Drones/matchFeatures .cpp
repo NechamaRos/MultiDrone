@@ -1,11 +1,12 @@
 #include "matchFeatures .h"
 using namespace std;
 
+
 //@params 2 vectors of key point
 //@return vector of matches
 //this function initialized data for the search
 std::vector<std::vector<PointMatch>> MatchFeaturers::knnMatch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, int k) {
-   
+
     this->descriptors_1 = descriptors1;
     this->descriptors_2 = descriptors2;
     //vector to store index of descript2
@@ -37,24 +38,24 @@ std::vector<std::vector<PointMatch>> MatchFeaturers::knnMatch(const std::vector<
 //@params 2 vectors of key point ,dists for storing the distance,
 //indices for index,k find the k nearest neighbor
 void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, std::vector<std::vector<int>>& indices, std::vector<std::vector<float>>& dists, int knn) {
-    
+
     //build hash table with descrip2 stores the vecs
-        for (int i=0; i<table_number; i++) {
-            //Each bucket has keys and each key has its nearest neighbors  
-                Bucket bucket;
-            for (int row = 0; row < descriptors_2.size(); row++)
-            {
-                //send to hash func to get key
-                size_t key = getKey(descriptors_2[row]);
-                //insert to current key in map
-                bucket[key].push_back(row);
-            }
-            //adds the bucket to the table
-            hash_table.push_back(bucket);
+    for (int i = 0; i < table_number; i++) {
+        //Each bucket has keys and each key has its nearest neighbors  
+        Bucket bucket;
+        for (int row = 0; row < descriptors_2.size(); row++)
+        {
+            //send to hash func to get key
+            size_t key = getKey(descriptors_2[row]);
+            //insert to current key in map
+            bucket[key].push_back(row);
+        }
+        //adds the bucket to the table
+        hash_table.push_back(bucket);
     }
 
     //fill mask for quick finding of key
-        fill_xor_mask(0, descriptors_2[0].size(), 2, xor_masks);
+    fill_xor_mask(0, descriptors_2[0].size(), 2, xor_masks);
 
     //find neighbors for descrip1
     for (size_t i = 0; i < descriptors_1.size(); ++i)
@@ -63,7 +64,7 @@ void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1
         ResultSet resultSet(knn);
 
         //find k nearest neighbors
-        findNeighbors(descriptors_1[i], resultSet , descriptors_2);
+        findNeighbors(descriptors_1[i], resultSet, descriptors_2);
 
         std::vector<int> resultIndices = resultSet.getIndices();
         std::vector<float> resultDistances = resultSet.getDistances();
@@ -76,12 +77,46 @@ void MatchFeaturers::knnSearch(const std::vector<std::vector<int>>& descriptors1
 }
 std::vector<PointMatch> MatchFeaturers::matchFilter(const std::vector<std::vector<PointMatch>>& knn_matches)
 {
+<<<<<<< HEAD
+    MatchFeaturers matcher2;
+    std::vector<std::vector<PointMatch>> knn_matches_for_filter = matcher2.knnMatch(descriptors_2, descriptors_1, 2);
+
+    vector<PointMatch>filter_ratio_1;
+    vector<PointMatch>filter_ratio_2;
+
+    for (const auto& matches : knn_matches) {
+        if (matches.size() > 1) {
+            // Checking the distance ratio between the first match and the second
+            if (matches[0].distance < 0.7 * matches[1].distance) {
+                filter_ratio_1.push_back(matches[0]);
+            }
+        }
+    }
+    for (const auto& matches : knn_matches_for_filter) {
+        if (matches.size() > 1) {
+            // Checking the distance ratio between the first match and the second
+            if (matches[0].distance < 0.7 * matches[1].distance) {
+                filter_ratio_2.push_back(matches[0]);
+            }
+        }
+    }
+
+    for (const auto& knn_matches_inner : filter_ratio_1) {
+        bool found = false;
+        for (const auto& otherNeighbor : filter_ratio_2) {
+            if (knn_matches_inner.queryIdx == otherNeighbor.trainIdx && knn_matches_inner.trainIdx == otherNeighbor.queryIdx)
+            {
+                good_matches.push_back(knn_matches_inner);
+                found = true;
+                break;
+=======
     for (const auto& matches : knn_matches) {
 
         if (matches.size() > 1) {
             // Checking the distance ratio between the first match and the second
             if (matches[0].distance < 0.7 * matches[1].distance) {
                 good_matches.push_back(matches[0]);
+>>>>>>> 9d6d83fd4b5b648a2a8391592fe10d0694fd55b6
             }
         }
     }
@@ -105,12 +140,12 @@ int computeDistance(const int* vec1, const int* vec2, size_t size)
 {
     int result = 0;
     for (size_t i = 0; i < size; i++) {
-        result +=popcount(vec1[i] ^ vec2[i]);
+        result += popcount(vec1[i] ^ vec2[i]);
     }
     return result;
 }
 //@params vec- one key point,result - for result ,desc2 -for finding the neighbors 
-void MatchFeaturers::findNeighbors(const std::vector<int>& vec, ResultSet& result, const std::vector<std::vector<int>>& descriptors2) 
+void MatchFeaturers::findNeighbors(const std::vector<int>& vec, ResultSet& result, const std::vector<std::vector<int>>& descriptors2)
 {
 
     auto table_s = hash_table.begin();
@@ -123,7 +158,7 @@ void MatchFeaturers::findNeighbors(const std::vector<int>& vec, ResultSet& resul
         for (const auto& xor_mask : xor_masks) {
             size_t sub_key = key ^ xor_mask;
             //get the vector in the current key in the bucket
-            const auto sub_bucket = getBucketFromKey(sub_key,ind);
+            const auto sub_bucket = getBucketFromKey(sub_key, ind);
             if (sub_bucket.size() == 0) continue;
 
             // run on vector in the found key in the bucket
