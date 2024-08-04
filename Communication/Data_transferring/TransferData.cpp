@@ -7,9 +7,6 @@
 #include "TransferData.h"
 #include "../Communication/Meta_Data.h"
 
-//constexpr size_t MAX_DATA_SIZE_FOR_THREAD = 1048576;
-
-constexpr size_t MAX_DATA_SIZE_FOR_THREAD = 4;//4 bytes
 
 using namespace std;
 
@@ -44,11 +41,12 @@ bool TransferData::sendMessageByChunk(const string& chunk)
 }
 bool TransferData::sendMetaData(const Meta_Data& metaData)
 {
-    // כאן תוסיף את הקוד לשליחה
+    
     try
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // סימול זמן שליחה
-        std::cout << "Sent metaData validation: " << std::endl; //<< metaData 
+        //Noa function
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+        std::cout << "Sent metaData validation " << std::endl; //<< metaData 
         return true;
     }
     catch (const std::exception&)
@@ -71,18 +69,19 @@ bool TransferData::sendData(const string& data, const Meta_Data& metaData) {
         throw exception("The send failed");
     }
 }
-void TransferData::SendsAsynchronously(const string& str, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
+
+void TransferData::SendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
 {
-    if (str.empty()) {
+    if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
     }
-    size_t str_size = str.size();
+    size_t str_size = dataAsStr.size();
     //open the threads and send to socket function.
     vector<future<bool>> futures;
     size_t chunkStart = 0;
     for (size_t i = 0; i < numChunks; ++i) {
         size_t chunkEnd = min(chunkStart + chunk_size, str_size);
-        string chunk = str.substr(chunkStart, chunkEnd - chunkStart);
+        string chunk = dataAsStr.substr(chunkStart, chunkEnd - chunkStart);
         chunkStart = chunkEnd;
         // If we have reached the maximum number of threads, wait for one to finish
         if (futures.size() >= numThreads) {
@@ -103,13 +102,15 @@ void TransferData::SendsAsynchronously(const string& str, const Meta_Data& metaD
     // Wait for all remaining threads to finish
     waiting(futures);
 }
-void TransferData::SendsSynchronously(const string& str, const Meta_Data& metaData)
+
+void TransferData::SendsSynchronously(const string& dataAsStr, const Meta_Data& metaData)
 {
-    if (str.empty()) {
+    if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
     }
-    this->sendData(str, metaData);
+    this->sendData(dataAsStr, metaData);
 }
+
 int TransferData::choosing_an_option_to_transfer() {
     int option;
     cout << "Enter your option:" << endl << "enter 1 to synchronous transfer"
@@ -123,13 +124,13 @@ int TransferData::choosing_an_option_to_transfer() {
     }
     return option;
 }
-void TransferData::preparingTheDataForTransferring(const string& str, const Meta_Data& metaData)
+void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData)
 {
     //count of threads.
     const int num_cores = this->num_cores(); // The maximum number of threads
 
     //found size of every chunk.
-    size_t str_size = str.size();
+    size_t str_size = dataAsStr.size();
     size_t chunk_size = str_size / num_cores;
     if (chunk_size > MAX_DATA_SIZE_FOR_THREAD) {
         chunk_size = MAX_DATA_SIZE_FOR_THREAD;
@@ -141,8 +142,8 @@ void TransferData::preparingTheDataForTransferring(const string& str, const Meta
     int option = this->choosing_an_option_to_transfer();
     if (option == 1)
     {
-        SendsSynchronously(str, metaData);
+        SendsSynchronously(dataAsStr, metaData);
     }
     else
-        SendsAsynchronously(str, metaData, numChunks, chunk_size, num_cores);
+        SendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores);
 }

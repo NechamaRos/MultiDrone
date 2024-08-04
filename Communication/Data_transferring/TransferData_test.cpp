@@ -88,9 +88,6 @@ TEST_CASE("TransferData::sendData function") {
         CHECK(td.sendData(data, metaData) == true);
     }
 
-    /*SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendData("", metaData), std::runtime_error);
-    }*/
 }
 
 TEST_CASE("TransferData::SendsAsynchronously function") {
