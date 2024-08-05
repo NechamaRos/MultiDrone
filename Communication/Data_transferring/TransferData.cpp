@@ -21,23 +21,21 @@ void TransferData::waiting(vector<future<bool>>& futures) {
         std::cout << "Result: " << std::boolalpha << result << std::endl;
     }
 }
-bool TransferData::sendMessageByChunk(const string& chunk)
-{
-    try
-    {
+bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex) {
+    try {
         if (chunk.empty()) {
             throw std::runtime_error("Chunk is empty");
         }
-        //Noa function, open the socket.
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << "Sent chunk: " << chunk << std::endl;
+
+        addChunk(chunk, chunkIndex);
+
         return true;
     }
-    catch (const std::exception&)
-    {
-        throw exception("The send failed");
+    catch (const std::exception&) {
+        throw std::runtime_error("The send failed");
     }
-
 }
 bool TransferData::sendMetaData(const Meta_Data& metaData)
 {
@@ -69,7 +67,6 @@ bool TransferData::sendData(const string& data, const Meta_Data& metaData) {
         throw exception("The send failed");
     }
 }
-
 void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
 {
     if (dataAsStr.empty()) {
@@ -95,14 +92,12 @@ void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data&
             }
         }
         // Submit the block in a new thread
-        futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk));
+        futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i));
     }
     futures.push_back(async(launch::async, &TransferData::sendMetaData, this, std::cref(metaData)));
-
     // Wait for all remaining threads to finish
     waiting(futures);
 }
-
 void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData)
 {
     if (dataAsStr.empty()) {
@@ -110,7 +105,6 @@ void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& 
     }
     this->sendData(dataAsStr, metaData);
 }
-
 void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData)
 {
     //count of threads.
@@ -133,4 +127,16 @@ void TransferData::preparingTheDataForTransferring(const string& dataAsStr, cons
     }
     else
         sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores);
+}
+void TransferData::addChunk(const string& chunk, size_t chunkIndex) {
+    lock_guard<mutex> lock(dataMutex);
+    collectedDataMap[chunkIndex] = chunk;
+}
+string TransferData::getCollectedData() {
+    lock_guard<mutex> lock(dataMutex);
+    string collectedData;
+    for (const auto& pair : collectedDataMap) {
+        collectedData += pair.second;
+    }
+    return collectedData;
 }
