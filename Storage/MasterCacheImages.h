@@ -1,5 +1,10 @@
 #pragma once
 #define CACHE_SIZE 100
+
+enum ERRORS
+{
+	ALLOCATE_ERROR
+};
  
 
 typedef struct point_s
@@ -29,7 +34,6 @@ typedef struct stack_emptyPlaceInTheArray_s
 }stack_emptyPlaceInTheArray_t;
 
 
-
 typedef struct UnitNode_LRU_s
 {
 	struct UnitNode_LRU_s* next;
@@ -37,6 +41,8 @@ typedef struct UnitNode_LRU_s
 	imgInfo_t* imgInfoPtr;
 
 }UnitNode_LRU_t;
+
+
 
 
 
@@ -75,6 +81,11 @@ typedef struct MasterCacheImg_cb_s
 }MasterCacheImg_cb_t;
 
 UnitNode_LRU_t* createUnitNode_LRU(imgInfo_t imgInfo);
+
+void initUnitNodeEmptyPlaceInCache();
+void initQueueEmptyPlaceInCache();
+
+
 
 
 
