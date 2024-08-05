@@ -34,6 +34,15 @@
     <Filter Include="Test\DataTransferring">
       <UniqueIdentifier>{16521998-4719-4cdc-b681-94a69e469f1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Socket_communication">
+      <UniqueIdentifier>{f6ccebe7-7420-44c3-8cdd-edec5e9783a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Socket_communication">
+      <UniqueIdentifier>{93a32beb-2514-4cbc-a3ee-76a547ebe3c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Socket_communication">
+      <UniqueIdentifier>{104ce04d-22db-4eff-bc23-204b164ce714}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="communication.cpp">
@@ -96,11 +105,11 @@
     <ClCompile Include="..\Validation\Validation_test.cpp">
       <Filter>Test\Validation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Data_transferring\TransferData.cpp">
-      <Filter>Source Files\DataTransferring</Filter>
+    <ClCompile Include="Server_function.cpp">
+      <Filter>Source Files\Socket_communication</Filter>
     </ClCompile>
-    <ClCompile Include="..\Data_transferring\TransferData_test.cpp">
-      <Filter>Test\DataTransferring</Filter>
+    <ClCompile Include="Server_test.cpp">
+      <Filter>Test\Socket_communication</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,8 +152,8 @@
     <ClInclude Include="..\Validation\VecValidation.h">
       <Filter>Header Files\Validation</Filter>
     </ClInclude>
-    <ClInclude Include="..\Data_transferring\TransferData.h">
-      <Filter>Header Files\DataTransferring</Filter>
+    <ClInclude Include="Server_function.h">
+      <Filter>Header Files\Socket_communication</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
