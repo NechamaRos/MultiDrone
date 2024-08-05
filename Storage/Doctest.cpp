@@ -5,7 +5,6 @@
 
 
 extern "C" {
-//#include "DiskManagment.h"
 #include"DiskManagmentApi.h"
 #include"Mock.h"
 	extern DiskMangmantCb_t* diskMangmantCb;
