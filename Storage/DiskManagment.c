@@ -128,7 +128,7 @@ void printLinkList(FILE* file)
 {
     if (diskMangmantCb->linkedList->head->next != NULL)
     {
-        UnitNodeLinkedLst_t* tmp = diskMangmantCb->linkedList->head->next;
+        UnitNodeLinkedList_t* tmp = diskMangmantCb->linkedList->head->next;
         while (tmp != diskMangmantCb->linkedList->tail)
         {
             fprintf(file, "imgId= %d , TL=( %d , %d ), BR=( %d , %d ), diskPtr= %s \n", tmp->imgInfo->imgId, tmp->imgInfo->imgPoints.TL.x, tmp->imgInfo->imgPoints.TL.y,
@@ -148,8 +148,8 @@ LinkedList_t* createLinkedList()
         throwExceptiontoFile(ALLOCATE_ERROR);
         return NULL;
     }
-    linkedList->head = (UnitNodeLinkedLst_t*)malloc(sizeof(UnitNodeLinkedLst_t));
-    linkedList->tail = (UnitNodeLinkedLst_t*)malloc(sizeof(UnitNodeLinkedLst_t));
+    linkedList->head = (UnitNodeLinkedList_t*)malloc(sizeof(UnitNodeLinkedList_t));
+    linkedList->tail = (UnitNodeLinkedList_t*)malloc(sizeof(UnitNodeLinkedList_t));
     if (!linkedList->head || !linkedList->tail) {
         throwExceptiontoFile(ALLOCATE_ERROR);
         return NULL;
@@ -163,10 +163,10 @@ LinkedList_t* createLinkedList()
 
 }
 
-UnitNodeLinkedLst_t* createNode(ImageInfo_t* imgInfo)
+UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo)
 {
 
-    UnitNodeLinkedLst_t* node = (UnitNodeLinkedLst_t*)malloc(sizeof(UnitNodeLinkedLst_t));
+    UnitNodeLinkedList_t* node = (UnitNodeLinkedList_t*)malloc(sizeof(UnitNodeLinkedList_t));
 
     if (!node)
     {
@@ -181,7 +181,7 @@ UnitNodeLinkedLst_t* createNode(ImageInfo_t* imgInfo)
     return node;
 }
 
-void insertToLinkList(UnitNodeLinkedLst_t* node)
+void insertToLinkList(UnitNodeLinkedList_t* node)
 {
 
     if (diskMangmantCb->linkedList->head->next == NULL)
@@ -202,7 +202,7 @@ void insertToLinkList(UnitNodeLinkedLst_t* node)
     diskMangmantCb->linkedList->AmountOfLinks += 1;
 }
 
-QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedLst_t* nodePtr) {
+QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedList_t* nodePtr) {
     QuadNode_t* quadNode = (QuadNode_t*)malloc(sizeof(QuadNode_t));
     //Checks that the assignment worked
     if (!quadNode) {
@@ -219,7 +219,7 @@ QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedLst_t* nodePt
     return quadNode;
 }
 
-void connectBetweenDatStructures(UnitNodeLinkedLst_t* nodePtr, QuadNode_t* quadNode)
+void connectBetweenDatStructures(UnitNodeLinkedList_t* nodePtr, QuadNode_t* quadNode)
 {
     quadNode->LinkedList_ptr = nodePtr;
     nodePtr->positionOnTree_ptr = quadNode;
@@ -314,7 +314,7 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
                         }
                         insertTotheQuadtree(existingNode, quadTree->topRightTree);
                     }
-                    else // Checks whether to enter the TR
+                    else // Checks whether to enter the BR
                     {
                         if (quadTree->botRightTree == NULL)
                         {
@@ -336,7 +336,7 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
             // Top-left quadrant
             if (quadTree->topLeftTree == NULL)
             {
-                quadTree->topLeftTree = createQuadTree(node->imagePoints.TL, CreatePoint(midX, midY));
+                quadTree->topLeftTree = createQuadTree(quadTree->TL, CreatePoint(midX, midY));
                 quadTree->topLeftTree->parent = quadTree;
                 quadTree->numOfNonNULLQuadTrees += 1;
             }
@@ -346,7 +346,7 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
             // Bottom-left quadrant
             if (quadTree->botLeftTree == NULL)
             {
-                quadTree->botLeftTree = createQuadTree(CreatePoint(node->imagePoints.TL.x, midY + 1), CreatePoint(midX, node->imagePoints.BR.y));
+                quadTree->botLeftTree = createQuadTree(CreatePoint(quadTree->TL.x, midY + 1), CreatePoint(midX, quadTree->BR.y));
                 quadTree->botLeftTree->parent = quadTree;
                 quadTree->numOfNonNULLQuadTrees += 1;
             }
@@ -360,7 +360,7 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
             //Top-right quadrant
             if (quadTree->topRightTree == NULL)
             {
-                quadTree->topRightTree = createQuadTree(CreatePoint(midX + 1, node->imagePoints.TL.y), CreatePoint(node->imagePoints.BR.x, midY));
+                quadTree->topRightTree = createQuadTree(CreatePoint(midX + 1, quadTree->TL.y), CreatePoint(quadTree->BR.x, midY));
                 quadTree->topRightTree->parent = quadTree;
                 quadTree->numOfNonNULLQuadTrees += 1;
             }
@@ -370,7 +370,7 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
             //Bottom-right quadrant
             if (quadTree->botRightTree == NULL)
             {
-                quadTree->botRightTree = createQuadTree(CreatePoint(midX + 1, midY + 1), CreatePoint(node->imagePoints.TL.x, node->imagePoints.TL.y));
+                quadTree->botRightTree = createQuadTree(CreatePoint(midX + 1, midY + 1), CreatePoint(quadTree->BR.x, quadTree->BR.y));
                 quadTree->botRightTree->parent = quadTree;
                 quadTree->numOfNonNULLQuadTrees += 1;
             }
@@ -420,9 +420,9 @@ void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, i
     searchImgsAtQuadTreeByRange(quadTree->botRightTree, TL, BR, count, idArray);
 }
 
-void removeIfExist(UnitNodeLinkedLst_t* node)
+void removeIfExist(UnitNodeLinkedList_t* node)
 {
-    UnitNodeLinkedLst_t* tmp = node;
+    UnitNodeLinkedList_t* tmp = node;
     node->next->prev = node->prev;
     node->prev->next = node->next;
     tmp->next = NULL;
@@ -434,7 +434,7 @@ void removeIfExist(UnitNodeLinkedLst_t* node)
 
 void removeData()
 {
-    UnitNodeLinkedLst_t* node = removeNodeFromLinkedList();
+    UnitNodeLinkedList_t* node = removeNodeFromLinkedList();
     //if the linkedLixt remove func return node
     if (node)
     {
@@ -447,12 +447,12 @@ void removeData()
     }
 }
 
-UnitNodeLinkedLst_t* removeNodeFromLinkedList()
+UnitNodeLinkedList_t* removeNodeFromLinkedList()
 {
     //Checking if it has links
     if (diskMangmantCb->linkedList->AmountOfLinks != 0)
     {
-        UnitNodeLinkedLst_t* tmp;
+        UnitNodeLinkedList_t* tmp;
         //Checking if it has when one link
         if (diskMangmantCb->linkedList->AmountOfLinks != 1)
         {
@@ -619,7 +619,7 @@ bool removeQuadNodeFromTree(QuadNode_t* quadNode) {
 
 }
 
-void moveToTheBeginning(UnitNodeLinkedLst_t* nodePtr)
+void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr)
 {
     //Checks if there is only one link
     if (nodePtr->prev == diskMangmantCb->linkedList->head)
@@ -922,7 +922,7 @@ void initImg(Point_t TL, Point_t BR, int* imgData)
 {
     ImagePoints_t tlrb = CreateImagePoint(TL, BR);
     ImageInfo_t* imgInfo = CreateImageInfo(tlrb, imgData);
-    UnitNodeLinkedLst_t* node = createNode(imgInfo);
+    UnitNodeLinkedList_t* node = createNode(imgInfo);
     QuadNode_t* quadNode = createQuadNode(tlrb, node);
     //inserting it to the linkedList & quadTree
     insertToLinkList(node);

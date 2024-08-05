@@ -43,7 +43,6 @@ TEST_CASE("Testing creat point with negative numbers") {
 
 	// Assert
 	CHECK(errno == POINT_NEGATIVE_ERORR);
-
 }
 TEST_CASE("test_CreateImagePoint_ValidInput")
 {
@@ -61,7 +60,6 @@ TEST_CASE("test_CreateImagePoint_ValidInput")
 	CHECK(point.BR.y == b.y);
 	CHECK(point.TL.y == a.y);
 	CHECK(point.TL.x == a.x);
-
 }
 TEST_CASE("test_CreateImagePoint_not_in_range")
 {
@@ -76,7 +74,6 @@ TEST_CASE("test_CreateImagePoint_not_in_range")
 
 	//Assert
 	CHECK(errno == POINT_NOT_IN_RANGE_ERORR);
-
 }
 TEST_CASE("test CreateImagePoint not CorrectPoints tl bigger")
 {
@@ -90,7 +87,6 @@ TEST_CASE("test CreateImagePoint not CorrectPoints tl bigger")
 
 	//Assert
 	CHECK(errno == POINT_NOT_IN_RANGE_ERORR);
-
 }
 TEST_CASE("TestingImgInfo ValidInput")
 {
@@ -112,7 +108,6 @@ TEST_CASE("TestingImgInfo ValidInput")
 	CHECK(info->disk_ptr == NULL);
 	//freeing allocated memory
 	free(info);
-
 }
 TEST_CASE("Testing create LinkList")
 {
@@ -143,7 +138,7 @@ TEST_CASE("Testing create LinkList Node")
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//Act
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//Assert
 	CHECK(node->next == NULL);
 	CHECK(node->prev == NULL);
@@ -154,7 +149,6 @@ TEST_CASE("Testing create LinkList Node")
 	//freeing allocated memory
 	free(info);
 	free(node);
-
 }
 TEST_CASE("Testing create QuadNode")
 {
@@ -167,7 +161,7 @@ TEST_CASE("Testing create QuadNode")
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//Act
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	//assert
@@ -193,7 +187,7 @@ TEST_CASE("Testing connector between data structures")
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//Act
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	//assert
@@ -229,7 +223,7 @@ TEST_CASE("Testing create QuadTree")
 
 	//freeing allocated memory
 	free(quadTree);
-
+	
 }
 TEST_CASE("Testing insert to linkList when linkList is mull")
 {
@@ -242,7 +236,7 @@ TEST_CASE("Testing insert to linkList when linkList is mull")
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//Creating a linked list
 	initDiskMangmantCb();
 	//Act
@@ -262,6 +256,7 @@ TEST_CASE("Testing insert to linkList when linkList is mull")
 	//freeing allocated memory
 	free(info);
 	free(node);
+	free(diskMangmantCb->quadTree);
 	free(diskMangmantCb->linkedList->head);
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
@@ -284,8 +279,8 @@ TEST_CASE("insert to linkList when It is  not null")
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(point_, imgData);
 	//creating nodes to insert
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* secondNode = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* secondNode = createNode(imgInfo);
 	//Creating a link list
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -301,12 +296,13 @@ TEST_CASE("insert to linkList when It is  not null")
 	//freeing allocated memory;
 	free(info);
 	free(node);
+	free(imgInfo);
 	free(secondNode);
+	free(diskMangmantCb->quadTree);
 	free(diskMangmantCb->linkedList->head);
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
-
 }
 TEST_CASE("Testing remove node from linkedList when there is only onel ink")
 {
@@ -320,7 +316,7 @@ TEST_CASE("Testing remove node from linkedList when there is only onel ink")
 	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//creating liinedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -332,13 +328,8 @@ TEST_CASE("Testing remove node from linkedList when there is only onel ink")
 	CHECK(diskMangmantCb->linkedList->tail->prev == NULL);
 
 	//freeing allocated memory
-	free(info);
-	free(node);
-	free(diskMangmantCb->linkedList->head);
-	free(diskMangmantCb->linkedList->tail);
-	free(diskMangmantCb->linkedList);
-	free(diskMangmantCb);
-
+	freeQuadTreeAndLinkedListAndArr();
+	
 }
 TEST_CASE("Testing remove node from linkedList when there is only one link")
 {
@@ -353,7 +344,7 @@ TEST_CASE("Testing remove node from linkedList when there is only one link")
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//creating liinedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -365,13 +356,8 @@ TEST_CASE("Testing remove node from linkedList when there is only one link")
 	CHECK(diskMangmantCb->linkedList->tail->prev == NULL);
 
 	//freeing allocated memory
-	free(info);
-	free(node);
-	free(diskMangmantCb->linkedList->head);
-	free(diskMangmantCb->linkedList->tail);
-	free(diskMangmantCb->linkedList);
-	free(diskMangmantCb);
-
+	freeQuadTreeAndLinkedListAndArr();
+	
 }
 TEST_CASE("Testing remove node from linkedList")
 {
@@ -394,9 +380,9 @@ TEST_CASE("Testing remove node from linkedList")
 	ImageInfo_t* infoC = CreateImageInfo(point, imgData);
 
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* nodeA = createNode(imgInfo);
-	UnitNodeLinkedLst_t* nodeB = createNode(infoC);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* nodeA = createNode(imgInfo);
+	UnitNodeLinkedList_t* nodeB = createNode(infoC);
 
 	//creating liinedList
 	initDiskMangmantCb(); //insert to linkedList
@@ -411,15 +397,18 @@ TEST_CASE("Testing remove node from linkedList")
 	CHECK(diskMangmantCb->linkedList->tail->prev == nodeA);
 
 	//freeing allocated memory
-	free(imgInfo);
+	free(info);
 	free(infoC);
-	free(nodeA);
+	free(imgInfo);
+	free(node);
 	free(nodeB);
+	free(nodeA);
+	free(diskMangmantCb->quadTree);
 	free(diskMangmantCb->linkedList->head);
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
-
+	
 }
 TEST_CASE("Testing remove node from linkedList when there is only one link and adding a new node")
 {
@@ -433,7 +422,7 @@ TEST_CASE("Testing remove node from linkedList when there is only one link and a
 	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//creating liinedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -448,11 +437,14 @@ TEST_CASE("Testing remove node from linkedList when there is only one link and a
 	CHECK(diskMangmantCb->linkedList->tail->prev == node);
 
 	//freeing allocated memory
+	free(info);
 	free(node);
+	free(diskMangmantCb->quadTree);
 	free(diskMangmantCb->linkedList->head);
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
+	
 }
 TEST_CASE("Testing Move to the beginning")
 {
@@ -472,9 +464,9 @@ TEST_CASE("Testing Move to the beginning")
 	ImageInfo_t* imgInfo = CreateImageInfo(point_, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
 	//creating three nodes
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* secondNode = createNode(imgInfo);
-	UnitNodeLinkedLst_t* thirdNode = createNode(imgInfoC);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* secondNode = createNode(imgInfo);
+	UnitNodeLinkedList_t* thirdNode = createNode(imgInfoC);
 	//creating linkedList
 	initDiskMangmantCb();
 	//inserting the nodes in to the list
@@ -493,9 +485,13 @@ TEST_CASE("Testing Move to the beginning")
 	CHECK(thirdNode == node->prev);
 
 	//freeing allocated memory
+	free(info);
+	free(imgInfoC);
+	free(imgInfo);
 	free(node);
 	free(secondNode);
 	free(thirdNode);
+	free(diskMangmantCb->quadTree);
 	free(diskMangmantCb->linkedList->head);
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
@@ -505,17 +501,17 @@ TEST_CASE("Testing Move to the beginning")
 TEST_CASE("Testing move to the beginning when there's one link")
 {
 	//Arrange
-	int x=randomValue(0, 38);
-	int y=randomValue(0, 38);
+	int x = randomValue(0, 38);
+	int y = randomValue(0, 38);
 	//creating img info
 	Point_t a = CreatePoint(x, y);
-	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
+	Point_t b = CreatePoint(x + SIZE_OF_IMG_LENGTH, y + SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData = NULL;
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//creating linkedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -528,13 +524,15 @@ TEST_CASE("Testing move to the beginning when there's one link")
 	CHECK(diskMangmantCb->linkedList->tail->prev == node);
 
 	//freeing allocated memory
+	free(info);
 	free(node);
+	free(diskMangmantCb->quadTree);
 	free(diskMangmantCb->linkedList->head);
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
-
 }
+
 TEST_CASE("Testing insert to the Quadtree when QuadTree is empty")
 {
 	//Arrange
@@ -550,7 +548,7 @@ TEST_CASE("Testing insert to the Quadtree when QuadTree is empty")
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//creating QuadNode
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	//Act
@@ -572,6 +570,7 @@ TEST_CASE("Testing insert to the Quadtree when QuadTree is empty")
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
+	printf("19");
 }
 TEST_CASE("Testing insert to the Quadtree")
 {
@@ -591,8 +590,8 @@ TEST_CASE("Testing insert to the Quadtree")
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	//creating nodes
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
 	//creating QuadNode
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	QuadNode_t* quadNodeB = createQuadNode(pointB, nodeB);
@@ -625,6 +624,7 @@ TEST_CASE("Testing insert to the Quadtree")
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
+	printf("20");
 }
 TEST_CASE("Testing remove quadNode from tree when there is one quadNode")
 {
@@ -638,7 +638,7 @@ TEST_CASE("Testing remove quadNode from tree when there is one quadNode")
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createNode(info);
 	//creating quadNode
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	insertTotheQuadtree(quadNode, diskMangmantCb->quadTree);
@@ -659,7 +659,7 @@ TEST_CASE("Testing remove quadNode from tree when there is one quadNode")
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
-
+	printf("21");
 
 }
 TEST_CASE("Testing remove quadNode from tree two quadNode")
@@ -678,8 +678,8 @@ TEST_CASE("Testing remove quadNode from tree two quadNode")
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
 	//creating quadNode
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	QuadNode_t* quadNodeB = createQuadNode(pointB, nodeB);
@@ -708,6 +708,7 @@ TEST_CASE("Testing remove quadNode from tree two quadNode")
 	free(diskMangmantCb->linkedList->tail);
 	free(diskMangmantCb->linkedList);
 	free(diskMangmantCb);
+	printf("22");
 
 }
 TEST_CASE("Testing remove QuadNode from tree when three chilern")
@@ -730,9 +731,9 @@ TEST_CASE("Testing remove QuadNode from tree when three chilern")
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* nodeC = createNode(imgInfoC);
-	UnitNodeLinkedLst_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* nodeC = createNode(imgInfoC);
+	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
 	//creating quadNode
 	QuadNode_t* quadNodeB = createQuadNode(pointB, nodeB);
 	QuadNode_t* quadNode = createQuadNode(point, node);
@@ -784,9 +785,9 @@ TEST_CASE("Testing remove QuadNode from QuadTree when grandfather numOfNonNULLQu
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
 	//creating node
-	UnitNodeLinkedLst_t* node = createNode(info);
-	UnitNodeLinkedLst_t* nodeB = createNode(imgInfo);
-	UnitNodeLinkedLst_t* nodeC = createNode(imgInfoC);
+	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* nodeC = createNode(imgInfoC);
 	//creating QuadNode
 	QuadNode_t* quadNode = createQuadNode(point, node);
 	QuadNode_t* quadNodeB = createQuadNode(pointB, nodeB);
@@ -808,20 +809,8 @@ TEST_CASE("Testing remove QuadNode from QuadTree when grandfather numOfNonNULLQu
 	CHECK(quadNodeB->parent->topRightTree == NULL);
 
 	//freeing allocated memory
-	free(info);
-	free(imgInfoC);
-	free(imgInfo);
-	free(node);
-	free(nodeB);
-	free(nodeC);
-	free(quadNodeC);
-	free(quadNodeB);
-	free(diskMangmantCb->quadTree);
-	free(diskMangmantCb->linkedList->head);
-	free(diskMangmantCb->linkedList->tail);
-	free(diskMangmantCb->linkedList);
-	free(diskMangmantCb);
-
+	freeQuadTreeAndLinkedListAndArr();
+	
 }
 TEST_CASE("Testing search in QuadTree non in range")
 {
@@ -848,7 +837,7 @@ TEST_CASE("Testing search in QuadTree non in range")
 	searchImgsAtQuadTreeByRange(diskMangmantCb->quadTree, TL, BR, &a, arr);
 	//Assert
 	CHECK(diskMangmantCb->arraySearchInfo[0] == NULL);
-
+	
 }
 TEST_CASE("Testing search in QuadTree all in range")
 {
@@ -878,6 +867,8 @@ TEST_CASE("Testing search in QuadTree all in range")
 	CHECK(diskMangmantCb->arraySearchInfo[0] != NULL);
 	CHECK(diskMangmantCb->arraySearchInfo[2] != NULL);
 	CHECK(diskMangmantCb->arraySearchInfo[1] != NULL);
+	freeQuadTreeAndLinkedListAndArr();
+	
 }
 TEST_CASE("Testing search in QuadTree one is in range")
 {
@@ -905,7 +896,8 @@ TEST_CASE("Testing search in QuadTree one is in range")
 	//Assert
 	CHECK(diskMangmantCb->arraySearchInfo[1] == NULL);
 	CHECK(diskMangmantCb->arraySearchInfo[0] != NULL);
-
+	freeQuadTreeAndLinkedListAndArr();
+	
 }
 TEST_CASE("save Before Shutdown ")
 {
@@ -969,7 +961,7 @@ TEST_CASE("Cache is asking to load a deleted image ")
 	bool isLoaded = loadImageFromDiskToCache(42, NULL);
 	//Assert
 	CHECK(isLoaded == false);
-
+	freeQuadTreeAndLinkedListAndArr();
 
 }
 TEST_CASE("Cache is asking to load exsiting id ")
@@ -1003,8 +995,7 @@ TEST_CASE("Cache is asking to load exsiting id ")
 	//Assert
 	CHECK(a == true);
 	freeQuadTreeAndLinkedListAndArr();
-
-
+	
 }
 TEST_CASE("remove when disk is full and entering the same point value")
 {
@@ -1029,7 +1020,7 @@ TEST_CASE("remove when disk is full and entering the same point value")
 	CHECK(diskMangmantCb->linkedList->tail->prev->imgInfo->imgPoints.TL.x != 0);
 	CHECK(diskMangmantCb->linkedList->head->next->imgInfo->imgPoints.TL.x == 1);
 	freeQuadTreeAndLinkedListAndArr();
-
+	
 
 }
 TEST_CASE("remove when disk is full and entering  different point value")
@@ -1055,7 +1046,7 @@ TEST_CASE("remove when disk is full and entering  different point value")
 	CHECK(diskMangmantCb->linkedList->tail->prev->imgInfo->imgPoints.TL.x != 0);
 	CHECK(diskMangmantCb->linkedList->head->next->imgInfo->imgPoints.TL.x == 1);
 	freeQuadTreeAndLinkedListAndArr();
-
+	
 
 }
 TEST_CASE("search when the disk is empty")
@@ -1072,7 +1063,7 @@ TEST_CASE("search when the disk is empty")
 	//Assert
 	CHECK(arr[0] == NULL);
 	freeQuadTreeAndLinkedListAndArr();
-
+	
 }
 TEST_CASE("add an img with uncorrect value") {
 	//Arrange
@@ -1089,6 +1080,7 @@ TEST_CASE("add an img with uncorrect value") {
 	//Assert
 	CHECK(errno == IMG_IS_NOT_IN_CORRECT_SIZE);
 	freeQuadTreeAndLinkedListAndArr();
+	
 }
 TEST_CASE("search when range is bigger than the quadTree range")
 {
@@ -1127,7 +1119,7 @@ TEST_CASE("search when range is bigger than the quadTree range")
 	CHECK(arr[2] != NULL);
 	CHECK(arr[3] == NULL);
 	freeQuadTreeAndLinkedListAndArr();
-
+	
 }
 TEST_CASE("search when range is not in quadTree range ")
 {
@@ -1168,4 +1160,5 @@ TEST_CASE("search when range is not in quadTree range ")
 	//assert
 	CHECK(arr[0] == NULL);
 	freeQuadTreeAndLinkedListAndArr();
+	
 }
