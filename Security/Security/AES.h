@@ -20,6 +20,11 @@ private:
     unsigned char xtime(unsigned char b);
     void XorBlocks(const unsigned char* a, const unsigned char* b, unsigned char* c, unsigned int len);
     void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
+    void InvSubBytes(unsigned char state[4][Nb]);
+    void InvMixColumns(unsigned char state[4][Nb]);
+    void InvShiftRows(unsigned char state[4][Nb]);
+    void DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
+
 public:
 	AES(const AESKeyLength keyLength=AESKeyLength::AES_256);
     void KeyExpansion(const unsigned char key[], unsigned char w[]);
@@ -35,8 +40,9 @@ public:
     void Rcon(unsigned char* a, unsigned int n);
     //void KeyExpansion(const unsigned char key[], unsigned char w[]);
 	unsigned char* EncryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
+    unsigned char* DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
     unsigned char* EncryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]);
-	unsigned char* DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
+	unsigned char* DecryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]);
 #endif
 };
 
