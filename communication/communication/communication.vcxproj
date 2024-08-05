@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Data_transferring\TransferData.cpp" />
+    <ClCompile Include="..\Data_transferring\TransferData_test.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -149,6 +151,7 @@
     <ClCompile Include="VecMessage_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Data_transferring\TransferData.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
