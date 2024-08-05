@@ -14,7 +14,7 @@ enum PolyError {
 class UsePoly
 {
 private:
-
+	  
 	PolyError lastError;
 
 public:

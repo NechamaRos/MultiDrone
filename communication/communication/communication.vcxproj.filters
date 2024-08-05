@@ -146,5 +146,8 @@
     <ClInclude Include="..\Recovery\ColorImageHandler.h">
       <Filter>Header Files\Recovery</Filter>
     </ClInclude>
+    <ClInclude Include="..\Recovery\UsePoly.h">
+      <Filter>Header Files\Recovery</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
