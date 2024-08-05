@@ -26,22 +26,22 @@ typedef struct ImageInfo_s {
 
 //one node of the linked List that contains next, prev 
 //and all the img info and a ptr to tne place in the quad tree
-typedef struct UnitNodeLinkedLst_s {
-    struct UnitNodeLinkedLst_s* next;
-    struct UnitNodeLinkedLst_s* prev;
+typedef struct UnitNodeLinkedList_s {
+    struct UnitNodeLinkedList_s* next;
+    struct UnitNodeLinkedList_s* prev;
     ImageInfo_t* imgInfo;
     struct  QuadNode_s* positionOnTree_ptr;
-}UnitNodeLinkedLst_t;
+}UnitNodeLinkedList_t;
 
 typedef struct LinkedList_s {
-    UnitNodeLinkedLst_t* head;
-    UnitNodeLinkedLst_t* tail;
+    UnitNodeLinkedList_t* head;
+    UnitNodeLinkedList_t* tail;
     int AmountOfLinks;
 } LinkedList_t;
 
 typedef struct QuadNode_s {
     ImagePoints_t imagePoints;
-    UnitNodeLinkedLst_t* LinkedList_ptr;
+    UnitNodeLinkedList_t* LinkedList_ptr;
     struct QuadTree_s* parent;
 } QuadNode_t;
 
@@ -87,19 +87,19 @@ void initImg(Point_t TL, Point_t BR, int* imgData);
 void initDiskMangmantCb();
 
 //linkedList
-UnitNodeLinkedLst_t* createNode(ImageInfo_t* imgInfo);
-void insertToLinkList(UnitNodeLinkedLst_t* node);
+UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo);
+void insertToLinkList(UnitNodeLinkedList_t* node);
 LinkedList_t* createLinkedList();
 void removeData();
-UnitNodeLinkedLst_t* removeNodeFromLinkedList();
-void removeIfExist(UnitNodeLinkedLst_t* node);
+UnitNodeLinkedList_t* removeNodeFromLinkedList();
+void removeIfExist(UnitNodeLinkedList_t* node);
 void removeFromdArraySearchInfo(int id);
-void moveToTheBeginning(UnitNodeLinkedLst_t* nodePtr);
+void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr);
 
 //QuadTree
 
-QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedLst_t* nodePtr);
-void connectBetweenDatStructures(UnitNodeLinkedLst_t* nodePtr, QuadNode_t* quadNode);
+QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedList_t* nodePtr);
+void connectBetweenDatStructures(UnitNodeLinkedList_t* nodePtr, QuadNode_t* quadNode);
 QuadTree_t* createQuadTree(Point_t TL, Point_t BR);
 void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, int* count, int* idArray);
 void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree);
