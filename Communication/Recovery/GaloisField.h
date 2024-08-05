@@ -13,8 +13,8 @@
 
 #define PRIM(x) PRIM_ ## x
 #define PRIM_0 0
-#define PRIM_1 0
-#define PRIM_2 0
+#define PRIM_1 0   
+#define PRIM_2 0   
 #define PRIM_3 0xb
 #define PRIM_4 0x13
 #define PRIM_5 0x25

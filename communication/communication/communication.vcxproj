@@ -149,6 +149,7 @@
     <ClCompile Include="VecMessage_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Recovery\GaloisField.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
