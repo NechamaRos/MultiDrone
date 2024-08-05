@@ -44,7 +44,6 @@ TEST_CASE("the central while") {
 	int i = 0;
 	while (true)
 	{
-		//printf("%d", ++i);
 		int result = define_clients_sockets_and_poll(clientSockets, fds);
 		if (result == 1) break;
 		result = check_about_new_client_connection(sockfd, fds, clientSockets);

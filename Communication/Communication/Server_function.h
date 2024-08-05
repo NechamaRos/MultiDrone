@@ -13,9 +13,8 @@ int start_listening(int& sockfd);
 void add_to_activeConnectionPollfds(struct pollfd* activeConnectionPollfds[], int newfd, int* fd_count, int* fd_size);
 
 // Remove an index from the set
-void del_from_activeConnectionPollfds(struct pollfd activeConnectionPollfds[], int i, int* fd_count);
+void delete_from_activeConnectionPollfds(struct pollfd activeConnectionPollfds[], int i, int* fd_count);
 
-//while(true)
 int define_clients_sockets_and_poll(std::vector<int>& clientSockets, WSAPOLLFD fds[FD_SETSIZE]);
 int check_about_new_client_connection(int& ListenSocket, WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets);
 void accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT_BUFLEN], int& recvbuflen);

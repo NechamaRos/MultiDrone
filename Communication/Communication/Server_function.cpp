@@ -113,14 +113,13 @@ void add_to_activeConnectionPollfds(struct pollfd* activeConnectionPollfds[], in
     (*fd_count)++;
 }
 // Remove an index from the set
-void del_from_activeConnectionPollfds(struct pollfd activeConnectionPollfds[], int i, int* fd_count)
+void delete_from_activeConnectionPollfds(struct pollfd activeConnectionPollfds[], int i, int* fd_count)
 {
     // Copy the one from the end over this one
     activeConnectionPollfds[i] = activeConnectionPollfds[*fd_count - 1];
 
     (*fd_count)--;
 }
-//while(true)
 int define_clients_sockets_and_poll(std::vector<int>& clientSockets, WSAPOLLFD fds[FD_SETSIZE]) {
     int numFds = clientSockets.size() + 1;
 
@@ -141,7 +140,6 @@ int check_about_new_client_connection(int& ListenSocket, WSAPOLLFD fds[FD_SETSIZ
         int ClientSocket = accept(ListenSocket, NULL, NULL);
         if (ClientSocket == INVALID_SOCKET) {
             printf("accept failed: %d\n", WSAGetLastError());
-            //continue;
             return 1;
         }
         clientSockets.push_back(ClientSocket);
