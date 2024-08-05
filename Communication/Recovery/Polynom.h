@@ -8,7 +8,7 @@ class Polynom
 public:
 	vector<RS_WORD> coef;
 	Polynom();
-	Polynom(vector<RS_WORD>& coef);
+	Polynom(vector<RS_WORD>& coef);  
 	Polynom(int size, vector<RS_WORD>& coef);
 	int getSize();
 	void setCopy(vector<RS_WORD>& coef);

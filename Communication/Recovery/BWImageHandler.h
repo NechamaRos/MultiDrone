@@ -7,7 +7,7 @@ class BWImageHandler
 {
 private:
     //vector<vector<uint8_t>> imageData;
-public:
+public:  
     vector<uint8_t> toOneDementionalArray(vector<vector<uint8_t>>& imageData);
     //BWImageHandler(vector<vector<uint8_t>>& inputImage);
     //Poly toPolynomial(GaloisField& gf) override;
