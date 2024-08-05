@@ -96,48 +96,6 @@
     <ClCompile Include="..\Validation\Validation_test.cpp">
       <Filter>Test\Validation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Recovery\BWImageHandler.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\ColorImageHandler.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\DataHandler.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\GaliosField.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\Polynom.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\ReedSoloEncode.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\ReedSolomon.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\TextHandler.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\UsePoly.cpp">
-      <Filter>Source Files\Recovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\ConvertDataTest.cpp">
-      <Filter>Test\RecoveryTests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\EncodeTest.cpp">
-      <Filter>Test\RecoveryTests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\GaliosFieldTest.cpp">
-      <Filter>Test\RecoveryTests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\PolynimTest.cpp">
-      <Filter>Test\RecoveryTests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Recovery\UsePolynomTest.cpp">
-      <Filter>Test\RecoveryTests</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3Message.h">
@@ -182,25 +140,10 @@
     <ClInclude Include="..\Recovery\GaloisField.h">
       <Filter>Header Files\Recovery</Filter>
     </ClInclude>
-    <ClInclude Include="..\Recovery\Polynom.h">
-      <Filter>Header Files\Recovery</Filter>
-    </ClInclude>
     <ClInclude Include="..\Recovery\BWImageHandler.h">
       <Filter>Header Files\Recovery</Filter>
     </ClInclude>
     <ClInclude Include="..\Recovery\ColorImageHandler.h">
-      <Filter>Header Files\Recovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Recovery\ReedSoloEncode.h">
-      <Filter>Header Files\Recovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Recovery\ReedSolomon.h">
-      <Filter>Header Files\Recovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Recovery\TextHandler.h">
-      <Filter>Header Files\Recovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Recovery\UsePoly.h">
       <Filter>Header Files\Recovery</Filter>
     </ClInclude>
   </ItemGroup>
