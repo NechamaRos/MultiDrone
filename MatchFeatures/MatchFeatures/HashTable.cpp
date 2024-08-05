@@ -4,6 +4,9 @@
 //return the vector in this current key
 const std::vector<int> HashTable::getBucketFromKey(BucketKey key, int index)
 {
+    if (hash_table[index].find(key) != hash_table[index].end())
+        return hash_table[index][key];
+    return std::vector<int>();
 }
 
 //build mask for quick search in table
