@@ -1,5 +1,10 @@
 #pragma once
 #define CACHE_SIZE 100
+
+enum ERRORS
+{
+	ALLOCATE_ERROR
+};
  
 
 typedef struct point_s
@@ -29,16 +34,15 @@ typedef struct stack_emptyPlaceInTheArray_s
 }stack_emptyPlaceInTheArray_t;
 
 
-
 typedef struct UnitNode_LRU_s
 {
-	int id;
-	int slaveId;
 	struct UnitNode_LRU_s* next;
 	struct UnitNode_LRU_s* prev;
 	imgInfo_t* imgInfoPtr;
 
 }UnitNode_LRU_t;
+
+
 
 
 
@@ -54,7 +58,7 @@ typedef struct linkedList_LRU_s
 typedef struct UnitNode_emptyPlaceInCache_s
 {
   int emptyPlaceInCache;
-  UnitNode_emptyPlaceInCache_s* next;
+  struct UnitNode_emptyPlaceInCache_s* next;
 
 }UnitNode_emptyPlaceInCache_t;
 
@@ -62,8 +66,8 @@ typedef struct UnitNode_emptyPlaceInCache_s
 
 typedef struct queue_emptyPlaceInCache_s
 {
-	UnitNode_emptyPlaceInCache_s* head;
-	UnitNode_emptyPlaceInCache_s* tail;
+	UnitNode_emptyPlaceInCache_t* head;
+	UnitNode_emptyPlaceInCache_t* tail;
 } queue_emptyPlaceInCache_t;
 
 
@@ -75,6 +79,11 @@ typedef struct MasterCacheImg_cb_s
 	stack_emptyPlaceInTheArray_t* emptyPlaceInTheArray;
 	linkedList_LRU_t* LRU;
 }MasterCacheImg_cb_t;
+
+
+void initUnitNodeEmptyPlaceInCache();
+void initQueueEmptyPlaceInCache();
+
 
 
 
