@@ -8,21 +8,21 @@
 #include "../Communication/Meta_Data.h"
 #include "../Communication/VecMessage.h"
 #include "../Communication/Data.h"
-
+using namespace std;
 VecValidation vv4({ 1,0 });
-Meta_Data mdv4(&vv4);
+Meta_Data<1> mdv4(&vv4);
 VecMessage vm14({ 'a','b','c' });
-Data vd4(mdv4, &vm14);
+Data<1> vd4(mdv4, &vm14);
 
 MatValidation mv4({ 1 });
-Meta_Data mdm4(&mv4);
+Meta_Data<2> mdm4(&mv4);
 MatMessage mm14({ {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } });
-Data md4(mdm4, &mm14);
+Data<2> md4(mdm4, &mm14);
 
 D3Validation d3v4({ 1 });
-Meta_Data mdd4(&d3v4);
+Meta_Data<3> mdd4(&d3v4);
 D3Message d3m14({ { {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } ,{ {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } });
-Data d3d4(mdd4, &d3m14);
+Data<3> d3d4(mdd4, &d3m14);
 
 
 TEST_CASE("TransferData::num_cores function") {
@@ -36,42 +36,42 @@ TEST_CASE("TransferData::num_cores function") {
 
 TEST_CASE("TransferData::waiting function") {
     TransferData td;
-    std::vector<std::future<bool>> futures;
+    vector<future<bool>> futures;
 
     SUBCASE("Wait for futures to complete") {
-        futures.push_back(std::async(std::launch::async, [] { return true; }));
-        futures.push_back(std::async(std::launch::async, [] { return false; }));
+        futures.push_back(async(launch::async, [] { return true; }));
+        futures.push_back(async(launch::async, [] { return false; }));
 
         // Redirect stdout to capture output
-        std::stringstream buffer;
-        std::streambuf* old = std::cout.rdbuf(buffer.rdbuf());
+        stringstream buffer;
+        streambuf* old = cout.rdbuf(buffer.rdbuf());
 
         td.waiting(futures);
 
-        std::string output = buffer.str();
-        std::cout.rdbuf(old);
+        string output = buffer.str();
+        cout.rdbuf(old);
 
-        CHECK(output.find("Result: true") != std::string::npos);
-        CHECK(output.find("Result: false") != std::string::npos);
+        CHECK(output.find("Result: true") != string::npos);
+        CHECK(output.find("Result: false") != string::npos);
     }
 }
 
 TEST_CASE("TransferData::sendMessageByChunk function") {
     TransferData td;
-    std::string chunk = "Test chunk";
+    string chunk = "Test chunk";
 
     SUBCASE("Successful send") {
         CHECK(td.sendMessageByChunk(chunk) == true);
     }
 
     SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendMessageByChunk(""), std::exception);
+        CHECK_THROWS_AS(td.sendMessageByChunk(""), exception);
     }
 }
 
 TEST_CASE("TransferData::sendMetaData function") {
     TransferData td;
-    Meta_Data metaData(&vv4);
+    Meta_Data<1> metaData(&vv4);
 
     SUBCASE("Successful send") {
         CHECK(td.sendMetaData(metaData) == true);
@@ -81,8 +81,8 @@ TEST_CASE("TransferData::sendMetaData function") {
 
 TEST_CASE("TransferData::sendData function") {
     TransferData td;
-    std::string data = "Test data";
-    Meta_Data metaData(&vv4);
+    string data = "Test data";
+    Meta_Data<1> metaData(&vv4);
 
     SUBCASE("Successful send") {
         CHECK(td.sendData(data, metaData) == true);
@@ -92,8 +92,8 @@ TEST_CASE("TransferData::sendData function") {
 
 TEST_CASE("TransferData::sendsAsynchronously function") {
     TransferData td;
-    std::string data = "Test data for async send";
-    Meta_Data metaData(&vv4);
+    string data = "Test data for async send";
+    Meta_Data<1> metaData(&vv4);
     size_t numChunks = 3;
     size_t chunk_size = 4;
     size_t numThreads = 2;
@@ -104,57 +104,43 @@ TEST_CASE("TransferData::sendsAsynchronously function") {
 
     SUBCASE("Asynchronous send with failure") {
         // Simulate failure by sending empty data
-        std::string failingData = "";
+        string failingData = "";
 
-        CHECK_THROWS_AS(td.sendsAsynchronously(failingData, metaData, numChunks, chunk_size, numThreads), std::runtime_error);
+        CHECK_THROWS_AS(td.sendsAsynchronously(failingData, metaData, numChunks, chunk_size, numThreads), runtime_error);
     }
 }
 
 TEST_CASE("TransferData::sendsSynchronously function") {
     TransferData td;
-    std::string data = "Test data for sync send";
-    Meta_Data metaData(&vv4);
+    string data = "Test data for sync send";
+    Meta_Data<1> metaData(&vv4);
 
     SUBCASE("Successful synchronous send") {
         CHECK_NOTHROW(td.sendsSynchronously(data, metaData));
     }
 
     SUBCASE("Synchronous send with exception") {
-        CHECK_THROWS_AS(td.sendsSynchronously("", metaData), std::runtime_error);
-    }
-}
-
-TEST_CASE("TransferData::choosing_an_option_to_transfer function") {
-    TransferData td;
-
-
-    SUBCASE("Choose asynchronous transfer option") {
-        // Redirect cin for testing
-        std::istringstream input("2");
-        std::cin.rdbuf(input.rdbuf());
-
-        int option = OPTION_TO_SEND;
-        CHECK(option == 2);
+        CHECK_THROWS_AS(td.sendsSynchronously("", metaData), runtime_error);
     }
 }
 
 TEST_CASE("TransferData::preparingTheDataForTransferring function") {
     TransferData td;
-    std::string data = "Test data for transfer";
-    Meta_Data metaData(&vv4);
+    string data = "Test data for transfer";
+    Meta_Data<1> metaData(&vv4);
 
     SUBCASE("Preparing data for synchronous transfer") {
         // Redirect cin for testing
-        std::istringstream input("1");
-        std::cin.rdbuf(input.rdbuf());
+        istringstream input("1");
+        cin.rdbuf(input.rdbuf());
 
         CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData));
     }
 
     SUBCASE("Preparing data for asynchronous transfer") {
         // Redirect cin for testing
-        std::istringstream input("2");
-        std::cin.rdbuf(input.rdbuf());
+        istringstream input("2");
+        cin.rdbuf(input.rdbuf());
 
         CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData));
     }

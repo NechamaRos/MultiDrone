@@ -34,15 +34,27 @@
     <Filter Include="Test\DataTransferring">
       <UniqueIdentifier>{16521998-4719-4cdc-b681-94a69e469f1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data_Compression">
+      <UniqueIdentifier>{b465e5c8-4282-44c3-a66b-e35902e72adb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data_Compression\Stracts">
+      <UniqueIdentifier>{4329790e-1a52-485e-8dda-8bb0dc1e0e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data_Compression\Compression">
+      <UniqueIdentifier>{e9e0947c-a1e7-4329-bfde-fa84f45b48cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data_Compression\Rescue">
+      <UniqueIdentifier>{a5c92dff-586f-4c7b-b1ec-d22c2145a512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data_Compression\Conversion">
+      <UniqueIdentifier>{a3ce8ea8-a561-42de-88bb-764851549aa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Data_Compression">
+      <UniqueIdentifier>{166cc9c0-4864-4121-bb77-f668235ff17f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="communication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="D3Message.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MatMessage.cpp">
@@ -51,16 +63,10 @@
     <ClCompile Include="Message.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Meta_Data.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VecMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D3Message_test.cpp">
-      <Filter>Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Data_test.cpp">
       <Filter>Test</Filter>
     </ClCompile>
     <ClCompile Include="MatMessage_test.cpp">
@@ -84,9 +90,6 @@
     <ClCompile Include="..\Validation\Validation.cpp">
       <Filter>Source Files\Validation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Validation\VecValidation.cpp">
-      <Filter>Source Files\Validation</Filter>
-    </ClCompile>
     <ClCompile Include="..\Validation\Convert_test.cpp">
       <Filter>Test\Validation</Filter>
     </ClCompile>
@@ -102,21 +105,42 @@
     <ClCompile Include="..\Data_transferring\TransferData_test.cpp">
       <Filter>Test\DataTransferring</Filter>
     </ClCompile>
+    <ClCompile Include="..\Data_Comperession\CompressionTests.cpp">
+      <Filter>Test\Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\RescueTests.cpp">
+      <Filter>Test\Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\HuffmanCompression.cpp">
+      <Filter>Data_Compression\Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\HuffmanNode.cpp">
+      <Filter>Data_Compression\Stracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\HuffmanRescue.cpp">
+      <Filter>Data_Compression\Rescue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\ImageConversions.cpp">
+      <Filter>Data_Compression\Conversion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_Comperession\ImageConversionTests.cpp">
+      <Filter>Test\Data_Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="Data_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\VecValidation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3Message.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MatMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Meta_Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VecMessage.h">
@@ -145,6 +169,30 @@
     </ClInclude>
     <ClInclude Include="..\Data_transferring\TransferData.h">
       <Filter>Header Files\DataTransferring</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\Data_Compression.h">
+      <Filter>Data_Compression\Stracts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\HuffmanCompression.h">
+      <Filter>Data_Compression\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\HuffmanNode.h">
+      <Filter>Data_Compression\Stracts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\HuffmanRescue.h">
+      <Filter>Data_Compression\Rescue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\Image.h">
+      <Filter>Data_Compression\Stracts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_Comperession\ImageConversions.h">
+      <Filter>Data_Compression\Conversion</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Meta_Data.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

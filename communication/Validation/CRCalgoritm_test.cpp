@@ -3,7 +3,7 @@
 #include "CRCalgoritm.h"
 #include "../communication/doctest.h"
 
-CRCalgoritm crc;
+CRCAlgorithm crc;
 
 TEST_CASE("copy arr function") {
 	SUBCASE("dest is empty") {
@@ -60,8 +60,8 @@ TEST_CASE("getRemainder function") {
 	}
 
 	SUBCASE("Exception thrown during division") {
-		std::vector<uint8_t> data = { 1, 0, 2, 1, 0 };
-		std::vector<uint8_t> key = { 1,0,4 };
+		 vector<uint8_t> data = { 1, 0, 2, 1, 0 };
+		 vector<uint8_t> key = { 1,0,4 };
 
 		CHECK_THROWS_AS(crc.getRemainder(data, key), runtime_error);
 	}
@@ -82,15 +82,15 @@ TEST_CASE("receiver function") {
 	}
 
 	SUBCASE("Invalid empty key") {
-		std::vector<uint8_t> data = { 1, 0, 1, 1, 0 };
-		std::vector<uint8_t> key;
+		 vector<uint8_t> data = { 1, 0, 1, 1, 0 };
+		 vector<uint8_t> key;
 
-		CHECK_THROWS_AS(crc.receiver(data, key), std::invalid_argument);
+		CHECK_THROWS_AS(crc.receiver(data, key),  invalid_argument);
 	}
 
 	SUBCASE("Exception thrown during division") {
-		std::vector<uint8_t> data = { 1, 0, 2, 1, 0 };
-		std::vector<uint8_t> key = { 1,0,4 };
+		 vector<uint8_t> data = { 1, 0, 2, 1, 0 };
+		 vector<uint8_t> key = { 1,0,4 };
 
 		CHECK_THROWS_AS(crc.receiver(data, key), runtime_error);
 	}

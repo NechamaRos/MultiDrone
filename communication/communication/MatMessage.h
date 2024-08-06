@@ -13,8 +13,8 @@ public:
 	MatMessage(const vector<vector<uint8_t>>& message)
 		:Message(matMessage), message(message)
 	{
-		int height = message.size();
-		int width = message[0].size();
+		size_t height = message.size();
+		size_t width = message[0].size();
 		for (size_t i = 1; i < height; i++)
 		{
 			if (message[i].size() != width)
@@ -22,9 +22,9 @@ public:
 		}
 	}
 	vector<vector<uint8_t>>&  getMessage() { return this->message; }
-	void copyCol(vector<uint8_t>& arr, int numCol);
+	void copyCol(vector<uint8_t>& arr, size_t numCol);
 	// Inherited via Message
-	vector<vector<vector<uint8_t>>> getreminder(int, int, vector<uint8_t>&) override;
+	vector<vector<vector<uint8_t>>> getReminder(size_t, size_t, vector<uint8_t>&) override;
 	void checkInReceive(vector<vector<vector<uint8_t>>>& valiDationData, vector<uint8_t>& key);
 
 };

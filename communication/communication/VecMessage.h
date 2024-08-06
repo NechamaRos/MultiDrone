@@ -15,7 +15,7 @@ public:
 
 	// Inherited via Message
 	vector<char>& getMessage() { return this->message; }
-	vector<uint8_t> getreminder(int, vector<uint8_t>&) override;
+	vector<uint8_t> getReminder(size_t, vector<uint8_t>&) override;
 	void checkInReceive(vector<uint8_t>& valiDationData, vector<uint8_t>& key);
 };
 
