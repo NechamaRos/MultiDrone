@@ -22,7 +22,6 @@ typedef struct MasterCacheImg_cb_s MasterCacheImg_cb_t;
 
 };
 
-
 struct ImgInfo_s
 {
 	int imgId;
@@ -54,10 +53,8 @@ struct UnitNode_LRU_s
 {
 	UnitNode_LRU_t* head;
 	UnitNode_LRU_t* tail;
-
+	int AmountOfLinks;
 };
-
-
 
 struct UnitNode_emptyPlaceInCache_s
 {
@@ -66,14 +63,11 @@ struct UnitNode_emptyPlaceInCache_s
 
 };
 
-
-
 struct queue_emptyPlaceInCache_s
 {
 	UnitNode_emptyPlaceInCache_t* head;
 	UnitNode_emptyPlaceInCache_t* tail;
 } ;
-
 
 struct MasterCacheImg_cb_s
 {
@@ -89,7 +83,7 @@ UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
 ImgInfo_t* createImgInfo(int imgId, int slaveId,Point_t TL,Point_t BR);
 void throwExcptionToFile(ERRORS);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
-
+LinkedList_LRU_t* initLinkedList();
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
 

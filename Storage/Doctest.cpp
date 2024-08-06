@@ -57,3 +57,12 @@ TEST_CASE("testing create UnitNode_LRU")
 	CHECK(node->next == NULL);
 	CHECK(node->prev == NULL);
 }
+TEST_CASE(" testing initLinkedList")
+{
+	//Act
+	LinkedList_LRU_t* linkedList = initLinkedList();
+	//assert
+	CHECK(linkedList->AmountOfLinks == 0);
+	CHECK(linkedList->head->next == NULL);
+	CHECK(linkedList->tail->prev==NULL);
+}

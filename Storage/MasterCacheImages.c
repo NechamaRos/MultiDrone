@@ -47,6 +47,31 @@ void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
     imgInfo->unitNodePtr = node;
 }
 
+LinkedList_LRU_t* initLinkedList()
+{
+    LinkedList_LRU_t* linedList_lru = (LinkedList_LRU_t*)malloc(sizeof(LinkedList_LRU_t));
+    if (!linedList_lru)
+    {
+        errno = ALLOCATE_ERROR;
+        throwExcptionToFile(ALLOCATE_ERROR);
+    }
+    linedList_lru->head = (UnitNode_LRU_t*)malloc(sizeof(UnitNode_LRU_t));
+    linedList_lru->tail = (UnitNode_LRU_t*)malloc(sizeof(UnitNode_LRU_t));
+    if (!linedList_lru->head || !linedList_lru->tail)
+    {
+        errno = ALLOCATE_ERROR;
+        throwExcptionToFile(ALLOCATE_ERROR);
+    }
+    else
+    {
+        linedList_lru->head->next = NULL;
+        linedList_lru->tail->prev = NULL;
+        linedList_lru->AmountOfLinks = 0;
+        return linedList_lru;
+    }
+    
+}
+
 void throwExcptionToFile(ERRORS err)
 {
 
