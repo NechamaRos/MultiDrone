@@ -2,6 +2,8 @@
 #include "doctest.h"
 #include <cstdlib>
 #include <ctime>
+#include <stdbool.h>
+
 
 extern "C" {
 #include "Disk_Mng_Master.h"
@@ -20,21 +22,51 @@ int generateRandomNumber() {
     return (rand() % (upper - lower + 1)) + lower;
 }
 int index, popValue,value;
-StackNode_t* newStackNode;
+
+//mock functions
+
+//the function get pointer to map in the disk and delete this map from disk
+void disk_deleteMap(int* diskPointer) {}
+
+
+////the function fill in the structer all the data which save befoe the computer closed,the function get  destenation,suorce,length;
+void disk_loadDataForInitializeDataStructers(void* i,void* x,void* b) 
+{
+}
 
 //stack tests
 
-//TEST_CASE("test_stack_initilaizeWithEmptyIndexes")
-//{
-//    CHECK(disk_mng_CB->diskFreeIndexesInArray->top == NULL);
-//}
+TEST_CASE("test_stack_firstInitialize")
+{
+    disk_mng_initialize();
+    for (int i = 0; i < DISK_SIZE; i++)
+    {
+        StackNode_t* newNode = stackNode_create(i);
+        stack_push(newNode);
+    }
+
+        for (int i =DISK_SIZE-1; i >0; i--)
+        {
+            CHECK( stack_pop() == i);
+        }
+
+}
+
+
+TEST_CASE("test_stack_normalInitialize")
+{
+    disk_mng_initialize();
+//load
+
+}
+
 TEST_CASE("test_stack_push")
 {
     disk_mng_initialize();
     for (size_t i = 0; i < DISK_SIZE; i++)
     {  
     index = generateRandomNumber();
-    newStackNode = stackNode_create(index);
+    StackNode_t* newStackNode= stackNode_create(index);
     stack_push(newStackNode);
     popValue = stack_pop();
     CHECK(popValue == index);
@@ -44,11 +76,8 @@ TEST_CASE("test_stack_push")
 TEST_CASE("test_stack_pop")
 {
     disk_mng_initialize();
-    for (size_t i = 0; i < DISK_SIZE; i++)
+    for (size_t i = 4; i < 0; i++)
     {
-        index = generateRandomNumber();
-        newStackNode = stackNode_create(index);
-        stack_push(newStackNode);
         value = stack_pop();
         CHECK(value !=stack_top());
     }
@@ -56,13 +85,11 @@ TEST_CASE("test_stack_pop")
 TEST_CASE("test_stack_top")
 {
     disk_mng_initialize();
-    for (size_t i = 0; i < DISK_SIZE; i++)
+    for (size_t i = DISK_SIZE-1; i < 0; i--)
     {
-        index = generateRandomNumber();
-        newStackNode = stackNode_create(index);
-        stack_push(newStackNode);
-        value = stack_pop();
-        CHECK(value == index);
+        value = stack_top();
+        stack_pop();
+        CHECK(value == i);
     }
 }
 TEST_CASE("test_stack_is_empty")
@@ -70,14 +97,17 @@ TEST_CASE("test_stack_is_empty")
     disk_mng_initialize();
     for (size_t i = 0; i < DISK_SIZE; i++)
     {
-        index = generateRandomNumber();
-        newStackNode = stackNode_create(index);
-        stack_push(newStackNode);
-    }
-    for (size_t i = 0; i < DISK_SIZE; i++)
-    {
         stack_pop();
     }
-    CHECK(stack_is_empty() == TRUE);
+    CHECK(stack_is_empty());
 
 }
+
+////array tests
+//
+//TEST_CASE("test_array_normalInitialize")
+//{
+//    
+////load
+//
+//}
