@@ -4,6 +4,7 @@
 #include "ECC.h"
 #include "Logger.h"
 #include "Utils.h"
+#define CHAR_BIT_ON 0xff;
 using namespace std;
 
 // Function to encrypt data using ECC
@@ -19,9 +20,12 @@ EncryptionResult ECC::encrypt(const T* data, const Point& publicKey) const {
         Logger::getInstance().log("encrypt: The public key is not correct - it is not on the curve");
         throw std::runtime_error("The public key is not correct - it is not on the curve");
     }
-
     // Generate a random number k
     cpp_int k = generateSecureRandomNumber(1, curve.getN());
+    Logger::getInstance().log("encrypt: the point K is "+k.str());
+    //Logger::getInstance().log(k.str());
+
+
     // Compute the points R and S
     Point R = curve.multiply(curve.getG(), k);
     Point S = curve.multiply(publicKey, k);
@@ -57,17 +61,22 @@ T* ECC::decrypt(const EncryptionResult& encryptedMessage, cpp_int privateKey) co
 
     // Convert the x value of S to a vector of bytes
     cpp_int x_value = S.getX();
-    vector<unsigned char> x_bytes;
+   /* vector<unsigned char> x_bytes;
     while (x_value > 0) {
         x_bytes.push_back(static_cast<unsigned char>(x_value % 256));
         x_value >>= 8;
-    }
+    }*/
+    
+
 
     // Decrypt the data using XOR with the bytes of x
     T* decryptedData = new T;
+     
     unsigned char* decryptedDataBytes = reinterpret_cast<unsigned char*>(decryptedData);
     for (size_t i = 0; i < sizeof(T); ++i) {
-        decryptedDataBytes[i] = encryptedMessage.ciphertext[i] ^ x_bytes[i % x_bytes.size()];
+        char mask = static_cast<unsigned char>(x_value) & CHAR_BIT_ON;
+        decryptedDataBytes[i] = encryptedMessage.ciphertext[i] ^ mask;
+        x_value >>= 8;
     }
 
     return decryptedData;

@@ -76,5 +76,5 @@ cpp_int gcd(cpp_int a, cpp_int b) {
 
 // Function to generate a random private key in the range [1, n-1]
 cpp_int generateRandomPrivateKey(cpp_int n) {
-    return rand() % (n - 1) + 1;
+    return generateSecureRandomNumber(1, n);
 }
