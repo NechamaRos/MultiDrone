@@ -15,7 +15,8 @@ typedef struct LinkedList_LRU_s LinkedList_LRU_t;
 typedef struct UnitNode_emptyPlaceInCache_s UnitNode_emptyPlaceInCache_t;
 typedef struct Queue_emptyPlaceInCache_s Queue_emptyPlaceInCache_t;
 typedef struct MasterCacheImg_cb_s MasterCacheImg_cb_t;
- struct Point_s
+
+struct Point_s
 {
 	int x;
 	int y;
@@ -87,6 +88,7 @@ LinkedList_LRU_t* initLinkedList();
 void insertInToLinedList(UnitNode_LRU_t* node);
 void MasterCacheImg_cb();
 void moveToTheBeginning(UnitNode_LRU_t* node);
+void removefromLinkedList();
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
 

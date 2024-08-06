@@ -99,6 +99,11 @@ LinkedList_LRU_t* initLinkedList()
 
 void insertInToLinedList(UnitNode_LRU_t* node)
 {
+    //the cache is full
+    if (masterCacheImg_cb->LRU->AmountOfLinks == CACHE_SIZE)
+    {
+        removefromLinkedList();
+    }
     //if it the first node in the linkedList
     if (masterCacheImg_cb->LRU->AmountOfLinks == 0)
     {
@@ -129,6 +134,20 @@ void moveToTheBeginning(UnitNode_LRU_t* node)
         node->next = masterCacheImg_cb->LRU->head->next;
         masterCacheImg_cb->LRU->head->next->prev = node;
         masterCacheImg_cb->LRU->head->next = node;
+    }
+}
+void removefromLinkedList()
+{
+    UnitNode_LRU_t* tmp;
+    //loop that remove 10% of the cache
+    for (int i = 0;i < CACHE_SIZE / 10;i++)
+    {
+        tmp = masterCacheImg_cb->LRU->tail->prev;
+        masterCacheImg_cb->LRU->tail->prev = tmp->prev;
+        tmp->prev->next = masterCacheImg_cb->LRU->tail;
+        masterCacheImg_cb->LRU->AmountOfLinks -= 1;
+        free(tmp->imgInfoPtr);
+        free(tmp);
     }
 }
 void throwExcptionToFile(ERRORS err)
