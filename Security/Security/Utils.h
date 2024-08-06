@@ -5,7 +5,6 @@ using namespace boost::multiprecision;
 #include <vector>
 #include <string>
 
-// הכרזה על הפונקציה
 
 cpp_int generateSecureRandomNumber(const cpp_int& min, const cpp_int& max);
 cpp_int mod(cpp_int a, cpp_int b);

@@ -4,6 +4,7 @@
 #include "ECC.h"
 #include "Logger.h"
 #include "Utils.h"
+#define CHAR_BIT_ON 0xff;
 using namespace std;
 
 // Function to encrypt data using ECC
@@ -19,18 +20,17 @@ EncryptionResult ECC::encrypt(const T* data, const Point& publicKey) const {
         Logger::getInstance().log("encrypt: The public key is not correct - it is not on the curve");
         throw std::runtime_error("The public key is not correct - it is not on the curve");
     }
-
     // Generate a random number k
     cpp_int k = generateSecureRandomNumber(1, curve.getN());
+    Logger::getInstance().log("encrypt: the point K is "+k.str());
+    //Logger::getInstance().log(k.str());
+
+
     // Compute the points R and S
     Point R = curve.multiply(curve.getG(), k);
     Point S = curve.multiply(publicKey, k);
 
-    // Convert data to a vector of unsigned char
-    vector<unsigned char> plaintext(data, data + sizeof(T));
-    vector<unsigned char> ciphertext;
-
-    // Convert the x value of S to bytes
+    // Convert the x value of S to a vector of bytes
     cpp_int x_value = S.getX();
     vector<unsigned char> x_bytes;
     while (x_value > 0) {
@@ -38,17 +38,13 @@ EncryptionResult ECC::encrypt(const T* data, const Point& publicKey) const {
         x_value >>= 8;
     }
 
-    // Check if x_bytes is not empty
-    if (x_bytes.empty()) {
-        Logger::getInstance().log("encrypt: x_bytes is empty");
-        throw std::runtime_error("x_bytes is empty");
+    // Encrypt the data using XOR with the bytes of x
+    vector<unsigned char> ciphertext(sizeof(T));
+    const unsigned char* dataBytes = reinterpret_cast<const unsigned char*>(data);
+    for (size_t i = 0; i < sizeof(T); ++i) {
+        ciphertext[i] = dataBytes[i] ^ x_bytes[i % x_bytes.size()];
     }
 
-    // Encrypt the data using XOR with the bytes of x
-    for (unsigned char c : plaintext) {
-        unsigned char encrypted_char = c ^ (x_bytes[0]); // Use the first byte of S.getX()
-        ciphertext.push_back(encrypted_char);
-    }
     return { ciphertext, R };
 }
 
@@ -63,35 +59,27 @@ T* ECC::decrypt(const EncryptionResult& encryptedMessage, cpp_int privateKey) co
     // Compute the point S by multiplying R with the private key
     Point S = curve.multiply(encryptedMessage.R, privateKey);
 
-    // Decrypt the ciphertext using XOR with the bytes of x
-    vector<unsigned char> ciphertext = encryptedMessage.ciphertext;
-    vector<unsigned char> plaintext;
-
-    // Convert the x value of S to bytes
+    // Convert the x value of S to a vector of bytes
     cpp_int x_value = S.getX();
-    vector<unsigned char> x_bytes;
+   /* vector<unsigned char> x_bytes;
     while (x_value > 0) {
         x_bytes.push_back(static_cast<unsigned char>(x_value % 256));
         x_value >>= 8;
-    }
+    }*/
+    
 
-    // Check if x_bytes is not empty
-    if (x_bytes.empty()) {
-        Logger::getInstance().log("decrypt: x_bytes is empty");
-        throw std::runtime_error("x_bytes is empty");
-    }
 
     // Decrypt the data using XOR with the bytes of x
-    for (unsigned char c : ciphertext) {
-        unsigned char decrypted_char = c ^ (x_bytes[0]); // Use the first byte of S.getX()
-        plaintext.push_back(decrypted_char);
+    T* decryptedData = new T;
+     
+    unsigned char* decryptedDataBytes = reinterpret_cast<unsigned char*>(decryptedData);
+    for (size_t i = 0; i < sizeof(T); ++i) {
+        char mask = static_cast<unsigned char>(x_value) & CHAR_BIT_ON;
+        decryptedDataBytes[i] = encryptedMessage.ciphertext[i] ^ mask;
+        x_value >>= 8;
     }
 
-    // Create a decrypted message from the plaintext data
-    T* decryptedMessage = new T;
-    copy(plaintext.begin(), plaintext.begin() + sizeof(T), reinterpret_cast<unsigned char*>(decryptedMessage));
-
-    return decryptedMessage;
+    return decryptedData;
 }
 
 #endif // ECC_IMPL_H
