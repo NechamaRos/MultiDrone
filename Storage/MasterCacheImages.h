@@ -84,6 +84,9 @@ ImgInfo_t* createImgInfo(int imgId, int slaveId,Point_t TL,Point_t BR);
 void throwExcptionToFile(ERRORS);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
 LinkedList_LRU_t* initLinkedList();
+void insertInToLinedList(UnitNode_LRU_t* node);
+void MasterCacheImg_cb();
+void moveToTheBeginning(UnitNode_LRU_t* node);
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
 
