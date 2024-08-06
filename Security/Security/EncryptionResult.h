@@ -8,11 +8,6 @@ struct EncryptionResult {
     std::vector<unsigned char> ciphertext;
     Point R;
 };
-//
-//struct DecryptionResult {
-//    std::vector<unsigned char> ciphertext;
-//    Point R;
-//};
 
 #endif // ENCRYPTIONRESULT_H
  

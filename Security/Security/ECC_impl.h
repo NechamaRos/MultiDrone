@@ -59,16 +59,8 @@ T* ECC::decrypt(const EncryptionResult& encryptedMessage, cpp_int privateKey) co
     // Compute the point S by multiplying R with the private key
     Point S = curve.multiply(encryptedMessage.R, privateKey);
 
-    // Convert the x value of S to a vector of bytes
     cpp_int x_value = S.getX();
-   /* vector<unsigned char> x_bytes;
-    while (x_value > 0) {
-        x_bytes.push_back(static_cast<unsigned char>(x_value % 256));
-        x_value >>= 8;
-    }*/
-    
-
-
+ 
     // Decrypt the data using XOR with the bytes of x
     T* decryptedData = new T;
      
