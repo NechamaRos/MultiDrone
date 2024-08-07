@@ -194,4 +194,17 @@ TEST_CASE("Push empty place in to stack after a few Pop")
 	CHECK(masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[masterCacheImg_cb->emptyPlaceInCache->length-1] == 2);
 }
 
+TEST_CASE("init stack all place is empty")
+{
+	//act
+	Stack_emptyPlace_t* stack = initStuck();
+	//assert
+	int length = stack->length;
+	int firstEmptyPlace = stack->emptyPlaceInTheArray[0];
+	int lastEmptyPlace = stack->emptyPlaceInTheArray[CACHE_SIZE-1];
 
+	CHECK(length == CACHE_SIZE);
+	CHECK(firstEmptyPlace == CACHE_SIZE - 1);
+	CHECK(lastEmptyPlace == 0);
+}
+ 
