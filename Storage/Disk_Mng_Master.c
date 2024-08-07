@@ -107,12 +107,19 @@ int getBalance(AVLNode_t* N) {
         return 0;
     return height(N->left) - height(N->right);
 }
+AVLNode_t* avlTree_minValueNode(AVLNode_t* node) {
+    AVLNode_t* current = node;
 
+    while (current->left != NULL)
+        current = current->left;
+
+    return current;
+}
 AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNodeInfo_t* data, int lruCounter) {
     if (node == NULL) 
     {
         data->lru = lruCounter;
-        return newAVLNode(data);
+        return avlNode_create(data);
     }
 
     if (data->mapSize < node->avlNodeInfo->mapSize)

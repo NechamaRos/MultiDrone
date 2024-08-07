@@ -60,6 +60,7 @@ int height(AVLNode_t* N);
 AVLNode_t* rightRotate(AVLNode_t* y);
 AVLNode_t* leftRotate(AVLNode_t* x);
 int getBalance(AVLNode_t* N);
+AVLNode_t* avlTree_minValueNode(AVLNode_t* node);
 
 AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNodeInfo_t* data, int lruCounter);
 void avlTree_firstInitialize();
