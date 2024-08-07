@@ -1,4 +1,5 @@
 #include "Convert.h"
+#include <algorithm>
 
 vector<uint8_t> Convert::convertCharToUint8(char c)
 {

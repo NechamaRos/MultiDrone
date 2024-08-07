@@ -1,5 +1,3 @@
-#pragma once
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "CRCalgoritm.h"
 #include "../communication/doctest.h"
 

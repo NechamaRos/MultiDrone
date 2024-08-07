@@ -12,7 +12,7 @@ void MatMessage::copyCol(vector<uint8_t>& arr, int numCol) {
 }
 
 
-vector<vector<vector<uint8_t>>> MatMessage::getreminder(int, int, vector<uint8_t>& key)throw(exception)
+vector<vector<vector<uint8_t>>> MatMessage::getreminder(int, int, vector<uint8_t>& key)
 {
 	int rows = this->message.size(),cols=this->message[0].size();
 	vector<vector<vector<uint8_t>>> res(2);
@@ -43,7 +43,7 @@ vector<vector<vector<uint8_t>>> MatMessage::getreminder(int, int, vector<uint8_t
 	return res;
 }
 
-void MatMessage::checkInReceive(vector<vector<vector<uint8_t>>>& valiDationData, vector<uint8_t>& key)throw(runtime_error)
+void MatMessage::checkInReceive(vector<vector<vector<uint8_t>>>& valiDationData, vector<uint8_t>& key)
 {
 	CRCalgoritm crc;
 	vector<uint8_t> tmp;

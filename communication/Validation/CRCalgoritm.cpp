@@ -10,7 +10,7 @@ void CRCalgoritm::Xor(vector<uint8_t>& arr1, const vector<uint8_t>& arr2) {
 			arr1[i - 1] = 1;
 	}
 }
-void CRCalgoritm::copyArr(const vector<uint8_t>& src, vector<uint8_t>& dest, int len)throw(invalid_argument) {
+void CRCalgoritm::copyArr(const vector<uint8_t>& src, vector<uint8_t>& dest, int len) {
 	if (src.empty()) {
 		return;
 	}
@@ -21,7 +21,7 @@ void CRCalgoritm::copyArr(const vector<uint8_t>& src, vector<uint8_t>& dest, int
 		dest.push_back(src[i]);
 	}
 }
-vector<uint8_t> CRCalgoritm::divideModolo2(const vector<uint8_t>& toDiv, const  vector<uint8_t>& divBy)throw (runtime_error) {
+vector<uint8_t> CRCalgoritm::divideModolo2(const vector<uint8_t>& toDiv, const  vector<uint8_t>& divBy) {
 	const int lenToDiv = toDiv.size();
 	const int lenDivBy = divBy.size();
 	if (lenToDiv < lenDivBy)
@@ -63,7 +63,7 @@ vector<uint8_t> CRCalgoritm::divideModolo2(const vector<uint8_t>& toDiv, const  
 	return res;
 }
 
-vector<uint8_t> CRCalgoritm::getRemainder(const vector<uint8_t>& data, vector<uint8_t>& key)throw(invalid_argument,runtime_error) {
+vector<uint8_t> CRCalgoritm::getRemainder(const vector<uint8_t>& data, vector<uint8_t>& key) {
 	if (key.empty())
 		throw invalid_argument("Invalid key");
 	int len_data = data.size();
@@ -92,7 +92,7 @@ vector<uint8_t> CRCalgoritm::getDataWithRemiainder(const vector<uint8_t>& data, 
 	copyArr(rem, dataWithRemainder, rem.size());
 	return dataWithRemainder;
 }
-void CRCalgoritm::receiver(const vector<uint8_t>& data, vector<uint8_t>& key)throw(runtime_error) {
+void CRCalgoritm::receiver(const vector<uint8_t>& data, vector<uint8_t>& key) {
 	if (key.empty())
 		throw invalid_argument("Invalid key");
 	vector<uint8_t> remainder;

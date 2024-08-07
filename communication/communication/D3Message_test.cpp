@@ -6,7 +6,7 @@ vector < vector<vector<uint8_t>>> d3mat = { { {1,0,1,0,1,1},{0,0,1,1,1,1} ,{0,0,
 { {1,0,1,0,1,1},{0,0,1,1,1,1} ,{0,0,1,0,1,1} ,{1,1,1,0,0,1} ,{1,1,0,0,1,0} } };
 
 
-D3Message mm(d3mat);
+D3Message mm3(d3mat);
 
 TEST_CASE("Constructor") {
 	SUBCASE("Should build the object with mat argument") {
@@ -23,7 +23,7 @@ TEST_CASE("Getremeinder function") {
 	SUBCASE("return 4d vector of columns reminder and rows remainder") {
 		vector<uint8_t> key = { 1,1,0 };
 
-		vector<vector<vector<vector<uint8_t>>>> res = mm.getreminder(1, 1,1, key);
+		vector<vector<vector<vector<uint8_t>>>> res = mm3.getreminder(1, 1,1, key);
 
 		CHECK(res[0].size() == 2);
 		CHECK(res[0][1].size() == 6);
@@ -34,14 +34,14 @@ TEST_CASE("Getremeinder function") {
 TEST_CASE("checkInReceive") {
 	SUBCASE("The data match the data-validation") {
 		vector<uint8_t> key = { 1,1,0 };
-		vector<vector<vector<vector<uint8_t>>>>  validationData = mm.getreminder(1, 1,1, key);
+		vector<vector<vector<vector<uint8_t>>>>  validationData = mm3.getreminder(1, 1,1, key);
 
-		CHECK_NOTHROW(mm.checkInReceive(validationData, key));
+		CHECK_NOTHROW(mm3.checkInReceive(validationData, key));
 	}
 	SUBCASE("The data not match the data-validation") {
 		vector<uint8_t> key = { 1,1,0 };
-		vector<vector<vector<vector<uint8_t>>>>  validationData = mm.getreminder(1,1, 1, key);
+		vector<vector<vector<vector<uint8_t>>>>  validationData = mm3.getreminder(1,1, 1, key);
 		validationData[0][1][0][0] = (!validationData[0][1][0][0]);
-		CHECK_THROWS_AS(mm.checkInReceive(validationData, key), runtime_error);
+		CHECK_THROWS_AS(mm3.checkInReceive(validationData, key), runtime_error);
 	}
 }

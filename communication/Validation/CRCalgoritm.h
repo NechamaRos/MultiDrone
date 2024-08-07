@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <cstdint>
 #include <vector>
 using namespace std;
 
@@ -16,7 +17,7 @@ public:
 
 	vector<uint8_t> getDataWithRemiainder(const vector<uint8_t>& data, vector<uint8_t>& key);
 
-	void receiver(const vector<uint8_t>& data, vector<uint8_t>& key)throw(runtime_error);
+	void receiver(const vector<uint8_t>& data, vector<uint8_t>& key);
 
 };
 
