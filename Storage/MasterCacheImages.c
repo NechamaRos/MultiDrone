@@ -1,6 +1,7 @@
 #include"MasterCacheImages.h"
 #include<errno.h>
 #include <stdlib.h>
+#include <assert.h>
 #include<stdio.h>
 
 
@@ -146,10 +147,39 @@ void removefromLinkedList()
         free(tmp);
     }
 }
-void removeFromImgArray(ImgInfo_t* imgInfoPtr)
+char* stringError(ERRORS err)
 {
+    //switch the error to string
+    switch (err)
+    {
+    case ALLOCATE_ERROR:
+        return "allcocate error";
+    default:
+        return "";
+        break;
+    }
 }
+
 void throwExcptionToFile(ERRORS err)
+{
+    FILE file;
+    //Attempt to open the file using fopen_s
+    errno_t error = fopen_s(&file, ".\\masterMoce\\Exceptions.txt", "a");
+    //file didt open
+    if (error!=0)
+    {
+        //Write exception to cnsole
+        printf("The file didn't open, try again ---------------Exception\n");
+        return;
+    }
+    //convert err to string
+    char* stringErr=stringError( err);
+    //write error to file
+    fprintf(&file, "%c\n",stringErr );
+    //close file
+    fclose(&file);
+}
+void removeFromImgArray(ImgInfo_t* imgInfoPtr)
 {
 
 }

@@ -92,6 +92,12 @@ void removefromLinkedList();
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
 
+char* stringError(ERRORS err);
+
+
+
+
+
 void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
 
