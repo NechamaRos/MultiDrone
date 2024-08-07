@@ -1,11 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
-
 #include"doctest.h"
 extern "C" {
 #include"MasterCacheImages.h"
 MasterCacheImg_cb_t* masterCacheImg_cb;
-
+ 
 }
 
 TEST_CASE("create point")
@@ -124,6 +123,31 @@ TEST_CASE("move to the Beginning")
 	CHECK(masterCacheImg_cb->LRU->head == nodeA->prev);
 	CHECK(nodeA->next == node);
 	CHECK(node->prev == nodeA);
+ 
+}
+TEST_CASE("remove when cach is full")
+{
+	//arrange
+	Point_t tl;
+	Point_t br;
+	ImgInfo_t* imgInfo;
+	UnitNode_LRU_t* node;
+	initMasterCacheImg_cb();
+	for (int i = 1;i <= 100;i++)
+	{
+		tl= createPoint(i, 5);
+		br= createPoint(i+2, 12);
+		imgInfo= createImgInfo(i, 2, tl, br);
+		node = createUnitNode_LRU(imgInfo);
+		insertInToLinedList(node);
+	}
+	//act
+	removefromLinkedList();
+	//assert
+	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10));
+
+ 
+}
 }
 
 TEST_CASE("init stack all place is empty")
