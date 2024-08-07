@@ -31,6 +31,7 @@ TEST_CASE("create imgInfo")
 	CHECK(imgInfo->TL.y == tl.y);
 	CHECK(imgInfo->slaveId == 2);
 	CHECK(imgInfo->imgId == 0);
+	CHECK(imgInfo->cachePtr == masterCacheImg_cb->cache);
 	
 }
 TEST_CASE("Testing connect Between Both Datas")
