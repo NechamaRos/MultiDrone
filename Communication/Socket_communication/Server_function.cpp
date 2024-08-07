@@ -13,7 +13,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "27015"
-#define DEFAULT_BUFLEN 512
+//#define DEFAULT_BUFLEN 512
 #define BACKLOG 10
 
 using namespace std;
@@ -186,7 +186,7 @@ int accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT
     return 1;
 }
 
-int send_message_to_drone(int clientSocket, const string& chunk) {
+int send_message_to_drone(int clientSocket, string chunk) {
     // Echo the received message back to the client
     char sendbuf[DEFAULT_BUFLEN];
 
