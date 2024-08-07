@@ -15,14 +15,13 @@ the release version that corresponds to the opencv_world420.dll :
 static cv::Mat img1, img2;
 static cv::Mat descriptors1, descriptors2;
 
-std::vector<MatchFeatures::DMatch1> convertToDMatch1(const std::vector<cv::DMatch>& matches) {
-    std::vector<MatchFeatures::DMatch1> matches1;
+std::vector<MatchFeatures::DMatch> convertToDMatch1(const std::vector<cv::DMatch>& matches) {
+    std::vector<MatchFeatures::DMatch> matches1;
     for (const auto& match : matches) {
-        matches1.push_back(MatchFeatures::DMatch1{ match.queryIdx, match.trainIdx, match.distance });
+        matches1.push_back(MatchFeatures::DMatch{ match.queryIdx, match.trainIdx, match.distance });
     }
     return matches1;
 }
-
 
 void bruteForceKnnMatch(const cv::Mat& descriptors1, const cv::Mat& descriptors2, vector<vector<cv::DMatch>>& knn_matches)
 {
@@ -40,7 +39,7 @@ std::vector<std::vector<float>> matToVector(const cv::Mat& mat) {
     return vec;
 }
 
-bool areVectorsEqual(const std::vector<MatchFeatures::DMatch1>& vec1, const std::vector<MatchFeatures::DMatch1>& vec2) {
+bool areVectorsEqual(const std::vector<MatchFeatures::DMatch>& vec1, const std::vector<MatchFeatures::DMatch>& vec2) {
     if (vec1.size() != vec2.size()) return false;
     for (size_t i = 0; i < vec1.size(); ++i) {
         if (vec1[i].queryIdx != vec2[i].queryIdx ||
@@ -106,9 +105,9 @@ TEST_CASE("found same matches") {
     std::vector<std::vector<float>> descVec1 = matToVector(descriptors1);
     std::vector<std::vector<float>> descVec2 = matToVector(descriptors2);
 
-    vector<MatchFeatures::DMatch1> matches = matcher.matchFeatures(descVec1, descVec2);
+    vector<MatchFeatures::DMatch> matches = matcher.matchFeatures(descVec1, descVec2);
 
-    std::vector<MatchFeatures::DMatch1> matchesCVConvert = convertToDMatch1(matchesCV);
+    std::vector<MatchFeatures::DMatch> matchesCVConvert = convertToDMatch1(matchesCV);
 
     std::cout << "Testing found same matches: " << std::endl;
     std::cout << "matchesCV size: " << matchesCVConvert.size() << std::endl;
@@ -118,7 +117,7 @@ TEST_CASE("found same matches") {
 
     for (size_t i = 0; i < matchesCVConvert.size(); i++)
     {
-        std::cout << "Match " << i << ": " << std::endl;
+        //std::cout << "Match " << i << ": " << std::endl;
         //std::cout << "QueryIdx: expected = " << matchesCVConvert.at(i).queryIdx << ", actual = " << matches.at(i).queryIdx << std::endl;
         //std::cout << "TrainIdx: expected = " << matchesCVConvert.at(i).trainIdx << ", actual = " << matches.at(i).trainIdx << std::endl;
         //std::cout << "Distance: expected = " << matchesCVConvert.at(i).distance << ", actual = " << matches.at(i).distance << std::endl;
@@ -127,7 +126,6 @@ TEST_CASE("found same matches") {
         CHECK(matchesCVConvert.at(i).trainIdx == matches.at(i).trainIdx);
         CHECK(matchesCVConvert.at(i).distance == matches.at(i).distance);
     }
-
 }
 
 TEST_CASE("testing the matchFeatures function for equality of matches") {
@@ -147,14 +145,14 @@ TEST_CASE("testing the matchFeatures function for equality of matches") {
         {1.0f, 1.1f, 1.2f}
     };
 
-    std::vector<MatchFeatures::DMatch1> expectedMatches = {
-        MatchFeatures::DMatch1(0, 0, 0.0f),
-        MatchFeatures::DMatch1(1, 2, 0.0f),
-        MatchFeatures::DMatch1(2, 1, 0.0f),
-        MatchFeatures::DMatch1(3, 3, 0.0f)
+    std::vector<MatchFeatures::DMatch> expectedMatches = {
+        MatchFeatures::DMatch(0, 0, 0.0f),
+        MatchFeatures::DMatch(1, 2, 0.0f),
+        MatchFeatures::DMatch(2, 1, 0.0f),
+        MatchFeatures::DMatch(3, 3, 0.0f)
     };
 
-    std::vector<MatchFeatures::DMatch1> actualMatches = matcher.matchFeatures(descriptors1, descriptors2);
+    std::vector<MatchFeatures::DMatch> actualMatches = matcher.matchFeatures(descriptors1, descriptors2);
 
     std::cout << "Testing matchFeatures for equality of matches: " << actualMatches.size() << " matches" << std::endl;
     CHECK(areVectorsEqual(actualMatches, expectedMatches));

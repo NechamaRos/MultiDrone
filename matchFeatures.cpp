@@ -1,9 +1,23 @@
 #include "matchFeatures.h"
-#include <omp.h> // Include OpenMP header
-// Constructor
+#include <omp.h>
+
+
 MatchFeatures::MatchFeatures() {}
 
-// Function to compute Euclidean distance between two descriptors
+MatchFeatures::DMatch::DMatch() :queryIdx(-1), trainIdx(-1), distance(FLT_MAX) {}
+
+MatchFeatures::DMatch::DMatch(int qIdx, int tIdx, float dist) :queryIdx(qIdx), trainIdx(tIdx), distance(dist) {}
+
+bool MatchFeatures::DMatch::operator>(const DMatch& other)
+{
+    return this->distance > other.distance;
+}
+
+int MatchFeatures::DMatch::first() { return queryIdx; }
+
+int MatchFeatures::DMatch::second() { return trainIdx; }
+
+
 double MatchFeatures::euclideanDistance(const std::vector<float>& desc1, const std::vector<float>& desc2)
 {
     double sum = 0.0;
@@ -14,10 +28,9 @@ double MatchFeatures::euclideanDistance(const std::vector<float>& desc1, const s
     return sqrt(sum);
 }
 
-// Function to perform KNN matching
-std::vector<std::vector<MatchFeatures::DMatch1>> MatchFeatures::knnMatch(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2, int k)
+std::vector<std::vector<MatchFeatures::DMatch>> MatchFeatures::knnMatch(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2, int k)
 {
-    std::vector<std::vector<DMatch1>> knn_matches;
+    std::vector<std::vector<DMatch>> knn_matches;
 #pragma omp parallel for
     for (int i = 0; i < descriptors1.size(); ++i)
     {
@@ -33,11 +46,10 @@ std::vector<std::vector<MatchFeatures::DMatch1>> MatchFeatures::knnMatch(const s
             return a.second < b.second;
             });
 
-
-        std::vector<MatchFeatures::DMatch1> knn;
+        std::vector<MatchFeatures::DMatch> knn;
         for (int n = 0; n < k && n < dists.size(); ++n)
         {
-            knn.push_back(MatchFeatures::DMatch1(i, dists[n].first, static_cast<float>(dists[n].second)));
+            knn.push_back(MatchFeatures::DMatch(i, dists[n].first, static_cast<float>(dists[n].second)));
         }
         knn_matches.push_back(knn);
     }
@@ -45,14 +57,13 @@ std::vector<std::vector<MatchFeatures::DMatch1>> MatchFeatures::knnMatch(const s
     return knn_matches;
 }
 
-// Function to match features between two sets of descriptors using KNN
-std::vector<MatchFeatures::DMatch1> MatchFeatures::matchFeatures(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2)
+std::vector<MatchFeatures::DMatch> MatchFeatures::matchFeatures(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2)
 {
-    std::vector<DMatch1> matches;
+    std::vector<DMatch> matches;
     const float ratio_thresh = 0.7f;
     int k = 2; // Number of neighbors to consider
 
-    std::vector<std::vector<DMatch1>> knn_matches = MatchFeatures::knnMatch(descriptors1, descriptors2, k);
+    std::vector<std::vector<DMatch>> knn_matches = MatchFeatures::knnMatch(descriptors1, descriptors2, k);
 
     for (const auto& knn : knn_matches)
     {
@@ -69,7 +80,7 @@ std::vector<MatchFeatures::DMatch1> MatchFeatures::matchFeatures(const std::vect
 // Function to draw matches between two images
 void MatchFeatures::drawMatches(const cv::Mat& img1, const std::vector<cv::KeyPoint>& keypoints1,
     const cv::Mat& img2, const std::vector<cv::KeyPoint>& keypoints2,
-    const std::vector<DMatch1>& matches, cv::Mat& outImg)
+    const std::vector<DMatch>& matches, cv::Mat& outImg)
 {
     if (matches.empty()) {
         outImg = cv::Mat::zeros(img1.rows, img1.cols + img2.cols, CV_8UC3);
@@ -101,7 +112,7 @@ void MatchFeatures::drawMatches(const cv::Mat& img1, const std::vector<cv::KeyPo
         cv::circle(outImg, pt2, 3, color, 1);
     }
 }
-map<int, int> MatchFeatures::countKeypointOccurrences(const vector<MatchFeatures::DMatch1>& matches)
+map<int, int> MatchFeatures::countKeypointOccurrences(const vector<DMatch>& matches)
 {
     map<int, int> keypointCount;
 

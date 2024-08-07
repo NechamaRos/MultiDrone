@@ -19,52 +19,49 @@
 #endif
 
 using namespace std;
-//using namespace cv;
 
 class MatchFeatures {
 public:
 
-    //בנאי ריק
+    //C'tor
     MatchFeatures();
 
-    class DMatch1 {
+    class DMatch {
+
     public:
         int queryIdx;
         int trainIdx;
         float distance;
 
-        DMatch1() : queryIdx(-1), trainIdx(-1), distance(FLT_MAX) {}
-        DMatch1(int qIdx, int tIdx, float dist) : queryIdx(qIdx), trainIdx(tIdx), distance(dist) {}
+        //deafult C'tor
+        DMatch();
 
-        bool operator>(const DMatch1& other) const {
-            return this->distance > other.distance;
-        }
-        // Add member functions to mimic `first` and `second` access
-        int getFirst() const { return queryIdx; }
-        int getSecond() const { return trainIdx; }
+        //C'tor
+        DMatch(int qIdx, int tIdx, float dist);
 
-        // Optionally, you can add operators for convenience
-        int first() const { return queryIdx; }
-        int second() const { return trainIdx; }
+        //return true if this.distance > other.distance
+        bool operator>(const DMatch& other);
+
+        //get queryIdx
+        int first();
+
+        //get trainIdx
+        int second();
     };
 
-    // פונקציה לחשב את המרחק האוקלידי בין שני תיאורים
+    // Function to compute Euclidean distance between two descriptors
     double euclideanDistance(const std::vector<float>& desc1, const std::vector<float>& desc2);
 
-    std::vector<std::vector<MatchFeatures::DMatch1>> knnMatch(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2, int k);
+    // Function to perform KNN matching
+    std::vector<std::vector<MatchFeatures::DMatch>> knnMatch(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2, int k);
 
-    // פונקציה להתאמת תכונות בין שתי תמונות
-    vector<DMatch1> matchFeatures(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2);
-    //void knnMatchImpl1(const cv::Mat& queryDescriptors, const cv::Mat& trainDescriptors, vector<vector<MatchFeatures::DMatch1>>& matches, int knn);
-    //float normL2Sqr1(const cv::Mat& vec1, const cv::Mat& vec2);
+    // Function to match features between two sets of descriptors using KNN
+    vector<DMatch> matchFeatures(const std::vector<std::vector<float>>& descriptors1, const std::vector<std::vector<float>>& descriptors2);
 
-
-    // ציור ההתאמות בין שתי תמונות
     void drawMatches(const cv::Mat& img1, const std::vector<cv::KeyPoint>& keypoints1,
         const cv::Mat& img2, const std::vector<cv::KeyPoint>& keypoints2,
-        const std::vector<DMatch1>& matches, cv::Mat& outImg);
+        const std::vector<DMatch>& matches, cv::Mat& outImg);
 
-    //ספירת כמות פעמים של התאמות לנקודה
-    map<int, int> countKeypointOccurrences(const vector<MatchFeatures::DMatch1>& matches);
+    map<int, int> countKeypointOccurrences(const vector<MatchFeatures::DMatch>& matches);
 
 };
