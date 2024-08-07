@@ -70,7 +70,7 @@ TEST_CASE(" testing initLinkedList")
 TEST_CASE("insert to linked List when there is no links in the linkedList")
 {
 	//arrange
-	MasterCacheImg_cb();
+	initMasterCacheImg_cb();
 	Point_t tl = createPoint(7, 5);
 	Point_t br = createPoint(5, 12);
 	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
@@ -87,7 +87,7 @@ TEST_CASE("insert to linked List when there is no links in the linkedList")
 TEST_CASE("insert to linked List when there is one  or more links in the linkedList")
 {
 	//arrange
-	MasterCacheImg_cb();
+	initMasterCacheImg_cb();
 	Point_t tl = createPoint(7, 5);
 	Point_t br = createPoint(5, 12);
 	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
@@ -107,7 +107,7 @@ TEST_CASE("insert to linked List when there is one  or more links in the linkedL
 TEST_CASE("move to the Beginning")
 {
 	//arrange
-	MasterCacheImg_cb();
+	initMasterCacheImg_cb();
 	Point_t tl = createPoint(7, 5);
 	Point_t br = createPoint(5, 12);
 	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
@@ -131,7 +131,7 @@ TEST_CASE("remove when cach is full")
 	Point_t br;
 	ImgInfo_t* imgInfo;
 	UnitNode_LRU_t* node;
-	MasterCacheImg_cb();
+	initMasterCacheImg_cb();
 	for (int i = 1;i <= 100;i++)
 	{
 		tl= createPoint(i, 5);
@@ -140,13 +140,9 @@ TEST_CASE("remove when cach is full")
 		node = createUnitNode_LRU(imgInfo);
 		insertInToLinedList(node);
 	}
-	tl = createPoint(10, 6);
-	br = createPoint(14, 12);
-	imgInfo = createImgInfo(8, 2, tl, br);
-	node = createUnitNode_LRU(imgInfo);
 	//act
-	insertInToLinedList(node);
+	removefromLinkedList();
 	//assert
-	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10)+1);
+	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10));
 
 }
