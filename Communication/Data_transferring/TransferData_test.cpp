@@ -61,11 +61,11 @@ TEST_CASE("TransferData::sendMessageByChunk function") {
     std::string chunk = "Test chunk";
 
     SUBCASE("Successful send") {
-        CHECK(td.sendMessageByChunk(chunk) == true);
+        CHECK(td.sendMessageByChunk(chunk, 0) == true);
     }
 
     SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendMessageByChunk(""), std::exception);
+        CHECK_THROWS_AS(td.sendMessageByChunk("", 0), std::exception);
     }
 }
 
@@ -124,20 +124,6 @@ TEST_CASE("TransferData::sendsSynchronously function") {
     }
 }
 
-TEST_CASE("TransferData::choosing_an_option_to_transfer function") {
-    TransferData td;
-
-
-    SUBCASE("Choose asynchronous transfer option") {
-        // Redirect cin for testing
-        std::istringstream input("2");
-        std::cin.rdbuf(input.rdbuf());
-
-        int option = OPTION_TO_SEND;
-        CHECK(option == 2);
-    }
-}
-
 TEST_CASE("TransferData::preparingTheDataForTransferring function") {
     TransferData td;
     std::string data = "Test data for transfer";
@@ -157,5 +143,27 @@ TEST_CASE("TransferData::preparingTheDataForTransferring function") {
         std::cin.rdbuf(input.rdbuf());
 
         CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData));
+    }
+}
+
+TEST_CASE("TransferData::addChunk and getCollectedData functions") {
+    TransferData td;
+
+    SUBCASE("Add and collect chunks") {
+        td.addChunk("Chunk1", 0);
+        td.addChunk("Chunk2", 1);
+        td.addChunk("Chunk3", 2);
+
+        std::string collectedData = td.getCollectedData();
+        CHECK(collectedData == "Chunk1Chunk2Chunk3");
+    }
+
+    SUBCASE("Collect data with out-of-order chunks") {
+        td.addChunk("Chunk2", 1);
+        td.addChunk("Chunk1", 0);
+        td.addChunk("Chunk3", 2);
+
+        std::string collectedData = td.getCollectedData();
+        CHECK(collectedData == "Chunk1Chunk2Chunk3");
     }
 }
