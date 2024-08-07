@@ -1,4 +1,4 @@
-#include "doctest.h"
+#include "../Communication/doctest.h"
 #include "Server_function.h"
 #ifndef _ws2tcpip
 #define ws2tcpip
@@ -19,7 +19,7 @@ TEST_CASE("initialize_winsock") {
 }
 
 TEST_CASE("get_server_info") {
-	int x = get_server_info(" ", &hints, &servinfo);
+	int x = setupAddressInfo(" ", &hints, &servinfo);
 	printf("get_server_info=%d\n", x);
 	CHECK(x == 0);
 }

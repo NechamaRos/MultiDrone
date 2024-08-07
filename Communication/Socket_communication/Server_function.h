@@ -24,5 +24,5 @@ void infinite_checking_for_incoming_messages(int sockfd);
 void cleanup(int ListenSocket);
 
 void send_message_to_all(const int& sockfd, const char* message);
-int send_message_to_drone(int clientSocket, const string& chunk);
+int send_message_to_drone(int clientSocket, string chunk);
 int send_mataData_to_drone(int clientSocket, const Meta_Data& metaData);
