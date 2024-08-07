@@ -72,21 +72,6 @@ void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
     imgInfo->unitNodePtr = node;
 }
 
- 
-}
-void moveToTheBeginning(UnitNode_LRU_t* node)
-{
-    //there is more than one link in the linkedList
-    if (masterCacheImg_cb->LRU->AmountOfLinks > 1)
-    {
-        node->next->prev = node->prev;
-        node->prev->next = node->next;
-        node->prev = masterCacheImg_cb->LRU->head;
-        node->next = masterCacheImg_cb->LRU->head->next;
-        masterCacheImg_cb->LRU->head->next->prev = node;
-        masterCacheImg_cb->LRU->head->next = node;
-    }
-}
 Stack_emptyPlace_t* initStuck()
 {
     Stack_emptyPlace_t* stack = (Stack_emptyPlace_t*)malloc(sizeof(Stack_emptyPlace_t));
