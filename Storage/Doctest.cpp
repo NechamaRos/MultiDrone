@@ -4,6 +4,7 @@
 #include"doctest.h"
 extern "C" {
 #include"MasterCacheImages.h"
+MasterCacheImg_cb_t* masterCacheImg_cb;
 }
 
 TEST_CASE("create point")
@@ -56,4 +57,70 @@ TEST_CASE("testing create UnitNode_LRU")
 	//assert
 	CHECK(node->next == NULL);
 	CHECK(node->prev == NULL);
+}
+TEST_CASE(" testing initLinkedList")
+{
+	//Act
+	LinkedList_LRU_t* linkedList = initLinkedList();
+	//assert
+	CHECK(linkedList->AmountOfLinks == 0);
+	CHECK(linkedList->head->next == NULL);
+	CHECK(linkedList->tail->prev==NULL);
+}
+TEST_CASE("insert to linked List when there is no links in the linkedList")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
+	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
+   //act
+	insertInToLinedList(node);
+	//assert
+	CHECK(masterCacheImg_cb->LRU->head->next == node);
+	CHECK(masterCacheImg_cb->LRU->tail->prev == node);
+	CHECK(masterCacheImg_cb->LRU->head == node->prev);
+	CHECK(masterCacheImg_cb->LRU->tail == node->next);
+	CHECK(masterCacheImg_cb->LRU->AmountOfLinks == 1);
+}
+TEST_CASE("insert to linked List when there is one  or more links in the linkedList")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
+	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
+	ImgInfo_t* imgInfoA = createImgInfo(8, 2, tl, br);
+	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfo);
+	insertInToLinedList(nodeA);
+	//act
+	insertInToLinedList(node);
+	//assert
+	CHECK(masterCacheImg_cb->LRU->head->next == node);
+	CHECK(masterCacheImg_cb->LRU->head == node->prev);
+	CHECK(nodeA == node->next);
+	CHECK(nodeA->prev == node);
+	CHECK(masterCacheImg_cb->LRU->AmountOfLinks == 2);
+}
+TEST_CASE("move to the Beginning")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
+	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
+	ImgInfo_t* imgInfoA = createImgInfo(8, 2, tl, br);
+	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfo);
+	insertInToLinedList(nodeA);
+	insertInToLinedList(node);
+	//act
+	moveToTheBeginning(nodeA);
+	//assert
+	CHECK(masterCacheImg_cb->LRU->head->next == nodeA);
+	CHECK(masterCacheImg_cb->LRU->head == nodeA->prev);
+	CHECK(nodeA->next == node);
+	CHECK(node->prev == nodeA);
 }

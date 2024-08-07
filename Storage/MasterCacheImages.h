@@ -9,7 +9,7 @@ typedef enum
  
 typedef struct Point_s Point_t;
 typedef struct ImgInfo_s ImgInfo_t;
-typedef struct Stack_emptyPlaceInTheArray_s Stack_emptyPlaceInTheArray_t;
+typedef struct Stack_emptyPlace_s Stack_emptyPlace_t;
 typedef struct UnitNode_LRU_s UnitNode_LRU_t;
 typedef struct LinkedList_LRU_s LinkedList_LRU_t;
 typedef struct UnitNode_emptyPlaceInCache_s UnitNode_emptyPlaceInCache_t;
@@ -30,15 +30,15 @@ struct ImgInfo_s
 	Point_t TL;
 	Point_t BR;
 	UnitNode_LRU_t* unitNodePtr;
+	int* cachePtr;
 
 };
 
 
-struct Stack_emptyPlaceInTheArray_s
+struct Stack_emptyPlace_s
 {
 	int emptyPlaceInTheArray[CACHE_SIZE];
 	int length;
-
 };
 
 
@@ -78,9 +78,9 @@ struct queue_emptyPlaceInCache_s
 struct MasterCacheImg_cb_s
 {
 	int cache[CACHE_SIZE];
-	UnitNode_emptyPlaceInCache_t* emptyPlaceInCache;
-	int imgArray[CACHE_SIZE];
-	Stack_emptyPlaceInTheArray_t* emptyPlaceInTheArray;
+	Stack_emptyPlace_t* emptyPlaceInCache;
+	ImgInfo_t* imgArray[CACHE_SIZE];
+	Stack_emptyPlace_t* emptyPlaceInTheArray;
 	LinkedList_LRU_t* LRU;
 };
 
@@ -89,9 +89,18 @@ UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
 ImgInfo_t* createImgInfo(int imgId, int slaveId,Point_t TL,Point_t BR);
 void throwExcptionToFile(ERRORS);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
-
+LinkedList_LRU_t* initLinkedList();
+void insertInToLinedList(UnitNode_LRU_t* node);
+void initMasterCacheImg_cb();
+void moveToTheBeginning(UnitNode_LRU_t* node);
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
+Stack_emptyPlace_t* initStuck();
+void insertTocache(int* imgData);
+void removeFromCache(int* cachePtr);
+void addEmptyPlaceInImgArrayStack(int index);
+void addEmptyPlaceInCacheStack(int index);
+
 
 
 
