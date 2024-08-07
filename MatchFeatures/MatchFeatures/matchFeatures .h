@@ -22,7 +22,6 @@ private:
 	std::vector<std::vector<int>> descriptors_1;
 	std::vector<std::vector<int>> descriptors_2;
 	std::vector<std::vector<PointMatch>> knn_matches;
-
 public:
 	std::vector<PointMatch>good_matches;
 	std::vector<std::vector<PointMatch>> knnMatch(const std::vector<std::vector<int>>& descriptors1, const std::vector<std::vector<int>>& descriptors2, int k);
