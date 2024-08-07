@@ -166,7 +166,7 @@ Data_Compression<D> compressImage(const Image<D>& img)
 
 	Data_Compression<D> compressedData(bestCompression(huffmanCompressed, rleCompressed, img));
 	compressedData.setDimension(img.dimensions);
-	if (compressedData.getCompressedData().substr(0, 3) == "HUF") {
+	if (compressedData.getCompressedData().substr(0, 2) == "HU") {// If compression chosen is HUF || HUF && RLE
 		compressedData.addHuffmanCode(huffmanCode);
 	}
 	return compressedData;
