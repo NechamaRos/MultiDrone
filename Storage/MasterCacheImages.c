@@ -199,7 +199,6 @@ void removeFromCache(int* cachePtr)
     //free the cache memory
     free(cachePtr);
     masterCacheImg_cb->cache[indexInArrayCache] = NULL;
-    
 }
 
 void removeFromImgArray(ImgInfo_t* imgInfo)
