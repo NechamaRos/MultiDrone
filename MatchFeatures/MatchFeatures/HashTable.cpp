@@ -119,8 +119,6 @@ void ResultSet::addPoint(float distance, int index)
             });
         worst_dist = results.back().first;
     }
-
-
 }
 
 std::vector<int> ResultSet::getIndices()
