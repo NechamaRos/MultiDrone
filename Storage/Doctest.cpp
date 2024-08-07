@@ -16,9 +16,8 @@ struct GlobalSetup {
 };
 GlobalSetup globalSetup;
 
-int generateRandomNumber() {
+int generateRandomNumber(int upper = DISK_SIZE) {
     int lower = 0;
-    int upper = DISK_SIZE;
     return (rand() % (upper - lower + 1)) + lower;
 }
 int index, popValue,value;

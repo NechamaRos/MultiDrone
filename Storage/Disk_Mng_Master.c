@@ -43,7 +43,7 @@ bool stack_is_empty() {
 
 StackNode_t* stackNode_create(int index)
 {   
-    StackNode_t* new_node = (StackNode_t*)allocate_memory(sizeof(StackNode_t), "Failed to allocate memory for max heap", "stack_push");
+    StackNode_t* new_node = (StackNode_t*)allocate_memory(sizeof(StackNode_t), "Failed to allocate memory for max heap", "stackNode_create");
     new_node->freeIndex = index;
     new_node->next = disk_mng_CB->diskFreeIndexesInArray->top;
     return new_node;
