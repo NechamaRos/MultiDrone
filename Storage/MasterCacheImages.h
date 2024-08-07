@@ -15,13 +15,13 @@ typedef struct LinkedList_LRU_s LinkedList_LRU_t;
 typedef struct UnitNode_emptyPlaceInCache_s UnitNode_emptyPlaceInCache_t;
 typedef struct Queue_emptyPlaceInCache_s Queue_emptyPlaceInCache_t;
 typedef struct MasterCacheImg_cb_s MasterCacheImg_cb_t;
- struct Point_s
+
+struct Point_s
 {
 	int x;
 	int y;
 
 };
-
 
 struct ImgInfo_s
 {
@@ -54,10 +54,8 @@ struct UnitNode_LRU_s
 {
 	UnitNode_LRU_t* head;
 	UnitNode_LRU_t* tail;
-
+	int AmountOfLinks;
 };
-
-
 
 struct UnitNode_emptyPlaceInCache_s
 {
@@ -66,14 +64,11 @@ struct UnitNode_emptyPlaceInCache_s
 
 };
 
-
-
 struct queue_emptyPlaceInCache_s
 {
 	UnitNode_emptyPlaceInCache_t* head;
 	UnitNode_emptyPlaceInCache_t* tail;
 } ;
-
 
 struct MasterCacheImg_cb_s
 {
@@ -93,6 +88,7 @@ LinkedList_LRU_t* initLinkedList();
 void insertInToLinedList(UnitNode_LRU_t* node);
 void initMasterCacheImg_cb();
 void moveToTheBeginning(UnitNode_LRU_t* node);
+void removefromLinkedList();
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
 Stack_emptyPlace_t* initStuck();
@@ -101,7 +97,8 @@ void removeFromCache(int* cachePtr);
 void addEmptyPlaceInImgArrayStack(int index);
 void addEmptyPlaceInCacheStack(int index);
 
-
+char* stringError(ERRORS err);
+void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
 
 
