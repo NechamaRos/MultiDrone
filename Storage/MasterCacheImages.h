@@ -86,12 +86,13 @@ void throwExcptionToFile(ERRORS);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
 LinkedList_LRU_t* initLinkedList();
 void insertInToLinedList(UnitNode_LRU_t* node);
-void MasterCacheImg_cb();
+void initMasterCacheImg_cb();
 void moveToTheBeginning(UnitNode_LRU_t* node);
 void removefromLinkedList();
 void initUnitNodeEmptyPlaceInCache();
 void initQueueEmptyPlaceInCache();
 
+void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
 
 

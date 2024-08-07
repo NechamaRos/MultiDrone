@@ -6,7 +6,7 @@
 
 MasterCacheImg_cb_t* masterCacheImg_cb;
 
-void MasterCacheImg_cb()
+void initMasterCacheImg_cb()
 {
     //allocate memory for MasterCacheImg_cb_t
     masterCacheImg_cb = (MasterCacheImg_cb_t*)malloc(sizeof(MasterCacheImg_cb_t));
@@ -99,11 +99,6 @@ LinkedList_LRU_t* initLinkedList()
 
 void insertInToLinedList(UnitNode_LRU_t* node)
 {
-    //the cache is full
-    if (masterCacheImg_cb->LRU->AmountOfLinks == CACHE_SIZE)
-    {
-        removefromLinkedList();
-    }
     //if it the first node in the linkedList
     if (masterCacheImg_cb->LRU->AmountOfLinks == 0)
     {
@@ -146,9 +141,13 @@ void removefromLinkedList()
         masterCacheImg_cb->LRU->tail->prev = tmp->prev;
         tmp->prev->next = masterCacheImg_cb->LRU->tail;
         masterCacheImg_cb->LRU->AmountOfLinks -= 1;
+        removeFromImgArray( tmp->imgInfoPtr);
         free(tmp->imgInfoPtr);
         free(tmp);
     }
+}
+void removeFromImgArray(ImgInfo_t* imgInfoPtr)
+{
 }
 void throwExcptionToFile(ERRORS err)
 {
