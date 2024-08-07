@@ -111,4 +111,11 @@ public:
         else
             sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores);
     }
+
+    void addChunk(const string& chunk, size_t chunkIndex);
+    string getCollectedData();
+
+private:
+    map<size_t, string> collectedDataMap;
+    mutex dataMutex;
 };

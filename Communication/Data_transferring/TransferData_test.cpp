@@ -145,3 +145,25 @@ TEST_CASE("TransferData::preparingTheDataForTransferring function") {
         CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData));
     }
 }
+
+TEST_CASE("TransferData::addChunk and getCollectedData functions") {
+    TransferData td;
+
+    SUBCASE("Add and collect chunks") {
+        td.addChunk("Chunk1", 0);
+        td.addChunk("Chunk2", 1);
+        td.addChunk("Chunk3", 2);
+
+        string collectedData = td.getCollectedData();
+        CHECK(collectedData == "Chunk1Chunk2Chunk3");
+    }
+
+    SUBCASE("Collect data with out-of-order chunks") {
+        td.addChunk("Chunk2", 1);
+        td.addChunk("Chunk1", 0);
+        td.addChunk("Chunk3", 2);
+
+        string collectedData = td.getCollectedData();
+        CHECK(collectedData == "Chunk1Chunk2Chunk3");
+    }
+}

@@ -37,3 +37,16 @@ bool TransferData::sendMessageByChunk(const string& chunk)
     }
 
 }
+
+void TransferData::addChunk(const string& chunk, size_t chunkIndex) {
+    lock_guard<mutex> lock(dataMutex);
+    collectedDataMap[chunkIndex] = chunk;
+}
+string TransferData::getCollectedData() {
+    lock_guard<mutex> lock(dataMutex);
+    string collectedData;
+    for (const auto& pair : collectedDataMap) {
+        collectedData += pair.second;
+    }
+    return collectedData;
+}
