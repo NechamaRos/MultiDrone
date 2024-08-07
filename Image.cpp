@@ -151,7 +151,6 @@ std::vector<uint8_t> Image::at(int i, int j) {
 	for (int c = 0; c < channels; ++c) {
 		pixel[c] = data[(i * width * channels) + (j * channels) + c];
 	}
-	pixel[0] = 180;
 	return pixel;
 }
 
