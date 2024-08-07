@@ -123,5 +123,37 @@ TEST_CASE("test_avlTree_rightRotate")
 	CHECK(avlNode1->left == nullptr);
 	CHECK(avlNode1->height == 1); 
 	CHECK(newRoot->height == 2);
+}
 
+TEST_CASE("test_avlTree_leftRotate")
+{
+	int mapSize = generateRandomNumber();
+	int indexArray = generateRandomNumber();
+	int lru = generateRandomNumber();
+
+	AVLNodeInfo_t* avlNodeInfo1 = avlNodeInfo_create(mapSize, indexArray, lru);
+	AVLNode_t* avlNode1 = avlNode_create(avlNodeInfo1);
+
+	AVLNodeInfo_t* avlNodeInfo2 = avlNodeInfo_create(mapSize, indexArray, lru);
+	AVLNode_t* avlNode2 = avlNode_create(avlNodeInfo2);
+
+	AVLNodeInfo_t* avlNodeInfo3 = avlNodeInfo_create(mapSize, indexArray, lru);
+	AVLNode_t* avlNode3 = avlNode_create(avlNodeInfo3);
+
+
+
+	avlNode1->right = avlNode2;
+	avlNode2->right = avlNode3;
+
+	avlNode2->height = std::max(avlNode_height(avlNode2->left), avlNode_height(avlNode2->right)) + 1;
+	avlNode1->height = std::max(avlNode_height(avlNode1->left), avlNode_height(avlNode1->right)) + 1;
+
+	AVLNode_t* newRoot = avlTree_leftRotate(avlNode1);
+
+	CHECK(newRoot == avlNode2); 
+	CHECK(newRoot->left == avlNode1); 
+	CHECK(newRoot->right == avlNode3); 
+	CHECK(avlNode1->right == nullptr); 
+	CHECK(avlNode1->height == 1); 
+	CHECK(newRoot->height == 2);
 }
