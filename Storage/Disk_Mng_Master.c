@@ -87,6 +87,19 @@ void array_normalInitialize() {
     //disk_loadDataForInitializeDataStructers(disk_mng_CB->diskFreeIndexesInArray, 4+ disk_mng_CB->diskFreeIndexesInArray->size* sizeof(int),DISK_SIZE*sizeof(ArrayInfo_t**));
 }
 
+ArrayInfo_t* arrayInfo_create(int mapid, int* diskPointer, int size, MapRange_t* range
+    //,AVLNodeInfo_t*  avlInfo//
+)
+{
+    ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for max heap", "arrayInfo_create");
+    arrayInfo->mapid = mapid;
+    arrayInfo ->diskPointer = diskPointer;
+    arrayInfo->size = size;
+    arrayInfo->range =range;
+    //arrayInfo->avlInfo = avlInfo;
+    return arrayInfo;
+}
+
 void array_deleteFromArray(int index)
 {
     disk_mng_CB->arrayForAllMApsInformation[index] = NULL;
@@ -96,6 +109,16 @@ void array_deleteArrayInfo(ArrayInfo_t* arrayInfo)
 {
     disk_deleteMap(arrayInfo->diskPointer);
     free(arrayInfo);
+}
+
+//maprange functions
+
+MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft) 
+{
+    MapRange_t* mapRange = (MapRange_t*)allocate_memory(sizeof(MapRange_t), "Failed to allocate memory for max heap", "mapRange_create");
+    mapRange->bottomRight = bottomRight;
+    mapRange->topLeft = topLeft;
+    return mapRange;
 }
 
 

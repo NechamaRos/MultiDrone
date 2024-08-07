@@ -36,7 +36,7 @@ struct ArrayInfo_s {
     int mapid;
     int* diskPointer;
     int size;
-    MapRange_t range;
+    MapRange_t* range;
     //AVLNodeInfo_t  avlInfo;
 
 };
@@ -97,4 +97,10 @@ void array_deleteFromArray(int index);
 void array_deleteArrayInfo(ArrayInfo_t* arrayInfo);
 
 void disk_deleteMap(int* diskPointer);
+
+ArrayInfo_t* arrayInfo_create(int mapid,int* diskPointer,int size,MapRange_t* range
+//,AVLNodeInfo_t*  avlInfo//
+ );
+
+MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft);
 
