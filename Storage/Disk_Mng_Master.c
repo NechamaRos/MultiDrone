@@ -43,7 +43,7 @@ void disk_mng_initialize() {
     avlTree_firstInitialize();
 }
 
-int height(AVLNode_t* N) {
+int avlNode_height(AVLNode_t* N) {
     if (N == NULL)
         return 0;
     return N->height;
@@ -76,36 +76,36 @@ AVLNode_t* avlNode_create(AVLNodeInfo_t* avlNodeInfo) {
 }
 void avlNode_delete(AVLNode_t* node) {
     if (node != NULL) {
-        avlNodeInfo_delete(node->avlNodeInfo);
+        avlNodeInfo_delete(node->avlNodeInfo);//?
         free(node);
     }
 }
 
 
-AVLNode_t* rightRotate(AVLNode_t* y) {
+AVLNode_t* avlTree_rightRotate(AVLNode_t* y) {
     AVLNode_t* x = y->left;
     AVLNode_t* T2 = x->right;
     x->right = y;
     y->left = T2;
-    y->height = max(height(y->left), height(y->right)) + 1;
-    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(avlNode_height(y->left), avlNode_height(y->right)) + 1;
+    x->height = max(avlNode_height(x->left), avlNode_height(x->right)) + 1;
     return x;
 }
 
-AVLNode_t* leftRotate(AVLNode_t* x) {
+AVLNode_t* avlTree_leftRotate(AVLNode_t* x) {
     AVLNode_t* y = x->right;
     AVLNode_t* T2 = y->left;
     y->left = x;
     x->right = T2;
-    x->height = max(height(x->left), height(x->right)) + 1;
-    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(avlNode_height(x->left), avlNode_height(x->right)) + 1;
+    y->height = max(avlNode_height(y->left), avlNode_height(y->right)) + 1;
     return y;
 }
 
-int getBalance(AVLNode_t* N) {
+int avlTree_getBalance(AVLNode_t* N) {
     if (N == NULL)
         return 0;
-    return height(N->left) - height(N->right);
+    return avlNode_height(N->left) - avlNode_height(N->right);
 }
 AVLNode_t* avlTree_minValueNode(AVLNode_t* node) {
     AVLNode_t* current = node;
@@ -129,24 +129,24 @@ AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNodeInfo_t* data, int lruCounter) 
     else
         return node;
 
-    node->height = 1 + max(height(node->left), height(node->right));
+    node->height = 1 + max(avlNode_height(node->left), avlNode_height(node->right));
 
-    int balance = getBalance(node);
+    int balance = avlTree_getBalance(node);
 
     if (balance > 1 && data->mapSize < node->left->avlNodeInfo->mapSize)
-        return rightRotate(node);
+        return avlTree_rightRotate(node);
 
     if (balance < -1 && data->mapSize > node->right->avlNodeInfo->mapSize)
-        return leftRotate(node);
+        return avlTree_leftRotate(node);
 
     if (balance > 1 && data->mapSize > node->left->avlNodeInfo->mapSize) {
-        node->left = leftRotate(node->left);
-        return rightRotate(node);
+        node->left = avlTree_leftRotate(node->left);
+        return avlTree_rightRotate(node);
     }
 
     if (balance < -1 && data->mapSize < node->right->avlNodeInfo->mapSize) {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
+        node->right = avlTree_rightRotate(node->right);
+        return avlTree_leftRotate(node);
     }
 
     return node;
@@ -166,7 +166,7 @@ void avlTree_insertElement(AVLNodeInfo_t* data) {
 }
 
 
-AVLNode_t* findEligibleForDeletion(AVLNode_t* node) {
+AVLNode_t* avlTree_FindingTheNodeThatIsSuitableForDeletion(AVLNode_t* node) {
     if (node == NULL) {
         return NULL;
     }
@@ -174,7 +174,7 @@ AVLNode_t* findEligibleForDeletion(AVLNode_t* node) {
     AVLNode_t* eligibleNode = NULL;
 
     // Check the right subtree first for the largest node
-    AVLNode_t* rightResult = findEligibleForDeletion(node->right);
+    AVLNode_t* rightResult = avlTree_FindingTheNodeThatIsSuitableForDeletion(node->right);
     if (rightResult != NULL && rightResult->avlNodeInfo->lru <= disk_mng_CB->disk_SortByMapSize->lruCounter * 0.7) {
         eligibleNode = rightResult;
     }
@@ -187,7 +187,7 @@ AVLNode_t* findEligibleForDeletion(AVLNode_t* node) {
     }
 
     // Check the left subtree if no eligible node found in the right subtree or current node
-    AVLNode_t* leftResult = findEligibleForDeletion(node->left);
+    AVLNode_t* leftResult = avlTree_FindingTheNodeThatIsSuitableForDeletion(node->left);
     if (leftResult != NULL && leftResult->avlNodeInfo->lru <= disk_mng_CB->disk_SortByMapSize->lruCounter * 0.7) {
         if (eligibleNode == NULL || leftResult->avlNodeInfo->mapSize > eligibleNode->avlNodeInfo->mapSize) {
             eligibleNode = leftResult;
@@ -203,29 +203,26 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
 
     // Traverse the tree to find the node
     if (node->avlNodeInfo->mapSize < root->avlNodeInfo->mapSize) {
-        root->left = avlTree_deleteNode(root->left, node->avlNodeInfo->mapSize);
+        root->left = avlTree_deleteNode(root->left, node);
     }
     else if (node->avlNodeInfo->mapSize > root->avlNodeInfo->mapSize) {
-        root->right = avlTree_deleteNode(root->right, node->avlNodeInfo->mapSize);
+        root->right = avlTree_deleteNode(root->right, node);
     }
     else {
         // Node with mapSize found
         if ((root->left == NULL) || (root->right == NULL)) {
             AVLNode_t* temp = root->left ? root->left : root->right;
             if (temp == NULL) {
-                temp = root;
                 root = NULL;
             }
             else {
                 *root = *temp;
             }
-            free(temp->avlNodeInfo); // Free AVLNodeInfo_t
-            free(temp); // Free AVLNode_t
         }
         else {
             AVLNode_t* temp = avlTree_minValueNode(root->right);
             root->avlNodeInfo = temp->avlNodeInfo;
-            root->right = avlTree_deleteNode(root->right, temp->avlNodeInfo->mapSize);
+            root->right = avlTree_deleteNode(root->right, temp);
         }
     }
 
@@ -234,27 +231,26 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
     }
 
     // Update height and balance the node
-    root->height = max(height(root->left), height(root->right)) + 1;
-    int balance = getBalance(root);
+    root->height = max(avlNode_height(root->left), avlNode_height(root->right)) + 1;
+    int balance = avlTree_getBalance(root);
 
-    if (balance > 1 && getBalance(root->left) >= 0) {
-        return rightRotate(root);
+    if (balance > 1 && avlTree_getBalance(root->left) >= 0) {
+        return avlTree_rightRotate(root);
     }
 
-    if (balance > 1 && getBalance(root->left) < 0) {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
+    if (balance > 1 && avlTree_getBalance(root->left) < 0) {
+        root->left = avlTree_leftRotate(root->left);
+        return avlTree_rightRotate(root);
     }
 
-    if (balance < -1 && getBalance(root->right) <= 0) {
-        return leftRotate(root);
+    if (balance < -1 && avlTree_getBalance(root->right) <= 0) {
+        return avlTree_leftRotate(root);
     }
 
-    if (balance < -1 && getBalance(root->right) > 0) {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
+    if (balance < -1 && avlTree_getBalance(root->right) > 0) {
+        root->right = avlTree_rightRotate(root->right);
+        return avlTree_leftRotate(root);
     }
 
     return root;
 }
-
