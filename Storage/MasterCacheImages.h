@@ -31,7 +31,6 @@ struct ImgInfo_s
 	Point_t BR;
 	UnitNode_LRU_t* unitNodePtr;
 	int* cachePtr;
-
 };
 
 
@@ -96,12 +95,12 @@ void removefromLinkedList();
 
 //stack
 Stack_emptyPlace_t* initStuck();
-void addEmptyPlaceInImgArrayStack(int index);
+void PushEmptyPlaceInToStack(Stack_emptyPlace_t* stack,int index);
+int PopFirstEmptyPlaceInStack(Stack_emptyPlace_t* stack);
 
 //cache
 void insertTocache(int* imgData);
 void removeFromCache(int* cachePtr);
-void addEmptyPlaceInCacheStack(int index);
 
 //imgArray
 void removeFromImgArray(ImgInfo_t* imgInfoPtr);
