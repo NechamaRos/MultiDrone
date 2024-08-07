@@ -79,27 +79,36 @@ struct MasterCacheImg_cb_s
 	LinkedList_LRU_t* LRU;
 };
 
+//info
 Point_t createPoint(int x, int y);
-UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
 ImgInfo_t* createImgInfo(int imgId, int slaveId,Point_t TL,Point_t BR);
-void throwExcptionToFile(ERRORS);
+
+//init cb
+void initMasterCacheImg_cb();
+
+//linkedList
+UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
 LinkedList_LRU_t* initLinkedList();
 void insertInToLinedList(UnitNode_LRU_t* node);
-void initMasterCacheImg_cb();
 void moveToTheBeginning(UnitNode_LRU_t* node);
 void removefromLinkedList();
-void initUnitNodeEmptyPlaceInCache();
-void initQueueEmptyPlaceInCache();
+
+//stack
 Stack_emptyPlace_t* initStuck();
+void addEmptyPlaceInImgArrayStack(int index);
+
+//cache
 void insertTocache(int* imgData);
 void removeFromCache(int* cachePtr);
-void addEmptyPlaceInImgArrayStack(int index);
 void addEmptyPlaceInCacheStack(int index);
 
-char* stringError(ERRORS err);
+//imgArray
 void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
+//help func
+char* stringError(ERRORS err);
+void throwExcptionToFile(ERRORS);
 
 
 
