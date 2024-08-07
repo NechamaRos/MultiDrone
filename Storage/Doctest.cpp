@@ -5,6 +5,7 @@
 extern "C" {
 #include"MasterCacheImages.h"
 MasterCacheImg_cb_t* masterCacheImg_cb;
+
 }
 
 TEST_CASE("create point")
@@ -123,4 +124,18 @@ TEST_CASE("move to the Beginning")
 	CHECK(masterCacheImg_cb->LRU->head == nodeA->prev);
 	CHECK(nodeA->next == node);
 	CHECK(node->prev == nodeA);
+}
+
+TEST_CASE("init stack all place is empty")
+{
+	//act
+	Stack_emptyPlace_t* stack = initStuck();
+	//assert
+	int length = stack->length;
+	int firstEmptyPlace = stack->emptyPlaceInTheArray[0];
+	int lastEmptyPlace = stack->emptyPlaceInTheArray[CACHE_SIZE-1];
+
+	CHECK(length == CACHE_SIZE);
+	CHECK(firstEmptyPlace == CACHE_SIZE - 1);
+	CHECK(lastEmptyPlace == 0);
 }
