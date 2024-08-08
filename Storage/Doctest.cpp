@@ -1,9 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include <cstdint>  
 #include"doctest.h"
 extern "C" {
 #include"MasterCacheImages.h"
 	MasterCacheImg_cb_t* masterCacheImg_cb;
- 
+}
 TEST_CASE("create point")
 {
 	//act
@@ -28,10 +29,10 @@ TEST_CASE("create imgInfo")
 	CHECK(imgInfo->TL.y == tl.y);
 	CHECK(imgInfo->slaveId == 2);
 	CHECK(imgInfo->imgId == 0);
-	CHECK(imgInfo->cachePtr == masterCacheImg_cb->cache);
+
 	freeMasterCacheImg_cb();
 	
-}
+}	
 TEST_CASE("Testing connect Between Both Datas")
 {
 	//arrange
@@ -77,8 +78,10 @@ TEST_CASE("insert to linked List when there is no links in the linkedList")
 	Point_t br = createPoint(5, 12);
 	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
 	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
-   //act
-	insertInToLinedList(node);
+	int* a = init_imgData();
+	
+    //act
+	insertData(node, a);
 	//assert
 	CHECK(masterCacheImg_cb->LRU->head->next == node);
 	CHECK(masterCacheImg_cb->LRU->tail->prev == node);
@@ -86,6 +89,20 @@ TEST_CASE("insert to linked List when there is no links in the linkedList")
 	CHECK(masterCacheImg_cb->LRU->tail == node->next);
 	CHECK(masterCacheImg_cb->LRU->AmountOfLinks == 1);
 	freeMasterCacheImg_cb();
+}
+TEST_CASE("insert to image array")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
+	//act
+	insertToImgArray(imgInfo);
+	//assert
+	CHECK(masterCacheImg_cb->imgArray[0] == imgInfo);
+	freeMasterCacheImg_cb();
+
 }
 TEST_CASE("insert to linked List when there is one  or more links in the linkedList")
 {
@@ -96,10 +113,12 @@ TEST_CASE("insert to linked List when there is one  or more links in the linkedL
 	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
 	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
 	ImgInfo_t* imgInfoA = createImgInfo(8, 2, tl, br);
-	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfo);
-	insertInToLinedList(nodeA);
+	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfoA);
+	int* a = init_imgData();
+	int* s = init_imgData();
+	insertData(nodeA,s);	
 	//act
-	insertInToLinedList(node);
+	insertData(node, a);
 	//assert
 	CHECK(masterCacheImg_cb->LRU->head->next == node);
 	CHECK(masterCacheImg_cb->LRU->head == node->prev);
@@ -117,9 +136,11 @@ TEST_CASE("move to the Beginning")
 	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
 	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
 	ImgInfo_t* imgInfoA = createImgInfo(8, 2, tl, br);
-	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfo);
-	insertInToLinedList(nodeA);
-	insertInToLinedList(node);
+	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfoA);
+	int* a = init_imgData();
+	int* s = init_imgData();
+	insertData(nodeA, s);
+	insertData(node, a);
 	//act
 	moveToTheBeginning(nodeA);
 	//assert
@@ -127,6 +148,48 @@ TEST_CASE("move to the Beginning")
 	CHECK(masterCacheImg_cb->LRU->head == nodeA->prev);
 	CHECK(nodeA->next == node);
 	CHECK(node->prev == nodeA);
+	freeMasterCacheImg_cb();
+}
+TEST_CASE("insert data")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
+	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
+	int* a = init_imgData();
+	//act
+	insertData(node,a);
+	CHECK(masterCacheImg_cb->cache[0] == a);
+	CHECK(masterCacheImg_cb->imgArray[0] == imgInfo);
+	CHECK(imgInfo->arrayIndexPtr == &masterCacheImg_cb->imgArray[0]);
+	CHECK(imgInfo->cachePtr == &masterCacheImg_cb->cache[0]);
+	CHECK(masterCacheImg_cb->emptyPlaceInCache->length == 99);
+	CHECK(masterCacheImg_cb->emptyPlaceInTheArray->length == 99);
+	freeMasterCacheImg_cb();
+}
+TEST_CASE("insert two images to data")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	ImgInfo_t* imgInfo = createImgInfo(0, 2, tl, br);
+	ImgInfo_t* imgInfoA = createImgInfo(0, 1, tl, br);
+	UnitNode_LRU_t* node = createUnitNode_LRU(imgInfo);
+	UnitNode_LRU_t* nodeA = createUnitNode_LRU(imgInfoA);
+	int* a = init_imgData();
+	insertData(nodeA, a);
+	//act
+	insertData(node, a);
+	//assert
+	CHECK(masterCacheImg_cb->cache[1] == a);
+	CHECK(masterCacheImg_cb->imgArray[1] == imgInfo);
+	CHECK(imgInfo->arrayIndexPtr == &masterCacheImg_cb->imgArray[1]);
+	//CHECK(imgInfo->cachePtr == &masterCacheImg_cb->cache[1]);
+	CHECK(masterCacheImg_cb->emptyPlaceInCache->length == 98);
+	CHECK(masterCacheImg_cb->emptyPlaceInTheArray->length == 98);
 	freeMasterCacheImg_cb();
 }
 TEST_CASE("remove when cach is full")
@@ -137,23 +200,22 @@ TEST_CASE("remove when cach is full")
 	ImgInfo_t* imgInfo;
 	UnitNode_LRU_t* node;
 	int* imgData=NULL;
+	int* a;
 	initMasterCacheImg_cb();
 	for (int i =0;i < 100;i++)
 	{
 		tl= createPoint(i, 6);
 		br= createPoint(i+2, 12);
 		imgInfo= createImgInfo(i, 2, tl, br);
-		insertTocache(imgData);
-		int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInTheArray);
-		masterCacheImg_cb->imgArray[index] = imgInfo;
-		node = createUnitNode_LRU(masterCacheImg_cb->imgArray[index]);
-		insertInToLinedList(node);
+		node = createUnitNode_LRU(imgInfo);
+		a = init_imgData();
+		insertData(node,a);
 	}
 	//act
 	removeTenPercentFromCache();
 	//assert
 	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10));
-	//freeMasterCacheImg_cb();
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("Pop first empty place in cache stack ")
 {
@@ -214,14 +276,14 @@ TEST_CASE("init stack all place is empty")
 	CHECK(stack->emptyPlaceInTheArray[CACHE_SIZE - 1] == 0);
 	free(stack);
 }
-TEST_CASE("insert to cache")
-{
-	//arrange
-	int* imgData = NULL;
-	//int index = CACHE_SIZE - (masterCacheImg_cb->emptyPlaceInCache->length + 1);
-	//act
-	insertTocache(imgData);
-	//assert
-	CHECK(masterCacheImg_cb->cache[0] == imgData);
-}
+//TEST_CASE("insert to cache")
+//{
+//	//arrange
+//	int* imgData = NULL;
+//	//int index = CACHE_SIZE - (masterCacheImg_cb->emptyPlaceInCache->length + 1);
+//	//act
+//	insertTocache(imgData,);
+//	//assert
+//	//CHECK(masterCacheImg_cb->cache[0] == imgData);
+//}
  

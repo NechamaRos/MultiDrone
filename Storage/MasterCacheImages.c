@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include<stdio.h>
+#include <time.h>
+
 
 
 MasterCacheImg_cb_t* masterCacheImg_cb;
@@ -36,7 +38,7 @@ void freeMasterCacheImg_cb()
 void removeAllData()
 {
     //Loop on all Links in linkedList
-    while (masterCacheImg_cb->LRU->AmountOfLinks!=0)
+    while (masterCacheImg_cb->LRU->AmountOfLinks != 0)
     {
         removefromLinkedList();
     }
@@ -49,6 +51,26 @@ Point_t createPoint(int x, int y)
     p.y = y;
     return p;
 }
+int* init_imgData()
+{
+    //allocate memory for imgData
+    int* imgData = (int*)malloc(sizeof(int));
+    //failed to assig
+    if (!imgData)
+    {
+        errno = ALLOCATE_ERROR;
+        throwExcptionToFile(ALLOCATE_ERROR);
+        return;
+    }
+    // Seed the random number generator with the current time
+    srand(time(0));
+    // Generate a random number
+    *imgData = rand() % 1000;
+    return imgData;
+}
+
+
+
 ImgInfo_t* createImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
 {
     //allocate memory for ImgInfo_t
@@ -64,9 +86,11 @@ ImgInfo_t* createImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
     imgInfo->TL = TL;
     imgInfo->BR = BR;
     imgInfo->unitNodePtr = NULL;
-    imgInfo->cachePtr = NULL; 
- /*   int indexAtCache = masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[masterCacheImg_cb->emptyPlaceInCache->length - 1];
-    imgInfo->cachePtr =masterCacheImg_cb->cache[indexAtCache];*/
+    imgInfo->arrayIndexPtr = NULL;
+    imgInfo->unitNodePtr = NULL;
+    int indexInCache = NULL;
+    //int indexInCache =  masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[masterCacheImg_cb->emptyPlaceInCache->length-1];
+    //imgInfo->cachePtr = &masterCacheImg_cb->cache[indexInCache];
     return imgInfo;
 }
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo)
@@ -171,6 +195,7 @@ void removefromLinkedList()
     }
     else
     {
+        removeFromImgArray(masterCacheImg_cb->LRU->tail->prev->imgInfoPtr);
         free(masterCacheImg_cb->LRU->tail->prev);
         masterCacheImg_cb->LRU->tail->prev = NULL;
         masterCacheImg_cb->LRU->head->next = NULL;
@@ -210,9 +235,8 @@ void removeTenPercentFromCache()
  
 void PushEmptyPlaceInToStack(Stack_emptyPlace_t* stack, int index)
 {
-    int length = stack->length-1;
     //Updating the stack of imgArray that freed up space 
-    stack->emptyPlaceInTheArray[length] = index;
+    stack->emptyPlaceInTheArray[stack->length ] = index;
     stack->length += 1;
 }
 
@@ -222,18 +246,18 @@ int PopFirstEmptyPlaceInStack(Stack_emptyPlace_t* stack)
     return stack->emptyPlaceInTheArray[stack->length];
 }
 
-void insertTocache(int* imgData)
+void insertTocache(int* imgData,ImgInfo_t* imgInfo)
 {
-    int index = CACHE_SIZE - masterCacheImg_cb->emptyPlaceInCache->length;
+
+    int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInCache);
     masterCacheImg_cb->cache[index] = imgData;
-    int indexInStackOfCache = masterCacheImg_cb->emptyPlaceInCache->length;
-    masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[indexInStackOfCache]=index;
+    imgInfo->cachePtr = &masterCacheImg_cb->cache[index];
 }
 
 void removeFromCache(int* cachePtr)
 {
-    //Calculation of freed cache memory space
-    int indexInArrayCache = cachePtr - &(masterCacheImg_cb->cache[0]) ;
+    //Calculation index in array
+    int indexInArrayCache = (cachePtr - &(masterCacheImg_cb->cache[0]))/2 ;
     //Updating the stack that freed up space in the cache 
     PushEmptyPlaceInToStack(masterCacheImg_cb->emptyPlaceInCache,indexInArrayCache);
     //update to null the cache memory
@@ -241,16 +265,29 @@ void removeFromCache(int* cachePtr)
     masterCacheImg_cb->cache[indexInArrayCache] = NULL;
 }
 
+void insertToImgArray(ImgInfo_t* imgInfo)
+{
+    int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInTheArray);
+    masterCacheImg_cb->imgArray[index] = imgInfo;
+    imgInfo->arrayIndexPtr = &(masterCacheImg_cb->imgArray[index]);
+
+}
 
 void removeFromImgArray(ImgInfo_t* imgInfo)
 {
-   int index = imgInfo - &(masterCacheImg_cb->imgArray[0]);
+   int index = imgInfo->arrayIndexPtr -&(masterCacheImg_cb->imgArray[0]);
    removeFromCache(imgInfo->cachePtr);
    PushEmptyPlaceInToStack(masterCacheImg_cb->emptyPlaceInTheArray, index);
    //free the imgArray
    free(imgInfo);
    masterCacheImg_cb->imgArray[index] = NULL;
    return;
+}
+void insertData(UnitNode_LRU_t* node, int* imgData)
+{
+    insertTocache(imgData,node->imgInfoPtr);
+    insertToImgArray(node->imgInfoPtr);
+    insertInToLinedList(node);
 }
 
 char* stringError(ERRORS err)
