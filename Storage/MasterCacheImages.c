@@ -142,7 +142,7 @@ void removeFromCache(int* cachePtr)
     cachePtr = NULL;
     masterCacheImg_cb->cache[indexInArrayCache] = NULL;
 }
-
+ 
 void removeFromImgArray(ImgInfo_t* imgInfo)
 {
     ImgInfo_t* base = &(masterCacheImg_cb->imgArray[0]);
