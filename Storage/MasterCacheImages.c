@@ -18,11 +18,11 @@ void initMasterCacheImg_cb()
         throwExcptionToFile(ALLOCATE_ERROR);
     }
     masterCacheImg_cb->LRU = initLinkedList();
-    masterCacheImg_cb->emptyPlaceInCache = initStuck();
-    masterCacheImg_cb->emptyPlaceInTheArray = initStuck();
+    masterCacheImg_cb->emptyPlaceInCache = initStack();
+    masterCacheImg_cb->emptyPlaceInTheArray = initStack();
     memset(masterCacheImg_cb->imgArray, 0, sizeof(masterCacheImg_cb->imgArray));
     memset(masterCacheImg_cb->cache, 0, sizeof(masterCacheImg_cb->cache));
-}
+} 
 
 void freeMasterCacheImg_cb()
 {
@@ -64,8 +64,9 @@ ImgInfo_t* createImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
     imgInfo->TL = TL;
     imgInfo->BR = BR;
     imgInfo->unitNodePtr = NULL;
-    int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInCache);
-    imgInfo->cachePtr = &(masterCacheImg_cb->cache[index]);
+    imgInfo->cachePtr = NULL; 
+ /*   int indexAtCache = masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[masterCacheImg_cb->emptyPlaceInCache->length - 1];
+    imgInfo->cachePtr =masterCacheImg_cb->cache[indexAtCache];*/
     return imgInfo;
 }
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo)
@@ -84,6 +85,12 @@ UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo)
     return node;
 }
 
+ void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
+{
+    //The pointers point to each other
+    node->imgInfoPtr = imgInfo;
+    imgInfo->unitNodePtr = node;
+}
 LinkedList_LRU_t* initLinkedList()
 {
     ////allocate memory for LinkedList_LRU_t
@@ -148,6 +155,7 @@ void moveToTheBeginning(UnitNode_LRU_t* node)
     }
 }
 
+ 
 void removefromLinkedList()
 {
     //there is more that one link
@@ -170,25 +178,7 @@ void removefromLinkedList()
     }
    
 }
-
-void removeTenPercentFromCache()
-{
-    //loop that remove 10% of the cache
-    for (int i = 0;i < CACHE_SIZE / 10;i++)
-    {
-        removefromLinkedList();
-    }
-
-}
-
-void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
-{
-    //The pointers point to each other
-    node->imgInfoPtr = imgInfo;
-    imgInfo->unitNodePtr = node;
-}
- 
-Stack_emptyPlace_t* initStuck()
+Stack_emptyPlace_t* initStack()
 {
     Stack_emptyPlace_t* stack = (Stack_emptyPlace_t*)malloc(sizeof(Stack_emptyPlace_t));
     //failed to assign
@@ -206,6 +196,18 @@ Stack_emptyPlace_t* initStuck()
     return stack;
 }
 
+
+
+void removeTenPercentFromCache()
+{
+    //loop that remove 10% of the cache
+    for (int i = 0;i < CACHE_SIZE / 10;i++)
+    {
+        removefromLinkedList();
+    }
+
+}
+ 
 void PushEmptyPlaceInToStack(Stack_emptyPlace_t* stack, int index)
 {
     int length = stack->length-1;

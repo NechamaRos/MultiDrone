@@ -1,12 +1,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-
 #include"doctest.h"
 extern "C" {
 #include"MasterCacheImages.h"
-MasterCacheImg_cb_t* masterCacheImg_cb;
+	MasterCacheImg_cb_t* masterCacheImg_cb;
  
-}
-
 TEST_CASE("create point")
 {
 	//act
@@ -139,13 +136,17 @@ TEST_CASE("remove when cach is full")
 	Point_t br;
 	ImgInfo_t* imgInfo;
 	UnitNode_LRU_t* node;
+	int* imgData=NULL;
 	initMasterCacheImg_cb();
-	for (int i = 1;i <= 100;i++)
+	for (int i =0;i < 100;i++)
 	{
-		tl= createPoint(i, 5);
+		tl= createPoint(i, 6);
 		br= createPoint(i+2, 12);
 		imgInfo= createImgInfo(i, 2, tl, br);
-		node = createUnitNode_LRU(imgInfo);
+		insertTocache(imgData);
+		int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInTheArray);
+		masterCacheImg_cb->imgArray[index] = imgInfo;
+		node = createUnitNode_LRU(masterCacheImg_cb->imgArray[index]);
 		insertInToLinedList(node);
 	}
 	//act
@@ -206,11 +207,21 @@ TEST_CASE("Push empty place in to stack after a few Pop")
 TEST_CASE("init stack all place is empty")
 {
 	//act
-	Stack_emptyPlace_t* stack = initStuck();
+	Stack_emptyPlace_t* stack = initStack();
 	//assert
 	CHECK(stack->length == CACHE_SIZE);
 	CHECK(stack->emptyPlaceInTheArray[0] == CACHE_SIZE - 1);
 	CHECK(stack->emptyPlaceInTheArray[CACHE_SIZE - 1] == 0);
 	free(stack);
+}
+TEST_CASE("insert to cache")
+{
+	//arrange
+	int* imgData = NULL;
+	//int index = CACHE_SIZE - (masterCacheImg_cb->emptyPlaceInCache->length + 1);
+	//act
+	insertTocache(imgData);
+	//assert
+	CHECK(masterCacheImg_cb->cache[0] == imgData);
 }
  
