@@ -20,8 +20,26 @@ void initMasterCacheImg_cb()
     masterCacheImg_cb->LRU = initLinkedList();
     masterCacheImg_cb->emptyPlaceInCache = initStuck();
     masterCacheImg_cb->emptyPlaceInTheArray = initStuck();
-    memset(masterCacheImg_cb->imgArray, NULL, sizeof(masterCacheImg_cb->imgArray));
-    memset(masterCacheImg_cb->cache, NULL, sizeof(masterCacheImg_cb->cache));
+    memset(masterCacheImg_cb->imgArray, 0, sizeof(masterCacheImg_cb->imgArray));
+    memset(masterCacheImg_cb->cache, 0, sizeof(masterCacheImg_cb->cache));
+}
+
+void freeMasterCacheImg_cb()
+{
+    removeAllData();
+    free(masterCacheImg_cb->emptyPlaceInCache);
+    free(masterCacheImg_cb->emptyPlaceInTheArray);
+    free(masterCacheImg_cb->LRU);
+    free(masterCacheImg_cb);
+}
+
+void removeAllData()
+{
+    //Loop on all Links in linkedList
+    while (masterCacheImg_cb->LRU->AmountOfLinks!=0)
+    {
+        removefromLinkedList();
+    }
 }
 
 Point_t createPoint(int x, int y)
@@ -132,18 +150,35 @@ void moveToTheBeginning(UnitNode_LRU_t* node)
 
 void removefromLinkedList()
 {
-    UnitNode_LRU_t* tmp;
-    //loop that remove 10% of the cache
-    for (int i = 0;i < CACHE_SIZE / 10;i++)
+    //there is more that one link
+    if (masterCacheImg_cb->LRU->AmountOfLinks > 1)
     {
+        UnitNode_LRU_t* tmp;
         tmp = masterCacheImg_cb->LRU->tail->prev;
         masterCacheImg_cb->LRU->tail->prev = tmp->prev;
         tmp->prev->next = masterCacheImg_cb->LRU->tail;
         masterCacheImg_cb->LRU->AmountOfLinks -= 1;
         removeFromImgArray(tmp->imgInfoPtr);
-        free(tmp->imgInfoPtr);
         free(tmp);
     }
+    else
+    {
+        free(masterCacheImg_cb->LRU->tail->prev);
+        masterCacheImg_cb->LRU->tail->prev = NULL;
+        masterCacheImg_cb->LRU->head->next = NULL;
+        masterCacheImg_cb->LRU->AmountOfLinks -= 1;
+    }
+   
+}
+
+void removeTenPercentFromCache()
+{
+    //loop that remove 10% of the cache
+    for (int i = 0;i < CACHE_SIZE / 10;i++)
+    {
+        removefromLinkedList();
+    }
+
 }
 
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
@@ -204,7 +239,8 @@ void removeFromCache(int* cachePtr)
     masterCacheImg_cb->cache[indexInArrayCache] = NULL;
 }
 
-void removefromImgArray(ImgInfo_t* imgInfo)
+
+void removeFromImgArray(ImgInfo_t* imgInfo)
 {
    int index = imgInfo - &(masterCacheImg_cb->imgArray[0]);
    removeFromCache(imgInfo->cachePtr);

@@ -31,6 +31,8 @@ TEST_CASE("create imgInfo")
 	CHECK(imgInfo->TL.y == tl.y);
 	CHECK(imgInfo->slaveId == 2);
 	CHECK(imgInfo->imgId == 0);
+	CHECK(imgInfo->cachePtr == masterCacheImg_cb->cache);
+	freeMasterCacheImg_cb();
 	
 }
 TEST_CASE("Testing connect Between Both Datas")
@@ -45,8 +47,7 @@ TEST_CASE("Testing connect Between Both Datas")
 	//assert
 	CHECK(imgInfo->unitNodePtr == node);
 	CHECK(node->imgInfoPtr == imgInfo);
-	
-	
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("testing create UnitNode_LRU")
 {
@@ -60,6 +61,7 @@ TEST_CASE("testing create UnitNode_LRU")
 	//assert
 	CHECK(node->next == NULL);
 	CHECK(node->prev == NULL);
+	freeMasterCacheImg_cb();
 }
 TEST_CASE(" testing initLinkedList")
 {
@@ -86,6 +88,7 @@ TEST_CASE("insert to linked List when there is no links in the linkedList")
 	CHECK(masterCacheImg_cb->LRU->head == node->prev);
 	CHECK(masterCacheImg_cb->LRU->tail == node->next);
 	CHECK(masterCacheImg_cb->LRU->AmountOfLinks == 1);
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("insert to linked List when there is one  or more links in the linkedList")
 {
@@ -106,6 +109,7 @@ TEST_CASE("insert to linked List when there is one  or more links in the linkedL
 	CHECK(nodeA == node->next);
 	CHECK(nodeA->prev == node);
 	CHECK(masterCacheImg_cb->LRU->AmountOfLinks == 2);
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("move to the Beginning")
 {
@@ -126,7 +130,7 @@ TEST_CASE("move to the Beginning")
 	CHECK(masterCacheImg_cb->LRU->head == nodeA->prev);
 	CHECK(nodeA->next == node);
 	CHECK(node->prev == nodeA);
- 
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("remove when cach is full")
 {
@@ -145,9 +149,10 @@ TEST_CASE("remove when cach is full")
 		insertInToLinedList(node);
 	}
 	//act
-	removefromLinkedList();
+	removeTenPercentFromCache();
 	//assert
 	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10));
+	//freeMasterCacheImg_cb();
 }
 TEST_CASE("Pop first empty place in cache stack ")
 {
@@ -157,6 +162,7 @@ TEST_CASE("Pop first empty place in cache stack ")
 	int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInCache);
 	//assert
 	CHECK(index == 0);
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("Pop first empty place in cache stack after a few pops")
 {
@@ -169,6 +175,7 @@ TEST_CASE("Pop first empty place in cache stack after a few pops")
 	int index = PopFirstEmptyPlaceInStack(masterCacheImg_cb->emptyPlaceInCache);
 	//assert
 	CHECK(index == 3);
+	freeMasterCacheImg_cb();
 }
 TEST_CASE("Push empty place in to stack")
 {
@@ -179,6 +186,7 @@ TEST_CASE("Push empty place in to stack")
 	PushEmptyPlaceInToStack(masterCacheImg_cb->emptyPlaceInCache, index);
 	//assert
 	CHECK(masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[CACHE_SIZE-1] == 0);
+	freeMasterCacheImg_cb();
 }
 
 TEST_CASE("Push empty place in to stack after a few Pop")
@@ -192,6 +200,7 @@ TEST_CASE("Push empty place in to stack after a few Pop")
 	PushEmptyPlaceInToStack(masterCacheImg_cb->emptyPlaceInCache, index);
 	//assert
 	CHECK(masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[masterCacheImg_cb->emptyPlaceInCache->length-1] == 2);
+	freeMasterCacheImg_cb();
 }
 
 TEST_CASE("init stack all place is empty")
@@ -199,12 +208,9 @@ TEST_CASE("init stack all place is empty")
 	//act
 	Stack_emptyPlace_t* stack = initStuck();
 	//assert
-	int length = stack->length;
-	int firstEmptyPlace = stack->emptyPlaceInTheArray[0];
-	int lastEmptyPlace = stack->emptyPlaceInTheArray[CACHE_SIZE-1];
-
-	CHECK(length == CACHE_SIZE);
-	CHECK(firstEmptyPlace == CACHE_SIZE - 1);
-	CHECK(lastEmptyPlace == 0);
+	CHECK(stack->length == CACHE_SIZE);
+	CHECK(stack->emptyPlaceInTheArray[0] == CACHE_SIZE - 1);
+	CHECK(stack->emptyPlaceInTheArray[CACHE_SIZE - 1] == 0);
+	free(stack);
 }
  
