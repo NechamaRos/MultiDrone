@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="..\Data_transferring\TransferData.cpp" />
     <ClCompile Include="..\Data_transferring\TransferData_test.cpp" />
+    <ClCompile Include="..\Socket_communication\Server_function.cpp" />
     <ClCompile Include="..\Socket_communication\Server_test.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
@@ -148,12 +149,12 @@
     <ClCompile Include="MatMessage_test.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Meta_Data.cpp" />
-    <ClCompile Include="Server_function.cpp" />
     <ClCompile Include="VecMessage.cpp" />
     <ClCompile Include="VecMessage_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Data_transferring\TransferData.h" />
+    <ClInclude Include="..\Socket_communication\Server_function.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
@@ -166,7 +167,6 @@
     <ClInclude Include="MatMessage.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Meta_Data.h" />
-    <ClInclude Include="Server_function.h" />
     <ClInclude Include="VecMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

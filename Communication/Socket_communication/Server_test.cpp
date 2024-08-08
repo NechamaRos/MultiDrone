@@ -19,15 +19,15 @@ TEST_CASE("initialize_winsock") {
 }
 
 TEST_CASE("get_server_info") {
-	int x = setupAddressInfo(" ", &hints, &servinfo);
+	int x = setupAddressInfo(&servinfo);
 	printf("get_server_info=%d\n", x);
 	CHECK(x == 0);
 }
 
 TEST_CASE("bind_to_first_available_socket") {
-	int x = bind_to_first_available_socket(sockfd, servinfo);
-	printf("bind_to_first_available_socket=%d\n", x);
-	CHECK(x == 0);
+	sockfd = bind_to_first_available_socket(servinfo);
+	printf("bind_to_first_available_socket=%d\n", sockfd);
+	CHECK(sockfd >1);
 }
 
 TEST_CASE("start_listening") {
