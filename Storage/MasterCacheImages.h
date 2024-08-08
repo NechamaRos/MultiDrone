@@ -47,6 +47,7 @@ struct UnitNode_LRU_s
     UnitNode_LRU_t* prev;
 	ImgInfo_t* imgInfoPtr;
 
+	
 };
 
  struct LinkedList_LRU_s
@@ -71,7 +72,7 @@ struct queue_emptyPlaceInCache_s
 
 struct MasterCacheImg_cb_s
 {
-	int cache[CACHE_SIZE];
+	int* cache[CACHE_SIZE];
 	Stack_emptyPlace_t* emptyPlaceInCache;
 	ImgInfo_t* imgArray[CACHE_SIZE];
 	Stack_emptyPlace_t* emptyPlaceInTheArray;
@@ -94,7 +95,7 @@ void moveToTheBeginning(UnitNode_LRU_t* node);
 void removefromLinkedList();
 
 //stack
-Stack_emptyPlace_t* initStuck();
+Stack_emptyPlace_t* initStack();
 void PushEmptyPlaceInToStack(Stack_emptyPlace_t* stack,int index);
 int PopFirstEmptyPlaceInStack(Stack_emptyPlace_t* stack);
 
