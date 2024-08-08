@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <bitset>
+#include <stdexcept> // This for std::runtime_error
 #include "../Communication/Meta_Data.h" 
 constexpr size_t MAX_DATA_SIZE_FOR_THREAD = 4;//4 bytes 1048576=1mb
 constexpr size_t OPTION_TO_SEND = 2; //sends Asynchronously

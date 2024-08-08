@@ -28,7 +28,6 @@ struct Image {
     /// <type param name="D">The dimensionality of the image.</type param>
     /// <param name="dims">The dimensions of the image.</param>
     /// <returns>The total size of the image in pixels.</returns>
-	template<size_t D>
 	void initImage(const array<size_t, D>& dims) {
 		dimensions = dims;
 		size_t totalSize = 1;

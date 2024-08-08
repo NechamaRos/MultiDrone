@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <algorithm> // This header for std::reverse
 
 using namespace std;
 

@@ -53,7 +53,6 @@ public:
 	const Data_Compression<D>* getCompress() const {
 		return compress;
 	}
-
 };
 
 template<size_t D>

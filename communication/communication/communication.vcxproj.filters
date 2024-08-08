@@ -7,9 +7,6 @@
     <Filter Include="Test\Validation">
       <UniqueIdentifier>{8dfbaf11-f5ef-407c-80bb-48e7fd1f1900}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Test\DataTransferring">
-      <UniqueIdentifier>{16521998-4719-4cdc-b681-94a69e469f1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data_Compression">
       <UniqueIdentifier>{b465e5c8-4282-44c3-a66b-e35902e72adb}</UniqueIdentifier>
     </Filter>
@@ -76,6 +73,9 @@
     <Filter Include="Test\Message">
       <UniqueIdentifier>{3acd9106-9e06-481b-97a7-fdb38cabc26b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test\Data_Transferring">
+      <UniqueIdentifier>{16521998-4719-4cdc-b681-94a69e469f1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Validation\Convert_test.cpp">
@@ -88,7 +88,7 @@
       <Filter>Test\Validation</Filter>
     </ClCompile>
     <ClCompile Include="..\Data_transferring\TransferData_test.cpp">
-      <Filter>Test\DataTransferring</Filter>
+      <Filter>Test\Data_Transferring</Filter>
     </ClCompile>
     <ClCompile Include="..\Data_Comperession\CompressionTests.cpp">
       <Filter>Test\Data_Compression</Filter>

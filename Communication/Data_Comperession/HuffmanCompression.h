@@ -1,9 +1,8 @@
 #pragma once
-#include "Image.h"
-#include "HuffmanNode.h"
-#include <iostream>
+#include <algorithm>
 #include <queue>
 #include <map>
+#include "HuffmanNode.h"
 #include"Data_Compression.h"
 #include "ImageConversions.h"
 
@@ -109,16 +108,18 @@ string runLengthEncode(const vector<unsigned char>& data);
 template<size_t D>
 string bestCompression(const string& huffmanCompressed, const string& rleCompressed, const Image<D>& img) {
 	size_t rawSize = img.pixels.size();
-	size_t huffmanSize = huffmanCompressed.length() / 8;
-	size_t rleSize = rleCompressed.length() ;
+	size_t huffmanSize = huffmanCompressed.size();
+	size_t rleSize = rleCompressed.size();
 
 	// Convert Huffman compressed string to bytes and apply RLE
 	vector<unsigned char> huffmanCompressedBytes = bitStringToBytes(huffmanCompressed);
 	string rleHufCompression = runLengthEncode(huffmanCompressedBytes);
-	size_t rleHufSize = rleHufCompression.length();
+	size_t rleHufSize = rleHufCompression.size();
 
 	// Find the smallest size
-	size_t minSize = min({ rawSize, huffmanSize, rleSize, rleHufSize });
+	//size_t minSize = min({ rawSize, huffmanSize, rleSize, rleHufSize });
+	array<size_t, 4> sizes = { rawSize, huffmanSize, rleSize, rleHufSize };
+	size_t minSize = *min_element(sizes.begin(), sizes.end());
 
 	if (minSize == rawSize) {
 		cout << "RAW compression\n";

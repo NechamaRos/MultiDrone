@@ -39,12 +39,7 @@ public:
 		}
 		compressByType();
 	}
-	Data(Data<D>& data) :metaData(data.metaData), message(data.message ? data.message->clone() : nullptr)
-	{
-		if (data.message) {
-			this->message = copyMessage(data.message);
-		}
-	}
+	Data(Data<D>& data) :metaData(data.metaData), message(data.message ? copyMessage(data.message) : nullptr){}
 	~Data() {
 		if (this->message != nullptr) {
 			delete this->message;
