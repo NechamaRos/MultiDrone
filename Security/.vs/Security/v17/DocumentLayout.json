@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\API.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\API.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -15,12 +19,8 @@
       "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\AES.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\API.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\API.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|solutionrelative:Security\\tests.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{07913333-3D44-41B8-910C-12B081369820}|Security\\Security.vcxproj|D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\doctest.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -46,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -90,7 +90,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "API.cpp",
               "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.cpp",
               "RelativeDocumentMoniker": "Security\\API.cpp",
@@ -98,7 +98,8 @@
               "RelativeToolTip": "Security\\API.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-07-29T19:32:54.764Z"
+              "WhenOpened": "2024-07-29T19:32:54.764Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -126,52 +127,55 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AES.cpp",
               "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.cpp",
               "RelativeDocumentMoniker": "Security\\AES.cpp",
               "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.cpp",
               "RelativeToolTip": "Security\\AES.cpp",
-              "ViewState": "AQIAAAsAAAAAAAAAAAApwDQAAAAiAAAA",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAAB4AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-07-28T19:37:13.801Z"
+              "WhenOpened": "2024-07-28T19:37:13.801Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "AES.h",
               "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.h",
               "RelativeDocumentMoniker": "Security\\AES.h",
               "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\AES.h",
               "RelativeToolTip": "Security\\AES.h",
-              "ViewState": "AQIAAB4AAAAAAAAAAAApwCwAAAAhAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAApwC0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-07-28T19:34:01.543Z"
+              "WhenOpened": "2024-07-28T19:34:01.543Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "tests.cpp",
               "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp",
               "RelativeDocumentMoniker": "Security\\tests.cpp",
               "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\tests.cpp",
               "RelativeToolTip": "Security\\tests.cpp",
-              "ViewState": "AQIAAKQBAAAAAAAAAAAAAKYBAAAAAAAA",
+              "ViewState": "AQIAAH0BAAAAAAAAAAAAAKYBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-07-28T19:28:23.493Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "API.h",
               "DocumentMoniker": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.h",
               "RelativeDocumentMoniker": "Security\\API.h",
               "ToolTip": "D:\\\u05E4\u05E8\u05E7\u05D8\u05D9\u05E7\u05D5\u05DD\\git project\\MultiDrone\\Security\\Security\\API.h",
               "RelativeToolTip": "Security\\API.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-08-05T11:09:38.14Z"
+              "WhenOpened": "2024-08-05T11:09:38.14Z",
+              "EditorCaption": ""
             }
           ]
         }
