@@ -4,6 +4,7 @@
 #include <chrono>
 #include <vector>
 #include <bitset>
+#include <stdexcept>
 #include "TransferData.h"
 #include "../Communication/Meta_Data.h"
 
@@ -26,6 +27,7 @@ bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex) {
         if (chunk.empty()) {
             throw std::runtime_error("Chunk is empty");
         }
+        //Noa function
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << "Sent chunk: " << chunk << std::endl;
 
@@ -49,7 +51,7 @@ bool TransferData::sendMetaData(const Meta_Data& metaData)
     }
     catch (const std::exception&)
     {
-        throw exception("The send failed");
+        throw std::runtime_error("The send failed");
     }
 
 }
@@ -64,7 +66,7 @@ bool TransferData::sendData(const string& data, const Meta_Data& metaData) {
     }
     catch (const std::exception&)
     {
-        throw exception("The send failed");
+        throw std::runtime_error("The send failed");
     }
 }
 void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
