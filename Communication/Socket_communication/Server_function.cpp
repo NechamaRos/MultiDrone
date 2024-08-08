@@ -1,10 +1,10 @@
 #include "Server_function.h"
 #include <winsock2.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <iostream>
 #include <vector>
 #include "../Communication/Meta_Data.h"
-
+#include <thread>
 #ifndef _ws2tcpip
 #define ws2tcpip
 #include <ws2tcpip.h>
@@ -29,27 +29,28 @@ int initialize_winsock() {
     }
     return 0;
 }
-int setupAddressInfo(const char* hostname, struct addrinfo* hints, struct addrinfo** servinfo) {
+int setupAddressInfo(struct addrinfo** servinfo) {
+    struct addrinfo hints;
     // Set up the address information
-    memset(hints, 0, sizeof hints);
-    hints->ai_family = AF_INET;
-    hints->ai_socktype = SOCK_STREAM;
-    hints->ai_protocol = IPPROTO_TCP;
-    hints->ai_flags = AI_PASSIVE; // use my IP
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = AI_PASSIVE; // use my IP
 
     //in erorr- print this
     int rv;
-    if ((rv = getaddrinfo(NULL, DEFAULT_PORT, hints, servinfo)) != 0) {
+    if ((rv = getaddrinfo(NULL, DEFAULT_PORT, &hints, servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         WSACleanup();
         return 1;
     }
     return 0;
-
 }
 //creat the socket by the servinfo- that contain the ip adress and protocol number.
-int bind_to_first_available_socket(int& sockfd, struct addrinfo* servinfo) {
+int bind_to_first_available_socket(struct addrinfo* servinfo) {
     struct addrinfo* p;
+    int sockfd;
     for (p = servinfo; p != NULL; p = p->ai_next) {
         if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
             perror("server: socket");
@@ -81,21 +82,20 @@ int bind_to_first_available_socket(int& sockfd, struct addrinfo* servinfo) {
         return 1;
     }
 
-    return 0;
+    return sockfd;
 
 }
 #pragma endregion
 
 int establishing_a_communication_infrastructure() {
-    int sockfd;  // listen on sock_fd, new connection on new_fd
-    struct addrinfo hints, * servinfo;
-
+    struct addrinfo* servinfo;
     if (initialize_winsock() == 0) {
-        if (int x = setupAddressInfo(" ", &hints, &servinfo))
+        if (setupAddressInfo(&servinfo) == 0)
         {
-            return bind_to_first_available_socket(sockfd, servinfo);
+            return bind_to_first_available_socket(servinfo);
         }
     }
+    return 1;
 }
 
 int start_listening(int& sockfd) {
@@ -110,28 +110,7 @@ int start_listening(int& sockfd) {
     return 0;
 }
 
-void add_to_activeConnectionPollfds(struct pollfd* activeConnectionPollfds[], int newfd, int* fd_count, int* fd_size)
-{
-    // If we don't have room, add more space in the pfds array
-    if (*fd_count == *fd_size) {
-        *fd_size *= 2; // Double it
 
-        *activeConnectionPollfds = (pollfd*)realloc(*activeConnectionPollfds, sizeof(**activeConnectionPollfds) * (*fd_size));
-    }
-
-    (*activeConnectionPollfds)[*fd_count].fd = newfd;
-    (*activeConnectionPollfds)[*fd_count].events = POLLIN; // Check ready-to-read
-
-    (*fd_count)++;
-}
-// Remove an index from the set
-void delete_from_activeConnectionPollfds(struct pollfd activeConnectionPollfds[], int i, int* fd_count)
-{
-    // Copy the one from the end over this one
-    activeConnectionPollfds[i] = activeConnectionPollfds[*fd_count - 1];
-
-    (*fd_count)--;
-}
 int define_clients_sockets_and_poll(std::vector<int>& clientSockets, WSAPOLLFD fds[FD_SETSIZE]) {
     int numFds = clientSockets.size() + 1;
 
@@ -146,7 +125,7 @@ int define_clients_sockets_and_poll(std::vector<int>& clientSockets, WSAPOLLFD f
     }
     return 0;
 }
-int check_about_new_client_connection(int& ListenSocket, WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets) {
+int check_about_new_client_connection(int ListenSocket,const WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets) {
     // Check if there's a new connection
     if (fds[0].revents & POLLRDNORM) {
         int ClientSocket = accept(ListenSocket, NULL, NULL);
@@ -163,10 +142,9 @@ int accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT
     int iResult = recv(clientSockets[i], recvbuf, recvbuflen, 0);
     if (iResult > 0) {
         recvbuf[iResult] = '\0';
-        printf("Received from client: %s\n", recvbuf);
-
-        send_message_to_drone(clientSockets[i],"");
-
+        printf("Received from client: %s\n", recvbuf); 
+        thread echo_message_to_the_drone(send_message_to_drone,clientSockets[i],"Successfully accepted");
+        echo_message_to_the_drone.detach();
         return 0;
     }
     else if (iResult == 0) {
@@ -186,27 +164,28 @@ int accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT
     return 1;
 }
 
-int send_message_to_drone(int clientSocket, string chunk) {
-    // Echo the received message back to the client
-    char sendbuf[DEFAULT_BUFLEN];
+int send_message_to_drone(int clientSocket, const char* message) {
+    if (message == "") {
+        // Echo the received message back to the client
+        char sendbuf[DEFAULT_BUFLEN];
+        std::cout << "Enter echo to client: ";
+        std::cin.getline(sendbuf, DEFAULT_BUFLEN);
+        int result = send(clientSocket, message, (int)strlen(message), 0);
+        return result;
+    }
 
-    std::cout << "Enter echo to client: ";
-    std::cin.getline(sendbuf, DEFAULT_BUFLEN);
-    return send(clientSocket, sendbuf, (int)strlen(sendbuf), 0);
+    int result = send(clientSocket, message, (int)strlen(message), 0);
+    return result;
 }
 
-int send_mataData_to_drone(int clientSocket, const Meta_Data& metaData){
-    char sendbuf[DEFAULT_BUFLEN];
 
-    //return send(clientSocket, metaData, (int)strlen(metaData), 0);
-}
 
-int checking_incoming_data_for_each_client(WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets, char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
+int checking_incoming_data_for_each_client(const WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets, char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
     int num = 0;
     for (int i = 0; i < clientSockets.size(); i++) {
         if (fds[i + 1].revents & POLLRDNORM) {
             //accept the message
-            num+= accept_message(clientSockets, i, recvbuf, recvbuflen);
+            num += accept_message(clientSockets, i, recvbuf, recvbuflen);
         }
     }
     return num == 0;
@@ -219,14 +198,13 @@ void infinite_checking_for_incoming_messages(int sockfd) {
     int recvbuflen = DEFAULT_BUFLEN;
     fds[0].fd = sockfd;
     fds[0].events = POLLRDNORM;
-    int i = 0;
     while (true)
     {
         int result = define_clients_sockets_and_poll(clientSockets, fds);
         if (result == 1) break;
         result = check_about_new_client_connection(sockfd, fds, clientSockets);
         if (result == 1) continue;
-        result= checking_incoming_data_for_each_client(fds, clientSockets, recvbuf, recvbuflen);
+        result = checking_incoming_data_for_each_client(fds, clientSockets, recvbuf, recvbuflen);
     }
 
 }
@@ -235,4 +213,8 @@ void cleanup(int ListenSocket) {
     closesocket(ListenSocket);
     WSACleanup();
 }
-void send_message_to_all(const int& sockfd,const char* message) {}
+void send_message_to_all(const int& sockfd, const char* message) {}
+
+int send_mataData_to_drone(int clientSocket, const Meta_Data& metaData){
+    return 0;
+}
