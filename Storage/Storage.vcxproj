@@ -131,9 +131,7 @@
     <ClCompile Include="Doctest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="doctest.h" />
     <ClInclude Include="Disk_Mng_Master.h" />
-    <ClInclude Include="Disk_Mng_Master_API.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
