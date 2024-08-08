@@ -7,45 +7,46 @@
 #include <stdexcept>
 using namespace std;
 
-enum class AESKeyLength{AES_128,AES_192,AES_256};
-
-class AES {
-
-private:
-	static constexpr unsigned int NB = 4;
-	static constexpr unsigned int blockBytesLen = 4 * NB * sizeof(unsigned char);
-	unsigned int NK;
-	unsigned int NR;
-	void CheckLength(unsigned int len);
-    unsigned char xtime(unsigned char b);
-    void XorBlocks(const unsigned char* a, const unsigned char* b, unsigned char* c, unsigned int len);
-    void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
-    void InvSubBytes(unsigned char state[4][Nb]);
-    void InvMixColumns(unsigned char state[4][Nb]);
-    void InvShiftRows(unsigned char state[4][Nb]);
-    void DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
-
-public:
-	AES(const AESKeyLength keyLength=AESKeyLength::AES_256);
-    void KeyExpansion(const unsigned char key[], unsigned char w[]);
-    void SubBytes(unsigned char state[4][NB]);
-    void FindInSBox(int r, int c);
-    void RotWord(unsigned char *a);
-    void SubWord(unsigned char *a);
-    void AddRoundKey(unsigned char state[4][NB], unsigned char* key);
-    void MixColumns(unsigned char state[4][NB]);
-    void ShiftRows(unsigned char state[4][NB]);
-    void ShiftRow(unsigned char state[4][NB],unsigned int i,unsigned int j);
-    void XorWords(unsigned char* a, unsigned char* b, unsigned char* c);
-    void Rcon(unsigned char* a, unsigned int n);
-    //void KeyExpansion(const unsigned char key[], unsigned char w[]);
-	unsigned char* EncryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
-    unsigned char* DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
-    unsigned char* EncryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]);
-	unsigned char* DecryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]);
-#endif
-};
-
+namespace MyAES
+{
+    enum class AESKeyLength { AES_128, AES_192, AES_256 };
+    class AES {
+    private:
+        static constexpr unsigned int NB = 4;
+        static constexpr unsigned int blockBytesLen = 4 * NB * sizeof(unsigned char);
+        unsigned int NK;
+        unsigned int NR;
+        unsigned char* CheckLength(const unsigned char in[], unsigned int& inLen);
+        unsigned char xtime(unsigned char b);
+        void XorBlocks(const unsigned char* a, const unsigned char* b, unsigned char* c, unsigned int len);
+        void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
+        void InvSubBytes(unsigned char state[4][NB]);
+        void InvMixColumns(unsigned char state[4][NB]);
+        void InvShiftRows(unsigned char state[4][NB]);
+        void DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
+        unsigned char* RemovePadding(const unsigned char* in, unsigned int& outLen);
+        void KeyExpansion(const unsigned char key[], unsigned char w[]);
+        void SubBytes(unsigned char state[4][NB]);
+        void FindInSBox(int r, int c);
+        void RotWord(unsigned char* a);
+        void SubWord(unsigned char* a);
+        void AddRoundKey(unsigned char state[4][NB], unsigned char* key);
+        void MixColumns(unsigned char state[4][NB]);
+        void ShiftRows(unsigned char state[4][NB]);
+        void ShiftRow(unsigned char state[4][NB], unsigned int i, unsigned int j);
+        void XorWords(unsigned char* a, unsigned char* b, unsigned char* c);
+        void Rcon(unsigned char* a, unsigned int n);
+    public:
+        AES(const AESKeyLength keyLength = AESKeyLength::AES_256);
+        //void KeyExpansion(const unsigned char key[], unsigned char w[]);
+        unsigned char* EncryptCBC(const unsigned char in[], unsigned int& inLen, const unsigned char key[], const unsigned char* iv);
+        unsigned char* DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
+        unsigned char* EncryptECB(const unsigned char in[], unsigned int& inLen, const unsigned char key[]);
+        unsigned char* DecryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]);
+        vector<unsigned char> ArrayToVector(unsigned char* a, unsigned int len);
+        unsigned char* VectorToArray(std::vector<unsigned char>& a);
+    };
+}
     unsigned const char sbox[16][16] = {
     {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b,
      0xfe, 0xd7, 0xab, 0x76},
@@ -280,5 +281,4 @@ public:
     /// Inverse circulant MDS matrix
     static const unsigned char INV_CMDS[4][4] = {
         {14, 11, 13, 9}, {9, 14, 11, 13}, {13, 9, 14, 11}, {11, 13, 9, 14} };
-
-//האם אני צריכה בדיקת תקינות על הkeyExpression שההרחבה לא מתפקששת?
+#endif
