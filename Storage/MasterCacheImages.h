@@ -77,12 +77,16 @@ struct MasterCacheImg_cb_s
 	LinkedList_LRU_t* LRU;
 };
 
+
 //info
 Point_t createPoint(int x, int y);
 ImgInfo_t* createImgInfo(int imgId, int slaveId,Point_t TL,Point_t BR);
 
-//init cb
+// cb
 void initMasterCacheImg_cb();
+void freeMasterCacheImg_cb();
+void removeAllData();
+
 
 //linkedList
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
@@ -91,6 +95,7 @@ LinkedList_LRU_t* initLinkedList();
 void insertInToLinedList(UnitNode_LRU_t* node);
 void moveToTheBeginning(UnitNode_LRU_t* node);
 void removefromLinkedList();
+void removeTenPercentFromCache();
 
 //stack
 Stack_emptyPlace_t* initStack();
