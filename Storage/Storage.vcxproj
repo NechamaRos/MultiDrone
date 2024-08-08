@@ -129,19 +129,9 @@
   <ItemGroup>
     <ClCompile Include="Disk_Mng_Master.c" />
     <ClCompile Include="Doctest.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="main.c" />
-=======
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="doctest.h" />
-    <ClInclude Include="Disk_Mng_Master.h" />
-    <ClInclude Include="Disk_Mng_Master_API.h" />
->>>>>>> origin/disk_managment_master
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Disk_Mng_Master.h" />
-    <ClInclude Include="doctest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

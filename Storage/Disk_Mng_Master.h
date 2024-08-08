@@ -41,6 +41,41 @@ struct DiskSortByMapSize_s {
     int lruCounter; 
 };
 
+struct Point_s {
+    int x; // longitude
+    int y; // latitude
+};
+
+struct MapRange_s {
+    Point_t topLeft;
+    Point_t bottomRight;
+};
+
+struct ArrayInfo_s {
+    int mapid;
+    int* diskPointer;
+    int size;
+    MapRange_t* range;
+    //AVLNodeInfo_t  avlInfo;
+
+};
+
+struct StackNode_s {
+    int freeIndex;
+    StackNode_t* next;
+};
+
+struct DiskFreeIndexesInArray_s {
+    int size;
+    StackNode_t* top;
+};
+struct Disk_Management_CB_s {
+    ArrayInfo_t** arrayForAllMApsInformation;
+    StackNode_t* stackNode;
+    DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
+    DiskSortByMapSize_t* disk_SortByMapSize;
+};
+extern Disk_Management_CB_t* disk_mng_CB;
 
 // Function declarations
  
@@ -105,59 +140,6 @@ AVLNode_t* avlTree_FindingTheNodeThatIsSuitableForDeletion(AVLNode_t* node);
 
 // avlTree_deleteNode-Deletes a node from the AVL tree without freeing its memory
 AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node);
-
-// Struct declarations
-
-struct Point_s {
-    int x; // longitude
-    int y; // latitude
-};
-
-struct MapRange_s {
-    Point_t topLeft; 
-    Point_t bottomRight; 
-};
-
-struct ArrayInfo_s {
-    int mapid;
-    int* diskPointer;
-    int size;
-    MapRange_t* range;
-    //AVLNodeInfo_t  avlInfo;
-
-};
-
-struct StackNode_s {
-    int freeIndex;
-    StackNode_t* next;
-};
-
-struct DiskFreeIndexesInArray_s {
-    int size;
-    StackNode_t* top;
-};
-struct Disk_Management_CB_s {
-    ArrayInfo_t** arrayForAllMApsInformation;
-    StackNode_t* stackNode;
-    DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
-    DiskSortByMapSize_t* disk_SortByMapSize;
-};
-extern Disk_Management_CB_t* disk_mng_CB;
-
-//the function aloocate memory to the object and check if fail
-void* allocate_memory(size_t size, const char* description, const char* functionName);
-
-//in case the allocate fail this function write to logFile
-void test_writeExceptionToFile(Exception exception, char* source);
-
-//disk managment 
-
-//initialize the disk managment CB
-
-void disk_mng_initialize_CB();
-
-////initialize the disk managment mapping
-void disk_mng_initialize();
 
 //stack functions
 
