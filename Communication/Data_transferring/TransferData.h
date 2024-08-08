@@ -12,6 +12,7 @@ class TransferData {
 public:
     int num_cores();
     void waiting(vector<future<bool>>& futures);
+<<<<<<< HEAD
     bool sendMessageByChunk(const string& chunk, size_t chunkIndex);
     bool sendMetaData(const Meta_Data& metaData);
     bool sendData(const string& data, const Meta_Data& metaData);
@@ -25,4 +26,12 @@ public:
 private:
     map<size_t, string> collectedDataMap;
     mutex dataMutex;
+=======
+    bool sendMessageByChunk(const string& chunk,int sockfd);
+    bool sendMetaData(const Meta_Data& metaData, int client_sockfd);
+    bool sendData(const string& data, const Meta_Data& metaData, int client_sockfd);
+    void sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_sockfd);
+    void sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData, int client_socket);
+    void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_sockfd);
+>>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
 };
