@@ -1,5 +1,6 @@
 constexpr auto TO_RICICLE = true;
 #include "Data.h"
+#include <cmath>
 
 Message* copyMessage(Message* mes) {
 	switch (mes->getType())
@@ -27,7 +28,7 @@ Message* copyMessage(Message* mes) {
 	}
 }
 
-Data::Data(Meta_Data& metaData, Message* message)throw(invalid_argument) :metaData(metaData)  {
+Data::Data(Meta_Data& metaData, Message* message) :metaData(metaData)  {
 		
 	if (checkData(metaData, message)) {
 			this->message = copyMessage(message); 
@@ -106,7 +107,7 @@ void Data::send()
 	}
 }
 
-void checkTheValidation(Message* m, Validation* v)throw (logic_error,runtime_error){
+void checkTheValidation(Message* m, Validation* v){
 	try {
 		switch (v->getType())
 		{
@@ -153,7 +154,7 @@ void ricicle() {
 	cout << "ricicle!!!" << endl;
 }
 
-void Data::receive()throw (logic_error)
+void Data::receive()
 {
 	Message* m = this->message;
 	Validation* v = this->metaData.getValidation();
