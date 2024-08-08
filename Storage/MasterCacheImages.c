@@ -20,9 +20,26 @@ void initMasterCacheImg_cb()
     masterCacheImg_cb->LRU = initLinkedList();
     masterCacheImg_cb->emptyPlaceInCache = initStuck();
     masterCacheImg_cb->emptyPlaceInTheArray = initStuck();
-    memset(masterCacheImg_cb->imgArray, NULL, sizeof(masterCacheImg_cb->imgArray));
-    memset(masterCacheImg_cb->cache, NULL, sizeof(masterCacheImg_cb->cache));
+    memset(masterCacheImg_cb->imgArray, 0, sizeof(masterCacheImg_cb->imgArray));
+    memset(masterCacheImg_cb->cache, 0, sizeof(masterCacheImg_cb->cache));
+}
 
+void freeMasterCacheImg_cb()
+{
+    removeAllData();
+    free(masterCacheImg_cb->emptyPlaceInCache);
+    free(masterCacheImg_cb->emptyPlaceInTheArray);
+    free(masterCacheImg_cb->LRU);
+    free(masterCacheImg_cb);
+}
+
+void removeAllData()
+{
+    //Loop on all Links in linkedList
+    while (masterCacheImg_cb->LRU->AmountOfLinks!=0)
+    {
+        removefromLinkedList();
+    }
 }
 
 Point_t createPoint(int x, int y)
@@ -65,6 +82,103 @@ UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo)
     node->prev = NULL;
     connectBetweenBothDatas(node,imgInfo);
     return node;
+}
+
+LinkedList_LRU_t* initLinkedList()
+{
+    ////allocate memory for LinkedList_LRU_t
+    LinkedList_LRU_t* linedList_lru = (LinkedList_LRU_t*)malloc(sizeof(LinkedList_LRU_t));
+    //failed to assign
+    if (!linedList_lru)
+    {
+        errno = ALLOCATE_ERROR;
+        throwExcptionToFile(ALLOCATE_ERROR);
+    }
+    //allocate memory for tail,head
+    linedList_lru->head = (UnitNode_LRU_t*)malloc(sizeof(UnitNode_LRU_t));
+    linedList_lru->tail = (UnitNode_LRU_t*)malloc(sizeof(UnitNode_LRU_t));
+    //failed to assign
+    if (!linedList_lru->head || !linedList_lru->tail)
+    {
+        errno = ALLOCATE_ERROR;
+        throwExcptionToFile(ALLOCATE_ERROR);
+    }
+    else
+    {
+        linedList_lru->head->next = NULL;
+        linedList_lru->tail->prev = NULL;
+        linedList_lru->AmountOfLinks = 0;
+        return linedList_lru;
+    }
+}
+
+void insertInToLinedList(UnitNode_LRU_t* node)
+{
+    //if it the first node in the linkedList
+    if (masterCacheImg_cb->LRU->AmountOfLinks == 0)
+    {
+        masterCacheImg_cb->LRU->head->next = node;
+        masterCacheImg_cb->LRU->tail->prev = node;
+        node->next = masterCacheImg_cb->LRU->tail;
+        node->prev = masterCacheImg_cb->LRU->head;
+    }
+    //one or more links in the linkedList
+    else
+    {
+        node->next = masterCacheImg_cb->LRU->head->next;
+        masterCacheImg_cb->LRU->head->next = node;
+        node->prev = masterCacheImg_cb->LRU->head;
+        node->next->prev = node;
+    }
+    masterCacheImg_cb->LRU->AmountOfLinks += 1;
+
+}
+
+void moveToTheBeginning(UnitNode_LRU_t* node)
+{
+    //there is more than one link in the linkedList
+    if (masterCacheImg_cb->LRU->AmountOfLinks > 1)
+    {
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+        node->prev = masterCacheImg_cb->LRU->head;
+        node->next = masterCacheImg_cb->LRU->head->next;
+        masterCacheImg_cb->LRU->head->next->prev = node;
+        masterCacheImg_cb->LRU->head->next = node;
+    }
+}
+
+void removefromLinkedList()
+{
+    //there is more that one link
+    if (masterCacheImg_cb->LRU->AmountOfLinks > 1)
+    {
+        UnitNode_LRU_t* tmp;
+        tmp = masterCacheImg_cb->LRU->tail->prev;
+        masterCacheImg_cb->LRU->tail->prev = tmp->prev;
+        tmp->prev->next = masterCacheImg_cb->LRU->tail;
+        masterCacheImg_cb->LRU->AmountOfLinks -= 1;
+        removeFromImgArray(tmp->imgInfoPtr);
+        free(tmp);
+    }
+    else
+    {
+        free(masterCacheImg_cb->LRU->tail->prev);
+        masterCacheImg_cb->LRU->tail->prev = NULL;
+        masterCacheImg_cb->LRU->head->next = NULL;
+        masterCacheImg_cb->LRU->AmountOfLinks -= 1;
+    }
+   
+}
+
+void removeTenPercentFromCache()
+{
+    //loop that remove 10% of the cache
+    for (int i = 0;i < CACHE_SIZE / 10;i++)
+    {
+        removefromLinkedList();
+    }
+
 }
 
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
@@ -123,10 +237,9 @@ void removeFromCache(int* cachePtr)
     //update to null the cache memory
     cachePtr = NULL;
     masterCacheImg_cb->cache[indexInArrayCache] = NULL;
-    
-    
 }
- 
+
+
 void removeFromImgArray(ImgInfo_t* imgInfo)
 {
    int index = imgInfo - &(masterCacheImg_cb->imgArray[0]);
@@ -137,86 +250,7 @@ void removeFromImgArray(ImgInfo_t* imgInfo)
    masterCacheImg_cb->imgArray[index] = NULL;
    return;
 }
- 
-LinkedList_LRU_t* initLinkedList()
-{
-    ////allocate memory for LinkedList_LRU_t
-    LinkedList_LRU_t* linedList_lru = (LinkedList_LRU_t*)malloc(sizeof(LinkedList_LRU_t));
-    //failed to assign
-    if (!linedList_lru)
-    {
-        errno = ALLOCATE_ERROR;
-        throwExcptionToFile(ALLOCATE_ERROR);
-    }
-    //allocate memory for tail,head
-    linedList_lru->head = (UnitNode_LRU_t*)malloc(sizeof(UnitNode_LRU_t));
-    linedList_lru->tail = (UnitNode_LRU_t*)malloc(sizeof(UnitNode_LRU_t));
-    //failed to assign
-    if (!linedList_lru->head || !linedList_lru->tail)
-    {
-        errno = ALLOCATE_ERROR;
-        throwExcptionToFile(ALLOCATE_ERROR);
-    }
-    else
-    {
-        linedList_lru->head->next = NULL;
-        linedList_lru->tail->prev = NULL;
-        linedList_lru->AmountOfLinks = 0;
-        return linedList_lru;
-    }
-    
-}
 
-void insertInToLinedList(UnitNode_LRU_t* node)
-{
-    //if it the first node in the linkedList
-    if (masterCacheImg_cb->LRU->AmountOfLinks == 0)
-    {
-        masterCacheImg_cb->LRU->head->next = node;
-        masterCacheImg_cb->LRU->tail->prev = node;
-        node->next = masterCacheImg_cb->LRU->tail;
-        node->prev = masterCacheImg_cb->LRU->head;
-    }
-    //one or more links in the linkedList
-    else
-    {
-        node->next = masterCacheImg_cb->LRU->head->next;
-        masterCacheImg_cb->LRU->head->next = node;
-        node->prev = masterCacheImg_cb->LRU->head;
-        node->next->prev = node;
-    }
-    masterCacheImg_cb->LRU->AmountOfLinks += 1;
-
-}
-void moveToTheBeginning(UnitNode_LRU_t* node)
-{
-    //there is more than one link in the linkedList
-    if (masterCacheImg_cb->LRU->AmountOfLinks > 1)
-    {
-        node->next->prev = node->prev;
-        node->prev->next = node->next;
-        node->prev = masterCacheImg_cb->LRU->head;
-        node->next = masterCacheImg_cb->LRU->head->next;
-        masterCacheImg_cb->LRU->head->next->prev = node;
-        masterCacheImg_cb->LRU->head->next = node;
-    }
-}
-void removefromLinkedList()
-{
-    UnitNode_LRU_t* tmp;
-    //loop that remove 10% of the cache
-    for (int i = 0;i < CACHE_SIZE / 10;i++)
-    {
-        tmp = masterCacheImg_cb->LRU->tail->prev;
-        masterCacheImg_cb->LRU->tail->prev = tmp->prev;
-        tmp->prev->next = masterCacheImg_cb->LRU->tail;
-        masterCacheImg_cb->LRU->AmountOfLinks -= 1;
-        removeFromImgArray( tmp->imgInfoPtr);
-        //freeing memory
-        tmp->imgInfoPtr = NULL;
-        free(tmp);
-    }
-}
 char* stringError(ERRORS err)
 {
     //switch the error to string
