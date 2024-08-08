@@ -96,7 +96,7 @@ void disk_mng_initialize();
 //AVL node info
 
 // avlNodeInfo_create-Creates and returns a new AVLNodeInfo_t structure
-AVLNodeInfo_t* avlNodeInfo_create(int mapSize, int arrayIndex, int lru);
+AVLNodeInfo_t* avlNodeInfo_create(int mapSize, int arrayIndex);
 
 // avlNodeInfo_delete-Deletes an AVLNodeInfo_t structure
 void avlNodeInfo_delete(AVLNodeInfo_t* nodeInfo);
@@ -126,14 +126,14 @@ int avlTree_getBalance(AVLNode_t* N);
 // avlTree_minValueNode-Finds and returns the node with the smallest value in the tree
 AVLNode_t* avlTree_minValueNode(AVLNode_t* node);
 
-// avlTree_insert-Inserts a new node into the AVL tree
-AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNodeInfo_t* data, int lruCounter);
-
 // avlTree_firstInitialize-Initializes the AVL tree for the first time
 void avlTree_firstInitialize();
 
+// avlTree_insert-Inserts a new node into the AVL tree
+AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNode_t* newNode);
+
 // avlTree_insertElement-Inserts a new element into the AVL tree
-void avlTree_insertElement(AVLNodeInfo_t* data);
+void avlTree_insertElement(AVLNode_t* newNode);
 
 // avlTree_FindingTheNodeThatIsSuitableForDeletion-Finds the node suitable for deletion according to conditions
 AVLNode_t* avlTree_FindingTheNodeThatIsSuitableForDeletion(AVLNode_t* node);
