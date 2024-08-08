@@ -141,7 +141,7 @@ TEST_CASE("remove when cach is full")
 	initMasterCacheImg_cb();
 	for (int i =0;i < 100;i++)
 	{
-		tl= createPoint(i, 5);
+		tl= createPoint(i, 6);
 		br= createPoint(i+2, 12);
 		imgInfo= createImgInfo(i, 2, tl, br);
 		insertTocache(imgData);

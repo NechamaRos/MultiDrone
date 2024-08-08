@@ -46,8 +46,6 @@ struct UnitNode_LRU_s
     UnitNode_LRU_t* next;
     UnitNode_LRU_t* prev;
 	ImgInfo_t* imgInfoPtr;
-
-	
 };
 
  struct LinkedList_LRU_s

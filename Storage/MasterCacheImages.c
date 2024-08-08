@@ -152,6 +152,7 @@ void removeFromImgArray(ImgInfo_t* imgInfo)
     //free the imgArray
     free(imgInfo);
     masterCacheImg_cb->imgArray[index] = NULL;
+
 }
  
 LinkedList_LRU_t* initLinkedList()
