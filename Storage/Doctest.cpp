@@ -137,7 +137,11 @@ void disk_deleteMap(int* diskPointer)
 
 
 //the function fill in the structer all the data which save befoe the computer closed,the function get  destenation,suorce,length;
-void disk_loadDataForInitializeDataStructers(void* i,void* x,void* b) 
+void disk_loadDataForInitializeDataStructers(void* destination,void* startAddress,void* howManyToLoad)
+{
+}
+
+void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* endAddrehowManyToLoadss)
 {
 }
 
@@ -151,6 +155,8 @@ TEST_CASE("test_disk_mng_initialize")
 {
 	disk_mng_initialize();
 }
+
+//avlNode tests
 
 TEST_CASE("test_avlNodeInfo_create")
 {
@@ -216,6 +222,23 @@ TEST_CASE("test_avlNode_height")
 	AVLNode_t* avlNode = avlNode_create(avlNodeInfo);
 
 	CHECK(avlNode->height == avlNode_height(avlNode));
+}
+
+//avlTree tests
+
+TEST_CASE("avlTree_firstInitialize")
+{
+
+}
+
+TEST_CASE("avlTree_normalInitialize")
+{
+
+}
+
+TEST_CASE("avlTree_saveData")
+{
+
 }
 
 TEST_CASE("test_avlTree_rightRotate")
@@ -627,6 +650,19 @@ TEST_CASE("test_stack_normalInitialize")
     disk_mng_initialize();
 }
 
+TEST_CASE("stack_firstInitialize")
+{
+
+}
+TEST_CASE("stack_normalInitialize")
+{
+
+}
+TEST_CASE("stack_saveData()")
+{
+
+}
+
 TEST_CASE("test_stack_push")
 {
     disk_mng_initialize();
@@ -679,6 +715,21 @@ TEST_CASE("test_stackNode_create")
 }
 
 //array tests
+
+TEST_CASE("array_firstInitialize")
+{
+
+}
+
+TEST_CASE("array_normalInitialize")
+{
+
+}
+
+TEST_CASE("array_saveData")
+{
+
+}
 
 TEST_CASE("test_array_deleteFromArray")
 {

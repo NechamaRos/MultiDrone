@@ -56,7 +56,6 @@ struct ArrayInfo_s {
     int* diskPointer;
     int size;
     MapRange_t* range;
-    //AVLNodeInfo_t  avlInfo;
 
 };
 
@@ -93,6 +92,13 @@ void disk_mng_initialize_CB();
 // disk_mng_initialize-Initializes the disk management system
 void disk_mng_initialize();
 
+// disk_mng_firstInitialize-Initializes the disk management system at the first time
+void disk_mng_firstInitialize();
+
+// disk_mng_normalInitialize-Initializes the disk management system each time the computer opened
+void disk_mng_normalInitialize();
+
+
 //AVL node info
 
 // avlNodeInfo_create-Creates and returns a new AVLNodeInfo_t structure
@@ -113,6 +119,14 @@ void avlNode_delete(AVLNode_t* node);
 int avlNode_height(AVLNode_t* N);
 
 //AVL tree
+// avlTree_firstInitialize-Initializes the AVL tree for the first time
+void avlTree_firstInitialize();
+
+// avlTree_firstInitialize-Initializes the AVL tree each time the computer opened
+void avlTree_normalInitialize();
+
+//save data from avlTree each closed
+void avlTree_saveData();
 
 // avlTree_rightRotate-Performs a right rotation on the given subtree
 AVLNode_t* avlTree_rightRotate(AVLNode_t* y);
@@ -149,6 +163,9 @@ void stack_firstInitialize();
 //normal initialize each open of the computer the disk will fill in the structers all the saved data
 void stack_normalInitialize();
 
+//save data from stack each closed
+void stack_saveData();
+
 //stack_is_empty check if the stack full
 bool stack_is_empty();
 
@@ -168,13 +185,15 @@ int stack_top();
 
 //array functions 
 
+//initialize on the first time when we turn on the computer just allocate memory to the array
+void array_firstInitialize();
 
 // Initializes an array with default values or in a standard way.
 // This function likely sets the array to a known starting state.
 void array_normalInitialize();
 
-//initialize on the first time when we turn on the computer just allocate memory to the array
-void array_firstInitialize();
+//save data from array each closed
+void array_saveData();
 
 // Deletes an element from an array at a specific index.
 void array_deleteFromArray(int index);
@@ -186,9 +205,14 @@ void array_deleteArrayInfo(ArrayInfo_t* arrayInfo);
 //disk_deleteMap the function get pointer to map in the disk and delete this map from disk
 void disk_deleteMap(int* diskPointer);
 
-ArrayInfo_t* arrayInfo_create(int mapid,int* diskPointer,int size,MapRange_t* range
-//,AVLNodeInfo_t*  avlInfo//
- );
+//create a new arrayInfo with all the parameters
+ArrayInfo_t* arrayInfo_create(int mapid,int* diskPointer,int size,MapRange_t* range);
 
+//create a new range with 2 point which given
 MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft);
 
+//disk_loadDataForInitializeDataStructers the function get destination where to load and from where and how many to load
+void disk_loadDataForInitializeDataStructers(void* destination, void* startAddress, void* howManyToLoad);
+
+//disk_loadDataForInitializeDataStructers the function get data where to save and from where and how many to save
+void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* howManyToLoad);
