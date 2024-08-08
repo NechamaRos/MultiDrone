@@ -11,10 +11,10 @@ class TransferData {
 public:
     int num_cores();
     void waiting(vector<future<bool>>& futures);
-    bool sendMessageByChunk(const string& chunk);
-    bool sendMetaData(const Meta_Data& metaData);
-    bool sendData(const string& data, const Meta_Data& metaData);
-    void sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads);
-    void sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData);
-    void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData);
+    bool sendMessageByChunk(const string& chunk,int sockfd);
+    bool sendMetaData(const Meta_Data& metaData, int client_sockfd);
+    bool sendData(const string& data, const Meta_Data& metaData, int client_sockfd);
+    void sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_sockfd);
+    void sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData, int client_socket);
+    void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_sockfd);
 };
