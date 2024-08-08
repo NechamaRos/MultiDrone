@@ -30,7 +30,8 @@ struct ImgInfo_s
 	Point_t TL;
 	Point_t BR;
 	UnitNode_LRU_t* unitNodePtr;
-	int* cachePtr;
+	int** cachePtr;
+	ImgInfo_t** arrayIndexPtr;
 };
 
 
@@ -81,12 +82,13 @@ struct MasterCacheImg_cb_s
 //info
 Point_t createPoint(int x, int y);
 ImgInfo_t* createImgInfo(int imgId, int slaveId,Point_t TL,Point_t BR);
+int* init_imgData();
 
 // cb
 void initMasterCacheImg_cb();
 void freeMasterCacheImg_cb();
 void removeAllData();
-
+void insertData(UnitNode_LRU_t* node, int* imgData);
 
 //linkedList
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
@@ -103,10 +105,11 @@ void PushEmptyPlaceInToStack(Stack_emptyPlace_t* stack,int index);
 int PopFirstEmptyPlaceInStack(Stack_emptyPlace_t* stack);
 
 //cache
-void insertTocache(int* imgData);
+void insertTocache(int* imgData, ImgInfo_t* imgInfo);
 void removeFromCache(int* cachePtr);
 
 //imgArray
+void insertToImgArray(ImgInfo_t* imgInfo);
 void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
 //help func
