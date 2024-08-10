@@ -12,20 +12,12 @@ class TransferData {
 public:
     int num_cores();
     void waiting(vector<future<bool>>& futures);
-<<<<<<< HEAD
-    bool sendMessageByChunk(const string& chunk,int sockfd);
-    bool sendMetaData(const Meta_Data& metaData, int client_sockfd);
-    bool sendData(const string& data, const Meta_Data& metaData, int client_sockfd);
-    void sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_sockfd);
+    bool sendMessageByChunk(const string& chunk, size_t chunkIndex, int client_socket);
+    bool sendMetaData(const Meta_Data& metaData, int client_socket);
+    bool sendData(const string& data, const Meta_Data& metaData, int client_socket);
+    void sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_socket);
     void sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData, int client_socket);
-    void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_sockfd);
-=======
-    bool sendMessageByChunk(const string& chunk, size_t chunkIndex);
-    bool sendMetaData(const Meta_Data& metaData);
-    bool sendData(const string& data, const Meta_Data& metaData);
-    void sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads);
-    void sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData);
-    void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData);
+    void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_socket);
 
     void addChunk(const string& chunk, size_t chunkIndex);
     string getCollectedData();
@@ -33,5 +25,4 @@ public:
 private:
     map<size_t, string> collectedDataMap;
     mutex dataMutex;
->>>>>>> team_Communication
 };

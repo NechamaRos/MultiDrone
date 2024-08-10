@@ -31,14 +31,12 @@ int initialize_winsock() {
 }
 int setupAddressInfo(struct addrinfo** servinfo) {
     struct addrinfo hints;
-    // Set up the address information
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE; // use my IP
 
-    //in erorr- print this
     int rv;
     if ((rv = getaddrinfo(NULL, DEFAULT_PORT, &hints, servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
@@ -47,7 +45,6 @@ int setupAddressInfo(struct addrinfo** servinfo) {
     }
     return 0;
 }
-//creat the socket by the servinfo- that contain the ip adress and protocol number.
 int bind_to_first_available_socket(struct addrinfo* servinfo) {
     struct addrinfo* p;
     int sockfd;
@@ -144,14 +141,14 @@ int accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT
         recvbuf[iResult] = '\0';
         printf("Received from client: %s\n", recvbuf); 
         thread echo_message_to_the_drone(send_message_to_drone,clientSockets[i],"Successfully accepted");
-        echo_message_to_the_drone.detach();
+        echo_message_to_the_drone.join();
         return 0;
     }
     else if (iResult == 0) {
         printf("Connection closing...\n");
         closesocket(clientSockets[i]);
         clientSockets.erase(clientSockets.begin() + i);
-        i--; // Adjust index after erasing        return 1;
+        i--; // Adjust index after erasing
         return 1;
     }
     else {
@@ -184,7 +181,6 @@ int checking_incoming_data_for_each_client(const WSAPOLLFD fds[FD_SETSIZE], std:
     int num = 0;
     for (int i = 0; i < clientSockets.size(); i++) {
         if (fds[i + 1].revents & POLLRDNORM) {
-            //accept the message
             num += accept_message(clientSockets, i, recvbuf, recvbuflen);
         }
     }

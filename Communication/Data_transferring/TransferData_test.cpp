@@ -1,3 +1,4 @@
+
 #include "../Communication/doctest.h"
 #include <vector>
 #include <future>
@@ -24,7 +25,7 @@ Meta_Data mdd4(&d3v4);
 D3Message d3m14({ { {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } ,{ {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } });
 Data d3d4(mdd4, &d3m14);
 
-int client_socket = 0;
+int client_socket=0;
 
 TEST_CASE("TransferData::num_cores function") {
     TransferData td;
@@ -62,19 +63,11 @@ TEST_CASE("TransferData::sendMessageByChunk function") {
     std::string chunk = "Test chunk";
 
     SUBCASE("Successful send") {
-<<<<<<< HEAD
-        CHECK(td.sendMessageByChunk(chunk, client_socket) == true);
+        CHECK(td.sendMessageByChunk(chunk, 0, client_socket) == true);
     }
 
     SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendMessageByChunk("", client_socket), std::exception);
-=======
-        CHECK(td.sendMessageByChunk(chunk, 0) == true);
-    }
-
-    SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendMessageByChunk("", 0), std::exception);
->>>>>>> team_Communication
+        CHECK_THROWS_AS(td.sendMessageByChunk("", 0, client_socket), std::exception);
     }
 }
 
