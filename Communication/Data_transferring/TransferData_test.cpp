@@ -1,3 +1,4 @@
+
 #include "../Communication/doctest.h"
 #include <vector>
 #include <future>
@@ -24,7 +25,7 @@ Meta_Data mdd4(&d3v4);
 D3Message d3m14({ { {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } ,{ {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } });
 Data d3d4(mdd4, &d3m14);
 
-int client_socket = 0;
+int client_socket=0;
 
 TEST_CASE("TransferData::num_cores function") {
     TransferData td;
@@ -63,6 +64,7 @@ TEST_CASE("TransferData::sendMessageByChunk function") {
 
     SUBCASE("Successful send") {
 <<<<<<< HEAD
+<<<<<<< HEAD
         CHECK(td.sendMessageByChunk(chunk, 0) == true);
     }
 
@@ -75,6 +77,13 @@ TEST_CASE("TransferData::sendMessageByChunk function") {
     SUBCASE("Send with exception") {
         CHECK_THROWS_AS(td.sendMessageByChunk("", client_socket), std::exception);
 >>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
+=======
+        CHECK(td.sendMessageByChunk(chunk, 0, client_socket) == true);
+    }
+
+    SUBCASE("Send with exception") {
+        CHECK_THROWS_AS(td.sendMessageByChunk("", 0, client_socket), std::exception);
+>>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
     }
 }
 
