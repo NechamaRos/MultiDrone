@@ -22,33 +22,16 @@ void TransferData::waiting(vector<future<bool>>& futures) {
         std::cout << "Result: " << std::boolalpha << result << std::endl;
     }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex) {
-=======
+
 bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, int client_socket) {
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
-    try {
-        if (chunk.empty()) {
-            throw std::runtime_error("Chunk is empty");
-        }
-        //Noa function
-<<<<<<< HEAD
-=======
-bool TransferData::sendMessageByChunk(const string& chunk,int client_sockfd)
-{
     try
     {
         if (chunk.empty()) {
             throw std::runtime_error("Chunk is empty");
         }
         //Noa function, open the socket.
-        //send_message_to_drone(client_sockfd, chunk);
->>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
-=======
         int result= send_message_to_drone(client_socket, chunk.c_str());
         //Add verification of whether the data was sent
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << "Sent chunk: " << chunk << std::endl;
 
@@ -96,16 +79,9 @@ bool TransferData::sendData(const string& data, const Meta_Data& metaData, int c
         throw std::runtime_error("The send failed");
     }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
-=======
 
-void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_sockfd)
->>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
-=======
+
 void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_socket)
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
 {
     if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
@@ -130,46 +106,23 @@ void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data&
             }
         }
         // Submit the block in a new thread
-<<<<<<< HEAD
-<<<<<<< HEAD
-        futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i));
-    }
-    futures.push_back(async(launch::async, &TransferData::sendMetaData, this, std::cref(metaData)));
-    // Wait for all remaining threads to finish
-    waiting(futures);
-}
-void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData)
-=======
-        futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk,client_sockfd));
-=======
         futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i,client_socket));
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
     }
+
     futures.push_back(async(launch::async, &TransferData::sendMetaData, this, std::cref(metaData),client_socket));
     // Wait for all remaining threads to finish
     waiting(futures);
 }
+
 void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData, int client_socket)
-<<<<<<< HEAD
->>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
-=======
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
 {
     if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
     }
     this->sendData(dataAsStr, metaData,client_socket);
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData)
-=======
 
-void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_sockfd)
->>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
-=======
 void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_socket)
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
 {
     //count of threads.
     const int num_cores = this->num_cores(); // The maximum number of threads

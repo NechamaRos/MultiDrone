@@ -63,27 +63,11 @@ TEST_CASE("TransferData::sendMessageByChunk function") {
     std::string chunk = "Test chunk";
 
     SUBCASE("Successful send") {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        CHECK(td.sendMessageByChunk(chunk, 0) == true);
-    }
-
-    SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendMessageByChunk("", 0), std::exception);
-=======
-        CHECK(td.sendMessageByChunk(chunk, client_socket) == true);
-    }
-
-    SUBCASE("Send with exception") {
-        CHECK_THROWS_AS(td.sendMessageByChunk("", client_socket), std::exception);
->>>>>>> e5026c1 (adding client_sockfd argument to ruti's functions, adding my send() function to ruti's functions)
-=======
         CHECK(td.sendMessageByChunk(chunk, 0, client_socket) == true);
     }
 
     SUBCASE("Send with exception") {
         CHECK_THROWS_AS(td.sendMessageByChunk("", 0, client_socket), std::exception);
->>>>>>> 28f3925 (addind my send functions to TransferData.cpp)
     }
 }
 
