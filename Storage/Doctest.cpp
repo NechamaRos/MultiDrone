@@ -130,6 +130,17 @@ int index, popValue,value;
 
 //mock functions
 
+int* disk_addMap(int* map)
+{
+    int num = generateRandomNumber(10000000);
+    if (num % 2 == 0)
+    {
+        int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for disk control block", "disk_addMap");
+        return map;
+    }
+    return NULL;
+}
+
 //the function get pointer to map in the disk and delete this map from disk
 void disk_deleteMap(int* diskPointer) 
 {
@@ -391,9 +402,7 @@ TEST_CASE("test_avlTree_insert") {
         int arrayIndex = generateRandomNumber();
 
         AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-        AVLNode_t* node = avlNode_create(info);
-
-        avlTree_insertElement(node);
+        avlTree_insertElement(info);
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->mapSize == mapSize);
@@ -410,8 +419,7 @@ TEST_CASE("test_avlTree_insert") {
             int arrayIndex = generateRandomNumber();
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
@@ -429,11 +437,8 @@ TEST_CASE("test_avlTree_insert") {
         AVLNodeInfo_t* info1 = avlNodeInfo_create(mapSize, arrayIndex1);
         AVLNodeInfo_t* info2 = avlNodeInfo_create(mapSize, arrayIndex2);
 
-        AVLNode_t* node1 = avlNode_create(info1);
-        AVLNode_t* node2 = avlNode_create(info2);
-
-        avlTree_insertElement(node1);
-        avlTree_insertElement(node2);
+        avlTree_insertElement(info1);
+        avlTree_insertElement(info2);
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->right != nullptr);
@@ -457,8 +462,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
             int lru = (i == 3) ? disk_mng_CB->disk_SortByMapSize->lruCounter * 0.6 : generateRandomNumber();
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         AVLNode_t* result = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
@@ -482,8 +486,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
             int lru = generateRandomNumber();
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         AVLNode_t* result = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
@@ -507,8 +510,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
             int lru = disk_mng_CB->disk_SortByMapSize->lruCounter * 0.8;
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         AVLNode_t* result = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
@@ -650,15 +652,7 @@ TEST_CASE("test_stack_normalInitialize")
     disk_mng_initialize();
 }
 
-TEST_CASE("stack_firstInitialize")
-{
-
-}
-TEST_CASE("stack_normalInitialize")
-{
-
-}
-TEST_CASE("stack_saveData()")
+TEST_CASE("stack_saveData")
 {
 
 }
@@ -708,6 +702,7 @@ TEST_CASE("test_stack_is_empty")
 
 TEST_CASE("test_stackNode_create")
 {
+    disk_mng_initialize();
     int index = generateRandomNumber();
     StackNode_t* new_node = stackNode_create(index);
     CHECK(new_node->freeIndex == index);
@@ -733,6 +728,7 @@ TEST_CASE("array_saveData")
 
 TEST_CASE("test_array_deleteFromArray")
 {
+    disk_mng_initialize();
     int index = generateRandomNumber();
     array_deleteFromArray(index);
     CHECK(disk_mng_CB->arrayForAllMApsInformation[index]== NULL);
@@ -740,7 +736,7 @@ TEST_CASE("test_array_deleteFromArray")
 
 TEST_CASE("test_arrayInfo_create")
 {
-    int mapid = generateRandomNumber();;
+    disk_mng_initialize();
     int * diskPointer = NULL;
     int size = generateRandomNumber();
     Point_t topLeft;
@@ -750,19 +746,38 @@ TEST_CASE("test_arrayInfo_create")
     bottomRight.x = generateRandomNumber();
     bottomRight.y = generateRandomNumber();
     MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
-
-
-    //arrayInfo->avlInfo = avlInfo;
-    ArrayInfo_t* arrayInfo= arrayInfo_create(mapid, diskPointer, size, mapRange);
-    CHECK(arrayInfo->mapid == mapid);
+    ArrayInfo_t* arrayInfo= arrayInfo_create(diskPointer, size, mapRange);
+    CHECK(arrayInfo->mapid == 0);
     CHECK(arrayInfo->diskPointer == NULL);
     CHECK(arrayInfo->size == size);
     CHECK(arrayInfo->range == mapRange);
 }
 
+TEST_CASE("test_array_addToArray")
+{
+    disk_mng_initialize(); 
+    for (size_t i = 0; i < DISK_SIZE; i++)
+    {
+        int* diskPointer = NULL;
+        int size = generateRandomNumber();
+        Point_t topLeft;
+        topLeft.x = generateRandomNumber();
+        topLeft.y = generateRandomNumber();
+        Point_t bottomRight;
+        bottomRight.x = generateRandomNumber();
+        bottomRight.y = generateRandomNumber();
+        MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+        ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, mapRange);
+        int index = stack_pop();
+        array_addToArray(arrayInfo, index);
+        CHECK(disk_mng_CB->arrayForAllMApsInformation[index] == arrayInfo);
+    }
+}
+
 //range functions
 TEST_CASE("test_mapRange_create")
 {
+    disk_mng_initialize();
     Point_t topLeft;
     topLeft.x = generateRandomNumber();
     topLeft.y = generateRandomNumber();
