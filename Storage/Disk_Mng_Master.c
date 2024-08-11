@@ -67,8 +67,7 @@ void stack_firstInitialize() {
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     for (size_t i = 0; i < DISK_SIZE; i++)
     {
-        StackNode_t* s= stackNode_create(i);
-        stack_push(s);
+        stack_push(i);
     }
 }
 
@@ -112,9 +111,9 @@ StackNode_t* stackNode_create(int index)
 }
 
 
-void stack_push(StackNode_t* new_node) 
+void stack_push(int index) 
 {
-
+    StackNode_t* new_node = stackNode_create(index);
     disk_mng_CB->diskFreeIndexesInArray->size++;
     disk_mng_CB->diskFreeIndexesInArray->top = new_node;
 }
@@ -167,7 +166,8 @@ void array_saveData()
 ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
 {
     ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for avlTree", "arrayInfo_create");
-    arrayInfo->mapid = disk_mng_CB->mapIdIndex++;
+    disk_mng_CB->mapIdIndex++;
+    arrayInfo->mapid = disk_mng_CB->mapIdIndex;
     arrayInfo ->diskPointer = diskPointer;
     arrayInfo->size = size;
     arrayInfo->range =range;
@@ -225,10 +225,33 @@ void test_writeExceptionToFile(Exception exception, const char* source) {
     fclose(file);
 }
 
-int avlNode_height(AVLNode_t* N) {
-    if (N == NULL)
-        return 0;
-    return N->height;
+int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree)
+{
+    AVLNodeInfo_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);//find the suitable map to delete
+    disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root,nodeToDelete);//delete the map from the AVL tree
+    ArrayInfo_t* arrayInfo = disk_mng_CB->arrayForAllMApsInformation[nodeToDelete->arrayIndex];//finding the object that corresponds to deletion in the array
+    bool isDeleteSuccess=disk_deleteMap(arrayInfo->diskPointer);//send API to the disk to delete the map
+    if (isDeleteSuccess)
+    {
+        cache_deleteMap(arrayInfo->mapid);//send API to the cache to delete the map
+        stack_push(nodeToDelete->arrayIndex);//push the index to the stack of free indexes
+        sizeToFree -= arrayInfo->size;//reducing the size that needs to be deleted
+        array_deleteFromArray(nodeToDelete->arrayIndex);//delete the map from the array
+        array_deleteArrayInfo(arrayInfo);//delete the array object
+        avlNode_delete(nodeToDelete);//delete the avl node
+    }
+    else
+    {
+        test_writeExceptionToFile(Error_When_Deleting_Map_from_Disk,"disk_mng_deleteMapFromDiskManagementDataStructures");
+    }
+}
+
+void disk_mng_delete(int mapSize)
+{
+    while (mapSize>0)
+    {
+        mapSize = disk_mng_deleteMapFromDiskManagementDataStructures(mapSize);
+    }
 }
 
 //AVL node info
@@ -262,6 +285,13 @@ void avlNode_delete(AVLNode_t* node) {
         free(node);
     }
 }
+
+int avlNode_height(AVLNode_t* N) {
+    if (N == NULL)
+        return 0;
+    return N->height;
+}
+
 
 
 AVLNode_t* avlTree_rightRotate(AVLNode_t* y) {
@@ -427,7 +457,7 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
         return root;
     }
 
-    // Traverse the tree to find the node
+    // STEP 1: PERFORM STANDARD BST DELETE
     if (node->avlNodeInfo->mapSize < root->avlNodeInfo->mapSize) {
         root->left = avlTree_deleteNode(root->left, node);
     }
@@ -435,44 +465,66 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
         root->right = avlTree_deleteNode(root->right, node);
     }
     else {
-        // Node with mapSize found
+        // This is the node to be deleted
         if ((root->left == NULL) || (root->right == NULL)) {
             AVLNode_t* temp = root->left ? root->left : root->right;
+
+            // No child case
             if (temp == NULL) {
+                // Simply remove the current node
                 root = NULL;
             }
             else {
+                // One child case
+                // Update root to point to the non-empty child
                 *root = *temp;
+                // Make sure to set the child pointers of the old node to NULL
+                root->left = temp->left;
+                root->right = temp->right;
             }
         }
         else {
+            // Node with two children: Get the inorder successor (smallest in the right subtree)
             AVLNode_t* temp = avlTree_minValueNode(root->right);
+
+            // Copy the inorder successor's data to this node
             root->avlNodeInfo = temp->avlNodeInfo;
+
+            // Delete the inorder successor
             root->right = avlTree_deleteNode(root->right, temp);
         }
     }
 
+    // If the tree had only one node then return
     if (root == NULL) {
         return root;
     }
 
-    // Update height and balance the node
-    root->height = max(avlNode_height(root->left), avlNode_height(root->right)) + 1;
+    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+    root->height = 1 + max(avlNode_height(root->left), avlNode_height(root->right));
+
+    // STEP 3: GET THE BALANCE FACTOR OF THIS NODE (to check whether this node became unbalanced)
     int balance = avlTree_getBalance(root);
 
+    // If this node becomes unbalanced, then there are 4 cases
+
+    // Left Left Case
     if (balance > 1 && avlTree_getBalance(root->left) >= 0) {
         return avlTree_rightRotate(root);
     }
 
+    // Left Right Case
     if (balance > 1 && avlTree_getBalance(root->left) < 0) {
         root->left = avlTree_leftRotate(root->left);
         return avlTree_rightRotate(root);
     }
 
+    // Right Right Case
     if (balance < -1 && avlTree_getBalance(root->right) <= 0) {
         return avlTree_leftRotate(root);
     }
 
+    // Right Left Case
     if (balance < -1 && avlTree_getBalance(root->right) > 0) {
         root->right = avlTree_rightRotate(root->right);
         return avlTree_leftRotate(root);
@@ -491,25 +543,28 @@ void* allocate_memory(size_t size, const char* description, const char* function
 }
 void disk_mng_addMap(MapRange_t* range, int size, int* map)
 {
-    
-    int* diskPointer = disk_addMap(map);
-    if (diskPointer != NULL)//success
+    if (disk_mng_isTheDataCorrect(range,size,map))
     {
-        if (stack_is_empty)
+        int* diskPointer = disk_addMap(map);
+        if (diskPointer != NULL)//success
         {
-            void disk_mng_delete(int size);
+            if (!disk_isThereEnoughSpace(size))
+            {
+                void disk_mng_delete(int size);
+            }
+            disk_mng_addMapToDiskManagementDataStructures(range, size, diskPointer);
         }
-        int index = stack_pop();
-        disk_mng_addMapToDiskManagementDataStructures(range, size, diskPointer, index);
-    }
-    else
-    {
-        test_writeExceptionToFile(Error_When_Adding_Map_To_Disk, disk_mng_addMap);
+        else
+        {
+            test_writeExceptionToFile(Error_When_Adding_Map_To_Disk, "disk_mng_addMap");
+        }
+
     }
 }
 
-void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer, int index)
+void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer)
 {
+    int index = stack_pop();
     ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer,size,range);
     array_addToArray(arrayInfo,index);
     AVLNodeInfo_t* avlNode = avlNodeInfo_create(size, index);
@@ -517,15 +572,22 @@ void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, 
 
 }
 
-bool disk_mng_checkDataStructures(MapRange_t* range, int size, int* map)
+bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map)
 {
     if (map == NULL)
     {
-        test_writeExceptionToFile(Error_Worng_Map_Variable, disk_mng_checkDataStructures);
+        test_writeExceptionToFile(Error_Worng_Map_Variable, "disk_mng_checkDataStructures_map");
+        return true;
     }
-    if (size >0)
+    if (size <=0)
     {
-        test_writeExceptionToFile(Error_Worng_Size_Variable, disk_mng_checkDataStructures);
+        test_writeExceptionToFile(Error_Worng_Size_Variable, "disk_mng_checkDataStructures_mapSize");
+        return false;
     }
-    //check range
+    if (false)
+    {
+        test_writeExceptionToFile(Error_Worng_Map_Range, "disk_mng_checkDataStructures_range");
+        return false;
+    }
+    return true;
 }
