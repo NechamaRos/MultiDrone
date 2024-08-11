@@ -1,11 +1,13 @@
 #include "Disk_Mng_Master.h"
+#include "Disk_Mng_Master_API.h"
+
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
  Disk_Management_CB_t* disk_mng_CB;
-
+ int length, startAdress, howManyToLoad;
 void disk_mng_initialize_CB()
 {
     disk_mng_CB = (Disk_Management_CB_t*)allocate_memory(sizeof(Disk_Management_CB_t), "Failed to allocate memory for disk control block", "disk_mng_initialize_CB");
@@ -13,11 +15,51 @@ void disk_mng_initialize_CB()
 
 void disk_mng_initialize()
 {
+    int startAdress = 0;
+    int howManyToLoad = sizeof(int);
+    int address=0;//לבדוק טיפוס 
+    disk_loadDataForInitializeDataStructers(&address, &startAdress,&howManyToLoad);
+    if (address != 1)//להחליט מה אומר שזה  הפעם  ראשונה
+    {
+        ////restart the first address int disk with 1 to know if its first time or not
+        disk_saveDataFromStructersToDisk(&address, &startAdress, &howManyToLoad);
+        disk_mng_firstInitialize();
+    }
+    else
+    {
+        disk_mng_normalInitialize();
+    }
+}
+
+
+
+
+void disk_mng_saveData()
+{
+    stack_saveData();
+    array_saveData();
+    avlTree_saveData();
+
+}
+
+void disk_mng_firstInitialize()
+{    
     disk_mng_initialize_CB();
     stack_firstInitialize();
     array_firstInitialize();
     avlTree_firstInitialize();
+    disk_mng_CB->mapIdIndex = 0;
+
 }
+
+void disk_mng_normalInitialize()
+{
+    disk_mng_initialize_CB();
+    stack_normalInitialize();
+    array_normalInitialize();
+    avlTree_normalInitialize();
+}
+
 //initialize on the first time we turn o the computer the stack will initialize with all the indexes.
 void stack_firstInitialize() {
     disk_mng_CB->diskFreeIndexesInArray=(DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_firstInitialize");
@@ -25,16 +67,35 @@ void stack_firstInitialize() {
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     for (size_t i = 0; i < DISK_SIZE; i++)
     {
-        StackNode_t* s= stackNode_create(i);
-        stack_push(s);
+        stack_push(i);
     }
 }
 
 void stack_normalInitialize() {
     disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
     int length = 0;
-    //disk_loadDataForInitializeDataStructers(length, 0, sizeof(int));
-    //disk_loadDataForInitializeDataStructers(disk_mng_CB->diskFreeIndexesInArray, 4, length*sizeof(int));
+    int startAdress = 4;
+    int howManyToLoad = sizeof(int);
+    //load the second address in disk with stack size
+    disk_loadDataForInitializeDataStructers(&length, &startAdress, &howManyToLoad);
+    startAdress = 12;
+    howManyToLoad = length * sizeof(int);
+    //load all the data from stack
+    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startAdress,&howManyToLoad) ;
+    
+}
+
+void stack_saveData()
+{
+    int startAdress = 4;
+    int howManyToLoad = 4+sizeof(int);
+    ////save size of stack in the second address in the disk
+    disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray->size), &startAdress, &howManyToLoad);
+
+    startAdress = 12;
+    howManyToLoad = disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int);
+    //save all the data from stack
+    disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray), &startAdress, &howManyToLoad);
 }
 
 bool stack_is_empty() {
@@ -84,20 +145,38 @@ void array_firstInitialize() {
 
 void array_normalInitialize() {
     disk_mng_CB->diskFreeIndexesInArray = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for stack ", "array_normalInitialize");
-    //disk_loadDataForInitializeDataStructers(disk_mng_CB->diskFreeIndexesInArray, 4+ disk_mng_CB->diskFreeIndexesInArray->size* sizeof(int),DISK_SIZE*sizeof(ArrayInfo_t**));
+    int startAdress = 12 + disk_mng_CB->diskFreeIndexesInArray->size* sizeof(int);
+    int howManyToLoad = DISK_SIZE * sizeof(ArrayInfo_t**);
+    //load all the data from array
+    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startAdress, &howManyToLoad);
+
+
+
 }
 
-ArrayInfo_t* arrayInfo_create(int mapid, int* diskPointer, int size, MapRange_t* range
-    //,AVLNodeInfo_t*  avlInfo//
-)
+void array_saveData()
 {
-    ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for max heap", "arrayInfo_create");
-    arrayInfo->mapid = mapid;
+    int startAdress = 12+disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int)+DISK_SIZE * sizeof(ArrayInfo_t**);
+    int howManyToLoad =DISK_SIZE* (sizeof(ArrayInfo_t**));
+    //save all the data from array
+    disk_saveDataFromStructersToDisk(&(disk_mng_CB->arrayForAllMApsInformation), &startAdress, &howManyToLoad);
+}
+
+
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
+{
+    ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for avlTree", "arrayInfo_create");
+    disk_mng_CB->mapIdIndex++;
+    arrayInfo->mapid = disk_mng_CB->mapIdIndex;
     arrayInfo ->diskPointer = diskPointer;
     arrayInfo->size = size;
     arrayInfo->range =range;
-    //arrayInfo->avlInfo = avlInfo;
     return arrayInfo;
+}
+
+void array_addToArray(ArrayInfo_t* arrayInfo, int index)
+{
+    disk_mng_CB->arrayForAllMApsInformation[index] = arrayInfo;
 }
 
 void array_deleteFromArray(int index)
@@ -289,6 +368,35 @@ void avlTree_firstInitialize() {
     disk_mng_CB->disk_SortByMapSize->lruCounter = 0;
 }
 
+void avlTree_normalInitialize() 
+{
+    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t**)allocate_memory(sizeof(DiskSortByMapSize_t*), "Failed to allocate memory for stack ", "avlTree_normalInitialize");
+    int length = 0;
+    int startAdress = 8;
+    int howManyToLoad = sizeof(int);
+    //load the third address in disk with avlTree size
+    disk_loadDataForInitializeDataStructers(&length, &startAdress, &howManyToLoad);
+    startAdress = 12+ disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int) + DISK_SIZE * sizeof(ArrayInfo_t**);
+    howManyToLoad = length * sizeof(DiskSortByMapSize_t**);
+    //load all the data from avlTree
+    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->disk_SortByMapSize), &startAdress, &howManyToLoad);
+}
+
+void avlTree_saveData() 
+{
+    int startAdress = 8;
+   int  howManyToLoad = sizeof(int);
+   ////save size of avkTree in the third address in the disk
+   disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize->totalElements), &startAdress, &howManyToLoad);
+
+
+   startAdress = 12+ disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int) + DISK_SIZE * sizeof(ArrayInfo_t**) + DISK_SIZE * (sizeof(ArrayInfo_t**));
+   howManyToLoad = disk_mng_CB->disk_SortByMapSize->totalElements * sizeof(int);
+   //save all the data from stack
+   disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize), &startAdress, &howManyToLoad);
+}
+
+
 void avlTree_insertElement(AVLNodeInfo_t* nodeInfo) {
     disk_mng_CB->disk_SortByMapSize->lruCounter++;
     AVLNode_t* newNode = avlNode_create(nodeInfo);
@@ -432,4 +540,54 @@ void* allocate_memory(size_t size, const char* description, const char* function
         return NULL;
     }
     return ptr;
+}
+void disk_mng_addMap(MapRange_t* range, int size, int* map)
+{
+    if (disk_mng_isTheDataCorrect(range,size,map))
+    {
+        int* diskPointer = disk_addMap(map);
+        if (diskPointer != NULL)//success
+        {
+            if (!disk_isThereEnoughSpace(size))
+            {
+                void disk_mng_delete(int size);
+            }
+            disk_mng_addMapToDiskManagementDataStructures(range, size, diskPointer);
+        }
+        else
+        {
+            test_writeExceptionToFile(Error_When_Adding_Map_To_Disk, "disk_mng_addMap");
+        }
+
+    }
+}
+
+void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer)
+{
+    int index = stack_pop();
+    ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer,size,range);
+    array_addToArray(arrayInfo,index);
+    AVLNodeInfo_t* avlNode = avlNodeInfo_create(size, index);
+    avlTree_insertElement(avlNode);
+
+}
+
+bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map)
+{
+    if (map == NULL)
+    {
+        test_writeExceptionToFile(Error_Worng_Map_Variable, "disk_mng_checkDataStructures_map");
+        return true;
+    }
+    if (size <=0)
+    {
+        test_writeExceptionToFile(Error_Worng_Size_Variable, "disk_mng_checkDataStructures_mapSize");
+        return false;
+    }
+    if (false)
+    {
+        test_writeExceptionToFile(Error_Worng_Map_Range, "disk_mng_checkDataStructures_range");
+        return false;
+    }
+    return true;
 }

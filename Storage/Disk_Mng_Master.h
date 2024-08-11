@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "Disk_Mng_Master_API.h"
+
 
 #define DISK_SIZE 1000
 
@@ -20,7 +22,11 @@ typedef struct Disk_Management_CB_s Disk_Management_CB_t;
 // Enum declaration
 typedef enum {
     Error_When_Allocating_Memory_Space,
-    Error_When_Deleting_Map_from_Disk
+    Error_When_Deleting_Map_from_Disk,
+    Error_When_Adding_Map_To_Disk,
+    Error_Worng_Size_Variable,
+    Error_Worng_Map_Variable,
+    Error_Worng_Map_Range
 } Exception;
 
 // Struct declarations
@@ -39,7 +45,7 @@ struct AVLNode_s {
 struct DiskSortByMapSize_s {
     AVLNode_t* root;
     int totalElements;
-    int lruCounter; 
+    int lruCounter;
 };
 
 struct Point_s {
@@ -57,7 +63,6 @@ struct ArrayInfo_s {
     int* diskPointer;
     int size;
     MapRange_t* range;
-    //AVLNodeInfo_t  avlInfo;
 
 };
 
@@ -71,6 +76,7 @@ struct DiskFreeIndexesInArray_s {
     StackNode_t* top;
 };
 struct Disk_Management_CB_s {
+    int mapIdIndex;
     ArrayInfo_t** arrayForAllMApsInformation;
     StackNode_t* stackNode;
     DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
@@ -79,7 +85,7 @@ struct Disk_Management_CB_s {
 extern Disk_Management_CB_t* disk_mng_CB;
 
 // Function declarations
- 
+
 // allocate_memory-Allocates memory and logs the allocation with a description and function name
 void* allocate_memory(size_t size, const char* description, const char* functionName);
 
@@ -92,6 +98,10 @@ int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree);
 //disk_mng_delete-Deleting maps until there is enough space to add a new map with the resulting size to disk
 void disk_mng_delete(int mapSize);
 
+//disk_mng_checkDataStructures-check 
+bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map);
+
+
 //initialize
 
 // disk_mng_initialize_CB-Initializes the control block for disk management
@@ -99,6 +109,13 @@ void disk_mng_initialize_CB();
 
 // disk_mng_initialize-Initializes the disk management system
 void disk_mng_initialize();
+
+// disk_mng_firstInitialize-Initializes the disk management system at the first time
+void disk_mng_firstInitialize();
+
+// disk_mng_normalInitialize-Initializes the disk management system each time the computer opened
+void disk_mng_normalInitialize();
+
 
 //AVL node info
 
@@ -120,6 +137,14 @@ void avlNode_delete(AVLNode_t* node);
 int avlNode_height(AVLNode_t* N);
 
 //AVL tree
+// avlTree_firstInitialize-Initializes the AVL tree for the first time
+void avlTree_firstInitialize();
+
+// avlTree_firstInitialize-Initializes the AVL tree each time the computer opened
+void avlTree_normalInitialize();
+
+//save data from avlTree each closed
+void avlTree_saveData();
 
 // avlTree_rightRotate-Performs a right rotation on the given subtree
 AVLNode_t* avlTree_rightRotate(AVLNode_t* y);
@@ -142,6 +167,7 @@ AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNode_t* newNode);
 // avlTree_insertElement-Inserts a new element into the AVL tree
 void avlTree_insertElement(AVLNodeInfo_t* nodeInfo);
 
+
 // avlTree_FindingTheNodeThatIsSuitableForDeletion-Finds the node suitable for deletion according to conditions
 AVLNode_t* avlTree_FindingTheNodeThatIsSuitableForDeletion(AVLNode_t* node);
 
@@ -155,6 +181,9 @@ void stack_firstInitialize();
 
 //normal initialize each open of the computer the disk will fill in the structers all the saved data
 void stack_normalInitialize();
+
+//save data from stack each closed
+void stack_saveData();
 
 //stack_is_empty check if the stack full
 bool stack_is_empty();
@@ -175,13 +204,15 @@ int stack_top();
 
 //array functions 
 
+//initialize on the first time when we turn on the computer just allocate memory to the array
+void array_firstInitialize();
 
 // Initializes an array with default values or in a standard way.
 // This function likely sets the array to a known starting state.
 void array_normalInitialize();
 
-//initialize on the first time when we turn on the computer just allocate memory to the array
-void array_firstInitialize();
+//save data from array each closed
+void array_saveData();
 
 // Deletes an element from an array at a specific index.
 void array_deleteFromArray(int index);
@@ -194,9 +225,25 @@ bool disk_deleteMap(int* diskPointer);
 
 void cache_deleteMap(int mapId);
 
-ArrayInfo_t* arrayInfo_create(int mapid,int* diskPointer,int size,MapRange_t* range
-//,AVLNodeInfo_t*  avlInfo//
- );
 
+//create a new arrayInfo with all the parameters
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range);
+
+void array_addToArray(ArrayInfo_t* arrayInfo, int index);
+
+//create a new range with 2 point which given
 MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft);
 
+//disk_loadDataForInitializeDataStructers the function get destination where to load and from where and how many to load
+void disk_loadDataForInitializeDataStructers(void* destination, void* startAddress, void* howManyToLoad);
+
+//disk_loadDataForInitializeDataStructers the function get data where to save and from where and how many to save
+void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* howManyToLoad);
+
+void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer);
+
+int* disk_addMap(int* map);
+
+void disk_mng_addMap(MapRange_t* range, int size, int* map);
+
+bool disk_isThereEnoughSpace(int mapSize);

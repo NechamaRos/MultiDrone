@@ -130,6 +130,17 @@ int index, popValue,value;
 
 //mock functions
 
+int* disk_addMap(int* map)
+{
+    //int num = generateRandomNumber(10000000);
+    //if (num % 2 == 0)
+    //{
+        int* map1 = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for disk control block", "disk_addMap");
+        return map1;
+    //}
+    //return NULL;
+}
+
 //the function get pointer to map in the disk and delete this map from disk
 bool disk_deleteMap(int* diskPointer) 
 {
@@ -139,8 +150,23 @@ void cache_deleteMap(int mapId)
 {
 }
 //the function fill in the structer all the data which save befoe the computer closed,the function get  destenation,suorce,length;
-void disk_loadDataForInitializeDataStructers(void* i,void* x,void* b) 
+void disk_loadDataForInitializeDataStructers(void* destination,void* startAddress,void* howManyToLoad)
 {
+}
+
+void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* endAddrehowManyToLoadss)
+{
+}
+bool disk_isThereEnoughSpace(int mapSize)
+{
+    //int num = generateRandomNumber(10000000);
+    //if (num % 2 == 0)
+    //{
+    //    return true;
+    //}
+    //return false;
+    return true;
+
 }
 
 TEST_CASE("test_disk_mng_initialize_CB")
@@ -153,6 +179,8 @@ TEST_CASE("test_disk_mng_initialize")
 {
 	disk_mng_initialize();
 }
+
+//avlNode tests
 
 TEST_CASE("test_avlNodeInfo_create")
 {
@@ -218,6 +246,23 @@ TEST_CASE("test_avlNode_height")
 	AVLNode_t* avlNode = avlNode_create(avlNodeInfo);
 
 	CHECK(avlNode->height == avlNode_height(avlNode));
+}
+
+//avlTree tests
+
+TEST_CASE("avlTree_firstInitialize")
+{
+
+}
+
+TEST_CASE("avlTree_normalInitialize")
+{
+
+}
+
+TEST_CASE("avlTree_saveData")
+{
+
 }
 
 TEST_CASE("test_avlTree_rightRotate")
@@ -370,12 +415,13 @@ TEST_CASE("test_avlTree_insert") {
         int arrayIndex = generateRandomNumber();
 
         AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-
         avlTree_insertElement(info);
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->mapSize == mapSize);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->lru == 1);
+        CHECK(disk_mng_CB->disk_SortByMapSize->totalElements == 1);
+
         printf("first tree\n");
         printTree(disk_mng_CB->disk_SortByMapSize->root);
         printf("\n");
@@ -392,6 +438,8 @@ TEST_CASE("test_avlTree_insert") {
         }
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
+        CHECK(disk_mng_CB->disk_SortByMapSize->totalElements == 7);
+
         printf("second tree\n");
         printTree(disk_mng_CB->disk_SortByMapSize->root);
         printf("\n");
@@ -414,7 +462,9 @@ TEST_CASE("test_avlTree_insert") {
         CHECK(disk_mng_CB->disk_SortByMapSize->root->left == nullptr);
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root->right->avlNodeInfo->mapSize == mapSize);
-        CHECK(disk_mng_CB->disk_SortByMapSize->root->right->avlNodeInfo->arrayIndex == arrayIndex2);       
+        CHECK(disk_mng_CB->disk_SortByMapSize->root->right->avlNodeInfo->arrayIndex == arrayIndex2);     
+        CHECK(disk_mng_CB->disk_SortByMapSize->totalElements == 2);
+
         printf("third tree\n");
         printTree(disk_mng_CB->disk_SortByMapSize->root);
         printf("\n");
@@ -442,6 +492,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
         printNode(result);
         printTree(disk_mng_CB->disk_SortByMapSize->root);
         printTreeDetails(disk_mng_CB->disk_SortByMapSize->root);
+        printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
 
         printf("\n");
 
@@ -466,6 +517,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
         printNode(result);
         printTree(disk_mng_CB->disk_SortByMapSize->root);
         printTreeDetails(disk_mng_CB->disk_SortByMapSize->root);
+        printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
 
         printf("\n");
 
@@ -490,6 +542,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
         printNode(result);
         printTree(disk_mng_CB->disk_SortByMapSize->root);
         printTreeDetails(disk_mng_CB->disk_SortByMapSize->root);
+        printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
 
         printf("\n");
 
@@ -544,6 +597,11 @@ TEST_CASE("test_stack_normalInitialize")
     disk_mng_initialize();
 }
 
+TEST_CASE("stack_saveData")
+{
+
+}
+
 TEST_CASE("test_stack_push")
 {
     disk_mng_initialize();
@@ -588,6 +646,7 @@ TEST_CASE("test_stack_is_empty")
 
 TEST_CASE("test_stackNode_create")
 {
+    disk_mng_initialize();
     int index = generateRandomNumber();
     StackNode_t* new_node = stackNode_create(index);
     CHECK(new_node->freeIndex == index);
@@ -596,8 +655,24 @@ TEST_CASE("test_stackNode_create")
 
 //array tests
 
+TEST_CASE("array_firstInitialize")
+{
+
+}
+
+TEST_CASE("array_normalInitialize")
+{
+
+}
+
+TEST_CASE("array_saveData")
+{
+
+}
+
 TEST_CASE("test_array_deleteFromArray")
 {
+    disk_mng_initialize();
     int index = generateRandomNumber();
     array_deleteFromArray(index);
     CHECK(disk_mng_CB->arrayForAllMApsInformation[index]== NULL);
@@ -605,7 +680,7 @@ TEST_CASE("test_array_deleteFromArray")
 
 TEST_CASE("test_arrayInfo_create")
 {
-    int mapid = generateRandomNumber();;
+    disk_mng_initialize();
     int * diskPointer = NULL;
     int size = generateRandomNumber();
     Point_t topLeft;
@@ -615,19 +690,40 @@ TEST_CASE("test_arrayInfo_create")
     bottomRight.x = generateRandomNumber();
     bottomRight.y = generateRandomNumber();
     MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
-
-
-    //arrayInfo->avlInfo = avlInfo;
-    ArrayInfo_t* arrayInfo= arrayInfo_create(mapid, diskPointer, size, mapRange);
-    CHECK(arrayInfo->mapid == mapid);
+    ArrayInfo_t* arrayInfo= arrayInfo_create(diskPointer, size, mapRange);
+    CHECK(arrayInfo->mapid == 1);
     CHECK(arrayInfo->diskPointer == NULL);
     CHECK(arrayInfo->size == size);
     CHECK(arrayInfo->range == mapRange);
 }
 
+TEST_CASE("test_array_addToArray")
+{
+    disk_mng_initialize(); 
+    for (int i = 0; i < DISK_SIZE; i++)
+    {
+        int* diskPointer = NULL;
+        int size = generateRandomNumber();
+        Point_t topLeft;
+        topLeft.x = generateRandomNumber();
+        topLeft.y = generateRandomNumber();
+        Point_t bottomRight;
+        bottomRight.x = generateRandomNumber();
+        bottomRight.y = generateRandomNumber();
+        MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+        ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, mapRange);
+        int index = stack_pop();
+        array_addToArray(arrayInfo, index);
+        CHECK(disk_mng_CB->arrayForAllMApsInformation[index] == arrayInfo);
+        printf("mapId%d\n", disk_mng_CB->mapIdIndex);
+
+    }
+}
+
 //range functions
 TEST_CASE("test_mapRange_create")
 {
+    disk_mng_initialize();
     Point_t topLeft;
     topLeft.x = generateRandomNumber();
     topLeft.y = generateRandomNumber();
@@ -641,3 +737,85 @@ TEST_CASE("test_mapRange_create")
     CHECK(mapRange->topLeft.y == topLeft.y);
 }
 
+TEST_CASE("test_disk_mng_addMap")
+{
+    disk_mng_initialize();
+    for (int i = 0; i < 20; i++)
+    {
+        Point_t topLeft;
+        topLeft.x = generateRandomNumber();
+        topLeft.y = generateRandomNumber();
+        Point_t bottomRight;
+        bottomRight.x = generateRandomNumber();
+        bottomRight.y = generateRandomNumber();
+        MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+        int size = generateRandomNumber();
+        int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
+        disk_mng_addMap(mapRange, size, map);
+        printf("totalElements%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
+        printf("mapIdIndex%d\n", disk_mng_CB->mapIdIndex);
+
+    }
+
+    REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 20);
+
+}
+
+TEST_CASE("Test disk_mng_deleteMapFromDiskManagementDataStructures") {
+    disk_mng_initialize(); 
+    SUBCASE("Delete a single map when disk is full") {
+        // Add maps until the disk is full
+        for (int i = 0; i < 5; i++) {
+            Point_t topLeft;
+            topLeft.x = generateRandomNumber();
+            topLeft.y = generateRandomNumber();
+            Point_t bottomRight;
+            bottomRight.x = generateRandomNumber();
+            bottomRight.y = generateRandomNumber();
+            MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+            int size = generateRandomNumber();
+            int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
+            disk_mng_addMap(mapRange, size, map); // Add maps to the disk
+            printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
+        }
+
+        // Verify that the disk is full and needs deletion
+        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 5);
+
+        // Perform deletion
+        int sizeToFree = generateRandomNumber(); // Random size to free
+        disk_mng_delete(sizeToFree);
+
+        // Ensure that space has been freed
+        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements < 5);
+    }
+
+}
+
+TEST_CASE("Test disk_mng_delete") {
+    disk_mng_initialize(); // Initialize the disk management control block
+
+    SUBCASE("Delete multiple maps until sufficient space is freed") {
+        // Add maps until the disk is full
+        for (int i = 0; i < 10; i++) {
+            Point_t topLeft;
+            topLeft.x = generateRandomNumber();
+            topLeft.y = generateRandomNumber();
+            Point_t bottomRight;
+            bottomRight.x = generateRandomNumber();
+            bottomRight.y = generateRandomNumber();
+            MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+            int size = generateRandomNumber();
+            int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
+            disk_mng_addMap(mapRange, size, map); // Add maps to the disk
+        }
+
+        // Perform multiple deletions to free space
+        int totalSizeToFree = generateRandomNumber();
+        disk_mng_delete(totalSizeToFree);
+
+        // Ensure that sufficient space has been freed
+        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements < 10);
+        REQUIRE(totalSizeToFree <= 0); // Verify that enough space was freed
+    }
+}
