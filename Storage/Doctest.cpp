@@ -131,11 +131,13 @@ int index, popValue,value;
 //mock functions
 
 //the function get pointer to map in the disk and delete this map from disk
-void disk_deleteMap(int* diskPointer) 
+bool disk_deleteMap(int* diskPointer) 
+{
+    return true;
+}
+void cache_deleteMap(int mapId)
 {
 }
-
-
 //the function fill in the structer all the data which save befoe the computer closed,the function get  destenation,suorce,length;
 void disk_loadDataForInitializeDataStructers(void* i,void* x,void* b) 
 {
@@ -368,9 +370,8 @@ TEST_CASE("test_avlTree_insert") {
         int arrayIndex = generateRandomNumber();
 
         AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-        AVLNode_t* node = avlNode_create(info);
 
-        avlTree_insertElement(node);
+        avlTree_insertElement(info);
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->mapSize == mapSize);
@@ -387,8 +388,7 @@ TEST_CASE("test_avlTree_insert") {
             int arrayIndex = generateRandomNumber();
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
@@ -406,11 +406,8 @@ TEST_CASE("test_avlTree_insert") {
         AVLNodeInfo_t* info1 = avlNodeInfo_create(mapSize, arrayIndex1);
         AVLNodeInfo_t* info2 = avlNodeInfo_create(mapSize, arrayIndex2);
 
-        AVLNode_t* node1 = avlNode_create(info1);
-        AVLNode_t* node2 = avlNode_create(info2);
-
-        avlTree_insertElement(node1);
-        avlTree_insertElement(node2);
+        avlTree_insertElement(info1);
+        avlTree_insertElement(info2);
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->right != nullptr);
@@ -434,8 +431,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
             int lru = (i == 3) ? disk_mng_CB->disk_SortByMapSize->lruCounter * 0.6 : generateRandomNumber();
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         AVLNode_t* result = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
@@ -459,8 +455,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
             int lru = generateRandomNumber();
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         AVLNode_t* result = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
@@ -484,8 +479,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
             int lru = disk_mng_CB->disk_SortByMapSize->lruCounter * 0.8;
 
             AVLNodeInfo_t* info = avlNodeInfo_create(mapSize, arrayIndex);
-            AVLNode_t* node = avlNode_create(info);
-            avlTree_insertElement(node);
+            avlTree_insertElement(info);
         }
 
         AVLNode_t* result = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
@@ -501,107 +495,30 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
 
     }
 }
-//TEST_CASE("test_avlTree_deleteNode") {
-//    disk_mng_initialize();
-//
-//    SUBCASE("Delete a leaf node") {
-//        // Insert random nodes
-//        for (int i = 0; i < 5; i++)
-//        {
-//            AVLNodeInfo_t* info1 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//            AVLNode_t* node1 = avlNode_create(info1);
-//            avlTree_insertElement(node1);
-//        }
-//        printf("Tree before deletion:\n");
-//        printTree(disk_mng_CB->disk_SortByMapSize->root);
-//
-//        AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
-//        disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);
-//
-//        printf("Tree after deletion:\n");
-//        printTree(disk_mng_CB->disk_SortByMapSize->root);
-//    }
-//
-//    SUBCASE("Delete a node with one child") {
-//        // Insert random nodes
-//        AVLNodeInfo_t* info1 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node1 = avlNode_create(info1);
-//        avlTree_insertElement(node1);
-//
-//        AVLNodeInfo_t* info2 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node2 = avlNode_create(info2);
-//        avlTree_insertElement(node2);
-//
-//        AVLNodeInfo_t* info3 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node3 = avlNode_create(info3);
-//        avlTree_insertElement(node3);
-//
-//        AVLNodeInfo_t* info4 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node4 = avlNode_create(info4);
-//        avlTree_insertElement(node4);
-//
-//        // Make node4 a child of node3
-//        node3->left = node4;
-//
-//        printf("Tree before deletion:\n");
-//        printTree(disk_mng_CB->disk_SortByMapSize->root);
-//
-//        AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
-//        disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);
-//
-//        printf("Tree after deletion:\n");
-//        printTree(disk_mng_CB->disk_SortByMapSize->root);
-//    }
-//
-//    SUBCASE("Delete a node with two children") {
-//        // Insert random nodes
-//        AVLNodeInfo_t* info1 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node1 = avlNode_create(info1);
-//        avlTree_insertElement(node1);
-//
-//        AVLNodeInfo_t* info2 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node2 = avlNode_create(info2);
-//        avlTree_insertElement(node2);
-//
-//        AVLNodeInfo_t* info3 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node3 = avlNode_create(info3);
-//        avlTree_insertElement(node3);
-//
-//        AVLNodeInfo_t* info4 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node4 = avlNode_create(info4);
-//        avlTree_insertElement(node4);
-//
-//        AVLNodeInfo_t* info5 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node5 = avlNode_create(info5);
-//        avlTree_insertElement(node5);
-//
-//        AVLNodeInfo_t* info6 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node6 = avlNode_create(info6);
-//        avlTree_insertElement(node6);
-//
-//        AVLNodeInfo_t* info7 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
-//        AVLNode_t* node7 = avlNode_create(info7);
-//        avlTree_insertElement(node7);
-//
-//        // Construct a more complex tree
-//        node4->left = node5;
-//        node4->right = node6;
-//        node2->right = node4;
-//        node1->left = node2;
-//        node1->right = node3;
-//        node3->left = node7;
-//
-//        printf("Tree before deletion:\n");
-//        printTree(disk_mng_CB->disk_SortByMapSize->root);
-//
-//        AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
-//        disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);
-//
-//        printf("Tree after deletion:\n");
-//        printTree(disk_mng_CB->disk_SortByMapSize->root);
-//        printf("cghvjbk");
-//    }
-//}
+TEST_CASE("test_avlTree_deleteNode") {
+    disk_mng_initialize();
+
+    for (int i = 0; i < 10; i++)
+    {
+        AVLNodeInfo_t* info1 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
+        avlTree_insertElement(info1);
+    }
+    printf("Tree before deletion:\n");
+    printTree(disk_mng_CB->disk_SortByMapSize->root);
+
+    AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
+    if (nodeToDelete!=NULL)
+    {
+        printf("the node to delete:\n");
+        printNode(nodeToDelete);
+
+        disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);
+
+        printf("Tree after deletion:\n");
+        printTree(disk_mng_CB->disk_SortByMapSize->root);
+
+    }
+}
 
 
 //stack tests
@@ -611,8 +528,8 @@ TEST_CASE("test_stack_firstInitialize")
     disk_mng_initialize();
     for (int i = 0; i < DISK_SIZE; i++)
     {
-        StackNode_t* newNode = stackNode_create(i);
-        stack_push(newNode);
+        
+        stack_push(i);
     }
 
     for (int i =DISK_SIZE-1; i >0; i--)
@@ -633,8 +550,7 @@ TEST_CASE("test_stack_push")
     for (size_t i = 0; i < DISK_SIZE; i++)
     {  
     index = generateRandomNumber();
-    StackNode_t* newStackNode= stackNode_create(index);
-    stack_push(newStackNode);
+    stack_push(index);
     popValue = stack_pop();
     CHECK(popValue == index);
     }

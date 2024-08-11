@@ -19,7 +19,8 @@ typedef struct Disk_Management_CB_s Disk_Management_CB_t;
 
 // Enum declaration
 typedef enum {
-    Error_When_Allocating_Memory_Space
+    Error_When_Allocating_Memory_Space,
+    Error_When_Deleting_Map_from_Disk
 } Exception;
 
 // Struct declarations
@@ -85,6 +86,12 @@ void* allocate_memory(size_t size, const char* description, const char* function
 // test_writeExceptionToFile-Writes exception details to a file
 void test_writeExceptionToFile(Exception exception, const char* source);
 
+//disk_mng_DeleteMapFromDiskManagementDataStructures- delete map from the disk
+int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree);
+
+//disk_mng_delete-Deleting maps until there is enough space to add a new map with the resulting size to disk
+void disk_mng_delete(int mapSize);
+
 //initialize
 
 // disk_mng_initialize_CB-Initializes the control block for disk management
@@ -133,7 +140,7 @@ void avlTree_firstInitialize();
 AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNode_t* newNode);
 
 // avlTree_insertElement-Inserts a new element into the AVL tree
-void avlTree_insertElement(AVLNode_t* newNode);
+void avlTree_insertElement(AVLNodeInfo_t* nodeInfo);
 
 // avlTree_FindingTheNodeThatIsSuitableForDeletion-Finds the node suitable for deletion according to conditions
 AVLNode_t* avlTree_FindingTheNodeThatIsSuitableForDeletion(AVLNode_t* node);
@@ -153,8 +160,8 @@ void stack_normalInitialize();
 bool stack_is_empty();
 
 
-// Push a new node onto the stack
-void stack_push(StackNode_t* new_node);
+// Push a new node into the stack
+void stack_push(int index);
 
 // Create a new stack node with the given index value
 StackNode_t* stackNode_create(int index);
@@ -182,9 +189,10 @@ void array_deleteFromArray(int index);
 // Frees or deletes information associated with an array.
 void array_deleteArrayInfo(ArrayInfo_t* arrayInfo);
 
-
 //disk_deleteMap the function get pointer to map in the disk and delete this map from disk
-void disk_deleteMap(int* diskPointer);
+bool disk_deleteMap(int* diskPointer);
+
+void cache_deleteMap(int mapId);
 
 ArrayInfo_t* arrayInfo_create(int mapid,int* diskPointer,int size,MapRange_t* range
 //,AVLNodeInfo_t*  avlInfo//
