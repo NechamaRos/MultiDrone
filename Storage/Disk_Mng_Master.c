@@ -1,4 +1,6 @@
 #include "Disk_Mng_Master.h"
+#include "Disk_Mng_Master_API.h"
+
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +31,9 @@ void disk_mng_initialize()
     }
 }
 
+
+
+
 void disk_mng_saveData()
 {
     stack_saveData();
@@ -43,6 +48,8 @@ void disk_mng_firstInitialize()
     stack_firstInitialize();
     array_firstInitialize();
     avlTree_firstInitialize();
+    disk_mng_CB->mapIdIndex = 0;
+
 }
 
 void disk_mng_normalInitialize()
@@ -76,6 +83,7 @@ void stack_normalInitialize() {
     howManyToLoad = length * sizeof(int);
     //load all the data from stack
     disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startAdress,&howManyToLoad) ;
+    
 }
 
 void stack_saveData()
@@ -156,14 +164,19 @@ void array_saveData()
 }
 
 
-ArrayInfo_t* arrayInfo_create(int mapid, int* diskPointer, int size, MapRange_t* range)
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
 {
     ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for avlTree", "arrayInfo_create");
-    arrayInfo->mapid = mapid;
+    arrayInfo->mapid = disk_mng_CB->mapIdIndex++;
     arrayInfo ->diskPointer = diskPointer;
     arrayInfo->size = size;
     arrayInfo->range =range;
     return arrayInfo;
+}
+
+void array_addToArray(ArrayInfo_t* arrayInfo, int index)
+{
+    disk_mng_CB->arrayForAllMApsInformation[index] = arrayInfo;
 }
 
 void array_deleteFromArray(int index)
@@ -354,8 +367,9 @@ void avlTree_saveData()
 }
 
 
-void avlTree_insertElement(AVLNode_t* newNode) {
+void avlTree_insertElement(AVLNodeInfo_t* nodeInfo) {
     disk_mng_CB->disk_SortByMapSize->lruCounter++;
+    AVLNode_t* newNode = avlNode_create(nodeInfo);
     disk_mng_CB->disk_SortByMapSize->root = avlTree_insert(disk_mng_CB->disk_SortByMapSize->root, newNode);
     disk_mng_CB->disk_SortByMapSize->totalElements++;
 }
@@ -474,4 +488,44 @@ void* allocate_memory(size_t size, const char* description, const char* function
         return NULL;
     }
     return ptr;
+}
+void disk_mng_addMap(MapRange_t* range, int size, int* map)
+{
+    
+    int* diskPointer = disk_addMap(map);
+    if (diskPointer != NULL)//success
+    {
+        if (stack_is_empty)
+        {
+            void disk_mng_delete(int size);
+        }
+        int index = stack_pop();
+        disk_mng_addMapToDiskManagementDataStructures(range, size, diskPointer, index);
+    }
+    else
+    {
+        test_writeExceptionToFile(Error_When_Adding_Map_To_Disk, disk_mng_addMap);
+    }
+}
+
+void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer, int index)
+{
+    ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer,size,range);
+    array_addToArray(arrayInfo,index);
+    AVLNodeInfo_t* avlNode = avlNodeInfo_create(size, index);
+    avlTree_insertElement(avlNode);
+
+}
+
+bool disk_mng_checkDataStructures(MapRange_t* range, int size, int* map)
+{
+    if (map == NULL)
+    {
+        test_writeExceptionToFile(Error_Worng_Map_Variable, disk_mng_checkDataStructures);
+    }
+    if (size >0)
+    {
+        test_writeExceptionToFile(Error_Worng_Size_Variable, disk_mng_checkDataStructures);
+    }
+    //check range
 }

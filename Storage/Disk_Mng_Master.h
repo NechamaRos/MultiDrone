@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "Disk_Mng_Master_API.h"
+
 
 #define DISK_SIZE 1000
 
@@ -19,7 +21,10 @@ typedef struct Disk_Management_CB_s Disk_Management_CB_t;
 
 // Enum declaration
 typedef enum {
-    Error_When_Allocating_Memory_Space
+    Error_When_Allocating_Memory_Space,
+    Error_When_Adding_Map_To_Disk,
+    Error_Worng_Size_Variable,
+    Error_Worng_Map_Variable
 } Exception;
 
 // Struct declarations
@@ -38,7 +43,7 @@ struct AVLNode_s {
 struct DiskSortByMapSize_s {
     AVLNode_t* root;
     int totalElements;
-    int lruCounter; 
+    int lruCounter;
 };
 
 struct Point_s {
@@ -69,6 +74,7 @@ struct DiskFreeIndexesInArray_s {
     StackNode_t* top;
 };
 struct Disk_Management_CB_s {
+    int mapIdIndex;
     ArrayInfo_t** arrayForAllMApsInformation;
     StackNode_t* stackNode;
     DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
@@ -77,7 +83,7 @@ struct Disk_Management_CB_s {
 extern Disk_Management_CB_t* disk_mng_CB;
 
 // Function declarations
- 
+
 // allocate_memory-Allocates memory and logs the allocation with a description and function name
 void* allocate_memory(size_t size, const char* description, const char* functionName);
 
@@ -147,7 +153,7 @@ void avlTree_firstInitialize();
 AVLNode_t* avlTree_insert(AVLNode_t* node, AVLNode_t* newNode);
 
 // avlTree_insertElement-Inserts a new element into the AVL tree
-void avlTree_insertElement(AVLNode_t* newNode);
+void avlTree_insertElement(AVLNodeInfo_t* newNode);
 
 // avlTree_FindingTheNodeThatIsSuitableForDeletion-Finds the node suitable for deletion according to conditions
 AVLNode_t* avlTree_FindingTheNodeThatIsSuitableForDeletion(AVLNode_t* node);
@@ -201,13 +207,13 @@ void array_deleteFromArray(int index);
 // Frees or deletes information associated with an array.
 void array_deleteArrayInfo(ArrayInfo_t* arrayInfo);
 
+//create a new arrayInfo with all the parameters
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range);
+
+void array_addToArray(ArrayInfo_t* arrayInfo, int index);
 
 //disk_deleteMap the function get pointer to map in the disk and delete this map from disk
 void disk_deleteMap(int* diskPointer);
-
-//create a new arrayInfo with all the parameters
-ArrayInfo_t* arrayInfo_create(int mapid,int* diskPointer,int size,MapRange_t* range);
-
 //create a new range with 2 point which given
 MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft);
 
@@ -216,3 +222,10 @@ void disk_loadDataForInitializeDataStructers(void* destination, void* startAddre
 
 //disk_loadDataForInitializeDataStructers the function get data where to save and from where and how many to save
 void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* howManyToLoad);
+
+void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer, int index);
+
+int* disk_addMap(int* map);
+void disk_mng_addMap(MapRange_t* range, int size, int* map);
+
+
