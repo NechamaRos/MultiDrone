@@ -1,11 +1,28 @@
 #include "Image.h"
 using namespace std;
 
-
-Image::Image()
+Image::Image(int w, int h, int c, std::vector<uint8_t> const& _data)
 {
+	if (c != 1 && c != 3)
+		throw std::exception("The channels must be 1 or 3");
+	if (w < 1 || h < 1)
+		throw std::exception("the arguments are invalid");
+	width = w;
+	height = h;
+	channels = c;
 	refCount = new int;
-	data = nullptr;
+	*refCount = 1;
+	ROI = width;
+	data = new uint8_t[width * 3 * height];
+	if (!_data.empty())
+		memcpy(data, _data.data(), width * 3 * height);
+	else
+	{
+		for (int i = 0; i < width * 3 * height; i++)
+		{
+			data[i] = 0;
+		}
+	}
 }
 
 Image::Image(Image const& other, int tl_x, int tl_y, int ROI_width, int ROI_height)
@@ -29,15 +46,6 @@ Image::Image(Image const& other)
 	(*refCount)++;
 }
 
-Image::Image(Image&& other)noexcept :
-	width(other.width), height(other.height), ROI(other.ROI), channels(other.channels)
-{
-	data = other.data;
-	other.data = nullptr;
-	refCount = (other.refCount);
-	other.refCount = nullptr;
-}
-
 Image::~Image()
 {
 	if (refCount)
@@ -52,97 +60,8 @@ Image::~Image()
 	}
 }
 
-Image Image::row(int y) const
-{
-	if (y > height) throw exception("index out of range");
-	Image img(width, 1, channels);
-	for (int j = 0; j < width - 1; j++)
-	{
-		img.setAllPixel(0, j, getAllPixel(j, y));
-	}
-	return img;
-}
 
-Image Image::col(int x) const
-{
-	if (x > width) throw exception("index out of range");
-	Image img(1, height, channels);
-	for (int i = 0; i < height - 1; i++)
-	{
-		img.setAllPixel(i, 0, getAllPixel(x, i));
-	}
-	return img;
-}
-
-tuple<int, int> Image::getSize()
-{
-	return make_tuple(width, height);
-}
-
-bool Image::empty()
-{
-	return width * height == 0 || data == nullptr;
-}
-
-Image Image::clone()const
-{
-	vector<uint8_t> res;
-	for (int i = 0; i < width * height * channels; i++)
-	{
-		res.push_back(data[i]);
-	}
-	Image m(width, height, channels, res);
-	return m;
-}
-
-vector<vector<uint8_t>> Image::splitChannels()const
-{
-	vector<uint8_t>red;
-	vector<uint8_t>green;
-	vector<uint8_t>blue;
-	for (int index = 0; index < width * height * channels; index++)
-	{
-		if (index % 3 == 0)
-			blue.push_back(data[index]);
-		else
-		{
-			if (index % 3 == 1)
-				green.push_back(data[index]);
-			else
-				red.push_back(data[index]);
-		}
-	}
-	vector<vector<uint8_t>>res({ red,green,blue });
-	return res;
-}
-
-std::vector<uint8_t> Image::mergeChannels(std::vector<vector<uint8_t>> v)
-{
-	if (v.size() != 3)
-		throw exception("the input is invalid");
-	if (v[0].size() != v[1].size() || v[0].size() != v[2].size())
-		throw exception("the input is invalid");
-	vector<uint8_t>res;
-	for (int i = 0; i < v[0].size(); i++)
-	{
-		res.push_back(v[0][i]);
-		res.push_back(v[1][i]);
-		res.push_back(v[2][i]);
-	}
-	return res;
-}
-
-vector<uint8_t> Image::getData()
-{
-	vector<uint8_t>data;
-	for (int i = 0; i < width * channels * height; i++)
-	{
-		data.push_back(this->data[i]);
-	}
-	return data;
-}
-
-std::vector<uint8_t> Image::at(int i, int j) {
+std::vector<uint8_t> Image::at(int i, int j)const {
 	if (i < 0 || i >= height || j < 0 || j >= width) {
 		throw std::out_of_range("Index out of range");
 	}
@@ -155,7 +74,8 @@ std::vector<uint8_t> Image::at(int i, int j) {
 }
 
 uint8_t Image::at(int i, int j, int c) {
-	if (i<0 || i>height || j<0 || j>width || c < 0 || c>2) throw out_of_range("Index out of range");
+	if (i < 0 || i >= height || j < 0 || j >= width || c < 0 || c>2)
+		throw out_of_range("Index out of range");
 	return data[(i * width * channels) + (j * channels) + c];
 }
 
@@ -178,16 +98,113 @@ uint8_t* Image::ptr(int i, int j, int c)
 }
 
 
-Image Image::operator+(uint8_t value) const
+Image Image::row(int y) const
 {
-	Image m(width, height, channels);
-	for (int index = 0; index < width * height * channels; index++)
-		m.data[index] = data[index] + value;
+	if (y > height-1) 
+		throw invalid_argument("index out of range");
+	Image img(width, 1, channels);
+	for (int j = 0; j < width; j++)
+	{
+		img.setAllPixel(0, j, at(y,j));
+	}
+	return img;
+}
+
+Image Image::col(int x) const
+{
+	if (x > width-1) 
+		throw invalid_argument("index out of range");
+	Image img(1, height, channels);
+	for (int i = 0; i < height; i++)
+	{
+		img.setAllPixel(i, 0, at(i, x));
+	}
+	return img;
+}
+
+
+tuple<int, int> Image::getSize()
+{
+	return make_tuple(width, height);
+}
+
+bool Image::empty()
+{
+	bool res= width * height == 0 || data == nullptr;
+	if (res)
+		return res;
+	res = true;
+	for (int i = 0; i < width * 3 * height; i++)
+	{
+		if (data[i] != 0)
+			return false;
+	}
+	return true;
+}
+
+Image Image::clone()const
+{
+	vector<uint8_t> res;
+	for (int i = 0; i < width * height * channels; i++)
+	{
+		res.push_back(data[i]);
+	}
+	Image m(width, height, channels, res);
 	return m;
 }
 
+vector<vector<uint8_t>> Image::splitChannels()const
+{
+	vector<uint8_t>red;
+	vector<uint8_t>green;
+	vector<uint8_t>blue;
+	for (int index = 0; index < width * height * channels; index++)
+	{
+		if (index % 3 == 0)
+			red.push_back(data[index]);
+		else
+		{
+			if (index % 3 == 1)
+				green.push_back(data[index]);
+			else
+				blue.push_back(data[index]);
+		}
+	}
+	vector<vector<uint8_t>>res({ red,green,blue });
+	return res;
+}
+
+vector<uint8_t> Image::margeChannels(vector<vector<uint8_t>>v)
+{
+	if (v.size() != 3)
+		throw exception("the input is invalid");
+	if(v[0].size()!=v[1].size()|| v[0].size() != v[2].size())
+		throw exception("the input is invalid");
+	vector<uint8_t>res;
+	for (int i = 0; i < v[0].size();i++)
+	{
+		res.push_back(v[0][i]);
+		res.push_back(v[1][i]);
+		res.push_back(v[2][i]);
+	}
+	return res;
+}
+
+vector<uint8_t> Image::getData()
+{
+	vector<uint8_t>data;
+	for (int i = 0; i < width*channels * height; i++)
+	{
+		data.push_back(this->data[i]);
+	}
+	return data;
+}
+
+
 Image Image::operator+(Image const& other) const
 {
+	if (width != other.width && height != other.height)
+		throw invalid_argument("the argument is invalid");
 	if (width == other.width)
 	{
 		int c = other.channels == 3 || channels == 3 ? 3 : 1;
@@ -203,7 +220,7 @@ Image Image::operator+(Image const& other) const
 		}
 		return res;
 	}
-	if (height == other.height)
+	else
 	{
 		int c = other.channels == 3 || channels == 3 ? 3 : 1;
 		Image res(width + other.width, height, c);
@@ -212,33 +229,52 @@ Image Image::operator+(Image const& other) const
 		int i2 = 0;
 		for (int j = 0; j < height; j++)
 		{
-			for (int i = 0; i < width; i++)
+			for (int i = 0; i < width*3; i++)
 			{
 				res.data[index++] = data[i1++];
 			}
-			for (int i = 0; i < other.width; i++)
+			for (int i = 0; i < other.width*3; i++)
 			{
-				res.data[index++] = data[i2++];
+				res.data[index++] = other.data[i2++];
 			}
 		}
 		return res;
 	}
-	else
-		return Image();
+}
+
+Image Image::operator+(uint8_t value) const
+{
+	Image m(width, height, channels);
+	for (int index = 0; index < width * height * channels; index++)
+	{
+		if (data[index] + value > 255)
+		{
+			throw invalid_argument("the argument is invalid!!");
+		}
+		m.data[index] = data[index] + value;
+	}
+	return m;
 }
 
 Image Image::operator-(uint8_t value) const
 {
 	Image m(width, height, channels);
 	for (int index = 0; index < width * height * channels; index++)
+	{
+		if (data[index] - value<0)
+		{
+			throw invalid_argument("the argument is invalid!!");
+		}
 		m.data[index] = data[index] - value;
+
+	}
 	return m;
 }
 
 bool Image::operator==(Image const& other) const
 {
 	if (width != other.width || height != other.height || channels != other.channels)
-		return false;
+		throw exception("It is impossible to compare objects with different dimensions");
 	for (int i = 0; i < width * height * channels; i++)
 	{
 		if (other.data[i] != data[i])
@@ -271,11 +307,9 @@ Image Image::operator=(Image const& other)
 }
 
 
-
-
 Image Image::readImage(string filename)
 {
-	int width = 0, height = 0;
+	int width=0, height=0;
 	vector<unsigned char> pixels;
 
 	ifstream file(filename, ios::binary);
@@ -292,18 +326,18 @@ Image Image::readImage(string filename)
 	int rowSize = ((width * 3 + 3) / 4) * 4; // Calculate padded row size
 	int padding = rowSize - width * 3;
 	pixels.resize(width * 3 * height);
-	for (int i = height - 1; i >= 0; i--) {
-		file.read(reinterpret_cast<char*>(&pixels[i * width * 3]), width * 3);
+	for (int i = height-1; i >=0; i--) {
+		file.read(reinterpret_cast<char*>(&pixels[i* width*3]), width*3);
 		file.seekg(padding, ios::cur);
 	}
-
+	
 	file.close();
 
 	Image result(width, height, 3, pixels);
 	return result;
 }
 
-void Image::displayImage(const Image& img, int delay)
+void Image::displayImage(const Image& img,int delay)
 {
 	int rowSize = img.width * 3; // Calculate padded row size
 	int padding = (((img.width * 3 + 3) / 4) * 4) - img.width * 3;
@@ -311,21 +345,18 @@ void Image::displayImage(const Image& img, int delay)
 	vector<uint8_t>data;
 	uint8_t* data2 = new uint8_t[rowSizeWithPadding * img.height];
 	int i = 0;
-	for (int y = 0; y < img.height; y++) {
+	for (int y = 0; y <img.height; y++) {
 		for (int x = 0; x < img.width; x++) {
 			int index = (y * img.width + x) * 3;
 			data2[i++] = img.data[index]; // Blue channel
-			data2[i++] = img.data[index + 1]; // Blue channel
-			data2[i++] = img.data[index + 2]; // Blue channel
-
+			data2[i++] = img.data[index+1]; // Blue channel
+			data2[i++]=img.data[index+2]; // Blue channel
 		}
 		// Write padding bytes
 		for (int p = 0; p < padding; p++) {
-			data2[i++] = uint8_t("\0");
+			data2[i++]=uint8_t("\0");
 		}
 	}
-
-
 
 	BITMAPINFO bmi = { 0 };
 	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -343,20 +374,20 @@ void Image::displayImage(const Image& img, int delay)
 	img.waitKey(delay);
 	ReleaseDC(hwnd, hdc);
 	DestroyWindow(hwnd);
-
+	delete[] data2;
+	
 }
 
 void Image::writeImage(const std::string& filename, const Image& image)
 {
 	std::ofstream bmpFile(filename, std::ios::out | std::ios::binary);
 	if (!bmpFile) {
-		std::cerr << "Error opening file for writing." << std::endl;
-		return;
+		throw runtime_error("Unable to open file");
 	}
 
 	int rowSize = image.width * 3; // Calculate padded row size
 	// Row size including padding
-	int padding = (((image.width * 3 + 3) / 4) * 4) - image.width * 3;
+	int padding = (((image.width * 3 + 3) / 4) * 4)-image.width*3 ;
 	int rowSizeWithPadding = ((image.width * 3 + 3) / 4) * 4;
 	int fileSize = 54 + rowSizeWithPadding * image.height; // Total file size
 	int imageSize = rowSizeWithPadding * image.height;
@@ -392,7 +423,7 @@ void Image::writeImage(const std::string& filename, const Image& image)
 	// Write image data (bottom to top)
 	for (int y = image.height - 1; y >= 0; y--) {
 		for (int x = 0; x < image.width; x++) {
-			int index = (y * image.width + x) * 3;
+			int index = (y * image.width + x)*3 ;
 			bmpFile.write(reinterpret_cast<const char*>(&image.data[index]), 1); // Blue channel
 			bmpFile.write(reinterpret_cast<const char*>(&image.data[index + 1]), 1); // Green channel
 			bmpFile.write(reinterpret_cast<const char*>(&image.data[index + 2]), 1); // Red channel
@@ -420,48 +451,29 @@ Image Image::resize(const Image& src, tuple<int, int> const size)
 	int newWidth = get<0>(size);
 	int newHeight = get<1>(size);
 	Image resImage(newWidth, newHeight);
-	//double loop of through each pixel in the new image (newWidth and newHeight).
 	for (int y = 0; y < newHeight; ++y) {
-		for (int x = 0; x < newWidth; ++x) 
-		{
-			//the positions in the original image that correspond to a pixel in the new image.
+		for (int x = 0; x < resImage.width; ++x) {
 			float gx = ((float)(x + 0.5) / newWidth) * oldWidth - 0.5;
 			float gy = ((float)(y + 0.5) / newHeight) * oldHeight - 0.5;
-			
-			//The integer index of the pixel position in the original image.
 			int gxi = static_cast<int>(gx);
 			int gyi = static_cast<int>(gy);
-
-			//The pixel values ​​(red, green, blue) at the point (gxi, gyi) in the original image
-			float c00r = image.getPixelCH(gyi, gxi, 0);
-			float c00g = image.getPixelCH(gyi, gxi, 1);
-			float c00b = image.getPixelCH(gyi, gxi, 2);
-
-			//The values ​​of the pixels adjacent to the point (gxi, gyi) in the original image.
-			// If the pixels go out of bounds, we use the existing pixel values.
-			float c10r = (gxi + 1 < oldWidth) ? image.getPixelCH(gyi, gxi + 1, 0) : c00r;
-			float c10g = (gxi + 1 < oldWidth) ? image.getPixelCH(gyi, gxi + 1, 1) : c00g;
-			float c10b = (gxi + 1 < oldWidth) ? image.getPixelCH(gyi, gxi + 1, 2) : c00b;
-
-			float c01r = (gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi, 0) : c00r;
-			float c01g = (gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi, 1) : c00g;
-			float c01b = (gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi, 2) : c00b;
-
-			float c11r = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi + 1, 0) : c00r;
-			float c11g = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi + 1, 1) : c00g;
-			float c11b = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.getPixelCH(gyi + 1, gxi + 1, 2) : c00b;
-
-			//Calculation of weights for interpolation. Representing the relative distance of the new pixel from the original whole pixel.
+			float c00r = image.at(gyi, gxi, 0);
+			float c00g = image.at(gyi, gxi, 1);
+			float c00b = image.at(gyi, gxi, 2);
+			float c10r = (gxi + 1 < oldWidth) ? image.at(gyi, gxi + 1, 0) : c00r;
+			float c10g = (gxi + 1 < oldWidth) ? image.at(gyi, gxi + 1, 1) : c00g;
+			float c10b = (gxi + 1 < oldWidth) ? image.at(gyi, gxi + 1, 2) : c00b;
+			float c01r = (gyi + 1 < oldHeight) ? image.at(gyi + 1, gxi, 0) : c00r;
+			float c01g = (gyi + 1 < oldHeight) ? image.at(gyi + 1, gxi, 1) : c00g;
+			float c01b = (gyi + 1 < oldHeight) ? image.at(gyi + 1, gxi, 2) : c00b;
+			float c11r = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.at(gyi + 1, gxi + 1, 0) : c00r;
+			float c11g = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.at(gyi + 1, gxi + 1, 1) : c00g;
+			float c11b = (gxi + 1 < oldWidth && gyi + 1 < oldHeight) ? image.at(gyi + 1, gxi + 1, 2) : c00b;
 			float wx = gx - gxi;
 			float wy = gy - gyi;
-
-			//Calculating the new pixel values ​​using interpolation
 			uint8_t r = (1 - wx) * (1 - wy) * c00r + wx * (1 - wy) * c10r + (1 - wx) * wy * c01r + wx * wy * c11r;
 			uint8_t g = (1 - wx) * (1 - wy) * c00g + wx * (1 - wy) * c10g + (1 - wx) * wy * c01g + wx * wy * c11g;
 			uint8_t b = (1 - wx) * (1 - wy) * c00b + wx * (1 - wy) * c10b + (1 - wx) * wy * c01b + wx * wy * c11b;
-
-
-			//Update the pixel in the new image		 
 			vector<uint8_t> pixel = { r, g, b };
 			resImage.setAllPixel(y, x, pixel);
 		}
@@ -471,45 +483,26 @@ Image Image::resize(const Image& src, tuple<int, int> const size)
 
 int Image::total()
 {
-	return width * height;
+	return width * height*channels;
 }
 
-
-vector<uint8_t> Image::getAllPixel(int i, int j) const {
-	if (i < 0 || i >= width || j < 0 || j >= height) {
-		throw std::out_of_range("Index out of range");
-	}
-
-	std::vector<uint8_t> pixel(channels);
-	for (int c = 0; c < channels; ++c) {
-		pixel[c] = data[(i * width * channels) + (j * channels) + c];
-	}
-	return pixel;
-}
-
-uint8_t& Image::getPixelCH(int i, int j, int c)
-{
-	if (i < 0 || i >= height || j < 0 || j >= width || c < 0 || c >= channels) {
-		throw std::out_of_range("Index out of range");
-	}
-	return data[(i * width * channels) + (j * channels) + c];
-}
 
 void Image::setAllPixel(int i, int j, const vector<uint8_t>& pixel)
 {
 
-	if (pixel.size() < 0 || pixel.size() > 3 || i < 0 || i >= height || j < 0 || j >= width)
-		throw std::out_of_range("Index out of range");
+	if (pixel.size() < 0 || pixel.size() > 3 || i < 0 || i >= height || j < 0 || j >= width) 
+		throw std::invalid_argument("Index out of range");
 	for (int c = 0; c < channels; c++)
 	{
 		setPixelCH(i, j, c, pixel.at(c));
 	}
 }
 
-//not return anything, here the copy on write, so what i need to return?
 void Image::setPixelCH(int i, int j, int c, int value)
 {
-	if (value < 0 || value>255) throw out_of_range("Index out of range");
-	if (i<0 || i>height || j<0 || j>width || c < 0 || c>2) throw out_of_range("Index out of range");
+	if (value < 0 || value>255) 
+		throw invalid_argument("Index out of range");
+	if (i<0 || i>height || j<0 || j>width || c < 0 || c>2) 
+		throw invalid_argument("Index out of range");
 	data[(i * width * channels) + (j * channels) + c] = value;
 }
