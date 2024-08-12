@@ -71,11 +71,6 @@ public:
 	//return a tuple of the width and height
 	std::tuple<int, int> getSize();
 
-	//get a row and a col and return the pixel in this place
-	std::vector<uint8_t> getAllPixel(int i, int j) const;
-
-	//get a row, a col and number-0/1/2 and return the specific channel in a pixel 0-B, 1-G, 2-R
-	uint8_t& getPixelCH(int i, int j, int c);
 
 	//get a row, a col and a vector of three number- B,G,R- and set in this place this vector of pixel
 	void setAllPixel(int i, int j, const std::vector<uint8_t>& pixel);
