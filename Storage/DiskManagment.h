@@ -88,7 +88,7 @@ bool InvalidPoints(Point_t TL, Point_t BR);
 void initImg(Point_t TL, Point_t BR, int* imgData);
 
 //linkedList
-UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo);
+UnitNodeLinkedList_t* createUnitNodeLinkedList(ImageInfo_t* imgInfo);
 void insertToLinkList(UnitNodeLinkedList_t* node);
 LinkedList_t* createLinkedList();
 void removeData();

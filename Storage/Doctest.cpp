@@ -135,12 +135,12 @@ TEST_CASE("Testing create LinkList Node")
 	int y=randomValue(0,38);
 	//the info of the img for the node
 	Point_t a = CreatePoint(x, y);
-	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
+	Point_t b = CreatePoint(x+ SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//Act
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//Assert
 	CHECK(node->next == NULL);
 	CHECK(node->prev == NULL);
@@ -160,11 +160,11 @@ TEST_CASE("Testing create QuadNode")
 	int y = randomValue(0,38);
 	//creating node
 	Point_t a = CreatePoint(x, y);
-	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
+	Point_t b = CreatePoint(x+ SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//Act
 	QuadNode_t* quadNode = createQuadNode(point);
 	//assert
@@ -214,11 +214,11 @@ TEST_CASE("Testing insert to linkList when linkList is mull")
 	int y = randomValue(0, 38);
 	//Creating a node
 	Point_t a = CreatePoint(x, y);
-	Point_t b = CreatePoint(x+SIZE_OF_IMG_LENGTH, y+SIZE_OF_IMG_WIDTH);
+	Point_t b = CreatePoint(x+ SIZE_OF_IMG_LENGTH, y+ SIZE_OF_IMG_WIDTH);
 	ImagePoints_t point = CreateImagePoint(a, b);
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//Creating a linked list
 	initDiskMangmantCb();
 	//Act
@@ -259,8 +259,8 @@ TEST_CASE("insert to linkList when It is  not null")
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(point_, imgData);
 	//creating nodes to insert
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* secondNode = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* secondNode = createUnitNodeLinkedList(imgInfo);
 	//Creating a link list
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -297,7 +297,7 @@ TEST_CASE("Testing remove node from linkedList when there is only onel ink")
 	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//creating liinedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -325,7 +325,7 @@ TEST_CASE("Testing remove node from linkedList when there is only one link")
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//creating liinedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -361,9 +361,9 @@ TEST_CASE("Testing remove node from linkedList")
 	ImageInfo_t* infoC = CreateImageInfo(point, imgData);
 
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* nodeA = createNode(imgInfo);
-	UnitNodeLinkedList_t* nodeB = createNode(infoC);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* nodeA = createUnitNodeLinkedList(imgInfo);
+	UnitNodeLinkedList_t* nodeB = createUnitNodeLinkedList(infoC);
 
 	//creating liinedList
 	initDiskMangmantCb(); //insert to linkedList
@@ -403,7 +403,7 @@ TEST_CASE("Testing remove node from linkedList when there is only one link and a
 	int* imgData = NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//creating liinedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -445,9 +445,9 @@ TEST_CASE("Testing Move to the beginning")
 	ImageInfo_t* imgInfo = CreateImageInfo(point_, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
 	//creating three nodes
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* secondNode = createNode(imgInfo);
-	UnitNodeLinkedList_t* thirdNode = createNode(imgInfoC);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* secondNode = createUnitNodeLinkedList(imgInfo);
+	UnitNodeLinkedList_t* thirdNode = createUnitNodeLinkedList(imgInfoC);
 	//creating linkedList
 	initDiskMangmantCb();
 	//inserting the nodes in to the list
@@ -492,7 +492,7 @@ TEST_CASE("Testing move to the beginning when there's one link")
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//creating linkedList
 	initDiskMangmantCb();
 	insertToLinkList(node);
@@ -530,7 +530,7 @@ TEST_CASE("Testing insert to the Quadtree when QuadTree is empty")
 	//img info
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//creating QuadNode
 	QuadNode_t* quadNode = createQuadNode(point);
 	//Act
@@ -572,8 +572,8 @@ TEST_CASE("Testing insert to the Quadtree")
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	//creating nodes
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* nodeB = createUnitNodeLinkedList(imgInfo);
 	//creating QuadNode
 	QuadNode_t* quadNode = createQuadNode(point);
 	QuadNode_t* quadNodeB = createQuadNode(pointB);
@@ -620,7 +620,7 @@ TEST_CASE("Testing remove quadNode from tree when there is one quadNode")
 	int* imgData =NULL;
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
 	//creating quadNode
 	QuadNode_t* quadNode = createQuadNode(point);
 	insertTotheQuadtree(quadNode, diskMangmantCb->quadTree);
@@ -661,8 +661,8 @@ TEST_CASE("Testing remove quadNode from tree two quadNode")
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* info = CreateImageInfo(point, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* nodeB = createUnitNodeLinkedList(imgInfo);
 	//creating quadNode
 	QuadNode_t* quadNode = createQuadNode(point);
 	QuadNode_t* quadNodeB = createQuadNode(pointB);
@@ -717,9 +717,9 @@ TEST_CASE("Testing remove QuadNode from tree when three chilern")
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* nodeC = createNode(imgInfoC);
-	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* nodeC = createUnitNodeLinkedList(imgInfoC);
+	UnitNodeLinkedList_t* nodeB = createUnitNodeLinkedList(imgInfo);
 	//creating quadNode
 	QuadNode_t* quadNodeB = createQuadNode(pointB);
 	QuadNode_t* quadNode = createQuadNode(point);
@@ -777,9 +777,9 @@ TEST_CASE("Testing remove QuadNode from QuadTree when grandfather numOfNonNULLQu
 	ImageInfo_t* imgInfo = CreateImageInfo(pointB, imgData);
 	ImageInfo_t* imgInfoC = CreateImageInfo(pointC, imgData);
 	//creating node
-	UnitNodeLinkedList_t* node = createNode(info);
-	UnitNodeLinkedList_t* nodeB = createNode(imgInfo);
-	UnitNodeLinkedList_t* nodeC = createNode(imgInfoC);
+	UnitNodeLinkedList_t* node = createUnitNodeLinkedList(info);
+	UnitNodeLinkedList_t* nodeB = createUnitNodeLinkedList(imgInfo);
+	UnitNodeLinkedList_t* nodeC = createUnitNodeLinkedList(imgInfoC);
 	//creating QuadNode
 	QuadNode_t* quadNode = createQuadNode(point);
 	QuadNode_t* quadNodeB = createQuadNode(pointB);

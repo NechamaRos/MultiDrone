@@ -148,7 +148,7 @@ LinkedList_t* createLinkedList()
     return linkedList;
 }
 
-UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo)
+UnitNodeLinkedList_t* createUnitNodeLinkedList(ImageInfo_t* imgInfo)
 {
     UnitNodeLinkedList_t* node = (UnitNodeLinkedList_t*)malloc(sizeof(UnitNodeLinkedList_t));
     if (!node)
@@ -830,7 +830,7 @@ void initImg(Point_t TL, Point_t BR, int* imgData)
 {
     ImagePoints_t tlrb = CreateImagePoint(TL, BR);
     ImageInfo_t* imgInfo = CreateImageInfo(tlrb, imgData);
-    UnitNodeLinkedList_t* node = createNode(imgInfo);
+    UnitNodeLinkedList_t* node = createUnitNodeLinkedList(imgInfo);
     QuadNode_t* quadNode = createQuadNode(tlrb);
     connectBetweenDatStructures(node, quadNode);
     //inserting in to the linkedList & quadTree
