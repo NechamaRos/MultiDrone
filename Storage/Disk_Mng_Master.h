@@ -83,6 +83,10 @@ struct Disk_Management_CB_s {
     DiskSortByMapSize_t* disk_SortByMapSize;
 };
 extern Disk_Management_CB_t* disk_mng_CB;
+void printTree(AVLNode_t* root);
+void printNode(AVLNode_t* node);
+
+
 
 // Function declarations
 

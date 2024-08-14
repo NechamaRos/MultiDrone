@@ -266,3 +266,13 @@ Error: Unknown exception.
 Error: Unknown exception.
 disk_mng_checkDataStructures_mapSize:
 Error: Unknown exception.
+disk_mng_checkDataStructures_mapSize:
+Error: Unknown exception.
+disk_mng_checkDataStructures_mapSize:
+Error: Unknown exception.
+disk_mng_checkDataStructures_mapSize:
+Error: Unknown exception.
+disk_mng_checkDataStructures_mapSize:
+Error: Unknown exception.
+disk_mng_checkDataStructures_mapSize:
+Error: Unknown exception.
