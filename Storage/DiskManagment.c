@@ -2,20 +2,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "DiskManagmentApi.h"
-//#include"DiskManagment.h"
 
-static int count = 0;
 #define DISK_SIZE 20
 #define POINT_TL_RANGE (Point_t){0, 0}
 #define POINT_BR_RANGE (Point_t){40, 40}
 
-
-
 DiskMangmantCb_t* diskMangmantCb;
 
-
-Point_t CreatePoint(int x, int y) {
+Point_t CreatePoint(int x, int y) 
+{
     Point_t p;
 
     if (x < 0 || y < 0)
@@ -32,43 +27,22 @@ Point_t CreatePoint(int x, int y) {
 ImagePoints_t CreateImagePoint(Point_t TL, Point_t BR)
 {
     ImagePoints_t imgPoint;
-
-    if (!isCorrectPoints(TL, BR))
-    {
-        throwExceptiontoFile(POINT_NOT_IN_RANGE_ERORR);
-        errno = POINT_NOT_IN_RANGE_ERORR;
-        imgPoint.BR.x = -1;
-        imgPoint.BR.y = -1;
-        imgPoint.TL.x = -1;
-        imgPoint.TL.y = -1;
-        return imgPoint;
-        return;
-    }
-
-    if (isCorrectSize(TL, BR))
+    if (InvalidPoints(TL, BR))
     {
         imgPoint.BR = BR;
         imgPoint.TL = TL;
         return imgPoint;
     }
-    else
-    {
-        throwExceptiontoFile(IMG_IS_NOT_IN_CORRECT_SIZE);
-        errno = IMG_IS_NOT_IN_CORRECT_SIZE;
-        imgPoint.BR.x = -1;
-        imgPoint.BR.y = -1;
-        imgPoint.TL.x = -1;
-        imgPoint.TL.y = -1;
-        return imgPoint;
-
-    }
-
-
+    imgPoint.BR.x = -1;
+    imgPoint.BR.y = -1;
+    imgPoint.TL.x = -1;
+    imgPoint.TL.y = -1;
+    return imgPoint;
 }
 
 bool isCorrectPoints(Point_t TL, Point_t BR)
 {
-
+    //Checks whether the points have not exceeded the limits and also the tl is smaller than the br
     if (TL.x > BR.x ||
         TL.y > BR.y ||
         TL.x<POINT_TL_RANGE.x ||
@@ -76,6 +50,8 @@ bool isCorrectPoints(Point_t TL, Point_t BR)
         BR.x>POINT_BR_RANGE.x ||
         BR.y>POINT_BR_RANGE.y)
     {
+        throwExceptiontoFile(POINT_NOT_IN_RANGE_ERORR);
+        errno = POINT_NOT_IN_RANGE_ERORR;
         return false;
     }
 
@@ -84,34 +60,44 @@ bool isCorrectPoints(Point_t TL, Point_t BR)
 
 bool isCorrectSize(Point_t TL, Point_t BR)
 {
-
+    //Checks if the image is the right size
     if (TL.x + SIZE_OF_IMG_LENGTH == BR.x && TL.y + SIZE_OF_IMG_WIDTH == BR.y)
     {
         return true;
     }
-
+    throwExceptiontoFile(IMG_IS_NOT_IN_CORRECT_SIZE);
+    errno = IMG_IS_NOT_IN_CORRECT_SIZE;
     return false;
 }
 
-ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData)//
+bool InvalidPoints(Point_t TL, Point_t BR)
+{
+    if (!isCorrectPoints(TL, BR) || !isCorrectSize(TL, BR))
+    {
+        return false;
+    }
+    return true;
+}
+
+ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData)
 {
     ImageInfo_t* img = (ImageInfo_t*)malloc(sizeof(ImageInfo_t));
-
     if (!img)
     {
         throwExceptiontoFile(ALLOCATE_ERROR);
 
         return NULL;
     }
-    img->imgId = ++count;
+    img->imgId = ++diskMangmantCb->imgIdCount;
     img->imgPoints.BR = imgPoints.BR;
     img->imgPoints.TL = imgPoints.TL;
-    img->disk_ptr = AddImgToDisk_Api(imgPoints.TL, imgPoints.BR, imgData, img->imgId);
+    img->disk_ptr = addImgToDisk(imgPoints.TL, imgPoints.BR, imgData, img->imgId);
 
     return img;
 }
 
-void initDiskMangmantCb() {
+void initDiskMangmantCb() 
+{
     diskMangmantCb = (DiskMangmantCb_t*)malloc(sizeof(DiskMangmantCb_t));
     if (!diskMangmantCb)
     {
@@ -121,6 +107,7 @@ void initDiskMangmantCb() {
     diskMangmantCb->linkedList = createLinkedList();
     diskMangmantCb->quadTree = createQuadTree(POINT_TL_RANGE, POINT_BR_RANGE);
     memset(diskMangmantCb->arraySearchInfo, NULL, sizeof(diskMangmantCb->arraySearchInfo));
+    diskMangmantCb->imgIdCount = 0;
 
 }
 
@@ -136,13 +123,11 @@ void printLinkList(FILE* file)
             tmp = tmp->next;
         }
     }
-
 }
 
 LinkedList_t* createLinkedList()
 {
     LinkedList_t* linkedList = (LinkedList_t*)malloc(sizeof(LinkedList_t));
-
     if (!linkedList)
     {
         throwExceptiontoFile(ALLOCATE_ERROR);
@@ -159,15 +144,13 @@ LinkedList_t* createLinkedList()
     linkedList->head->prev = NULL;
     linkedList->tail->next = NULL;
     linkedList->AmountOfLinks = 0;
-    return linkedList;
 
+    return linkedList;
 }
 
 UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo)
 {
-
     UnitNodeLinkedList_t* node = (UnitNodeLinkedList_t*)malloc(sizeof(UnitNodeLinkedList_t));
-
     if (!node)
     {
         throwExceptiontoFile(ALLOCATE_ERROR);
@@ -183,7 +166,7 @@ UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo)
 
 void insertToLinkList(UnitNodeLinkedList_t* node)
 {
-
+    //if it the first node to be insert
     if (diskMangmantCb->linkedList->head->next == NULL)
     {
         diskMangmantCb->linkedList->head->next = node;
@@ -193,7 +176,6 @@ void insertToLinkList(UnitNodeLinkedList_t* node)
     }
     else
     {
-
         node->prev = diskMangmantCb->linkedList->head;
         node->next = diskMangmantCb->linkedList->head->next;
         diskMangmantCb->linkedList->head->next = node;
@@ -202,7 +184,8 @@ void insertToLinkList(UnitNodeLinkedList_t* node)
     diskMangmantCb->linkedList->AmountOfLinks += 1;
 }
 
-QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedList_t* nodePtr) {
+QuadNode_t* createQuadNode(ImagePoints_t imagePoint) 
+{
     QuadNode_t* quadNode = (QuadNode_t*)malloc(sizeof(QuadNode_t));
     //Checks that the assignment worked
     if (!quadNode) {
@@ -213,9 +196,7 @@ QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedList_t* nodeP
     quadNode->imagePoints.BR = imagePoint.BR;
     quadNode->imagePoints.TL = imagePoint.TL;
     quadNode->parent = NULL;
-    connectBetweenDatStructures(nodePtr, quadNode);
-
-
+    
     return quadNode;
 }
 
@@ -250,7 +231,10 @@ QuadTree_t* createQuadTree(Point_t TL, Point_t BR)
 
 void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
 {
-    //The recursion breakpoint checks that everything is NULL
+    //Finds the intersection points that divide the space into four
+    int midX = (quadTree->TL.x + quadTree->BR.x) / 2;
+    int midY = (quadTree->TL.y + quadTree->BR.y) / 2;
+    //The recursion breakpoint when the node found his correct place and everything is NULL 
     if (quadTree->quadNode == NULL && quadTree->topLeftTree == NULL &&
         quadTree->topRightTree == NULL && quadTree->botLeftTree == NULL &&
         quadTree->botRightTree == NULL)
@@ -259,10 +243,6 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
         node->parent = quadTree;
         return;
     }
-
-    //Finds the intersection points that divide the space into four
-    int midX = (quadTree->TL.x + quadTree->BR.x) / 2;
-    int midY = (quadTree->TL.y + quadTree->BR.y) / 2;
     //The place I want to enter is taken
     if (quadTree->quadNode != NULL)
     {
@@ -272,6 +252,7 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
             QuadNode_t* tmp = quadTree->quadNode;
             quadTree->quadNode = node;
             free(tmp);
+            return;
         }
         else
         {
@@ -328,8 +309,6 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
             }
         }
     }
-
-
     // Check which child quadrant the node should go into
     if (node->imagePoints.TL.x <= midX) {
         if (node->imagePoints.TL.y <= midY) {
@@ -411,7 +390,6 @@ void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, i
             (*count)++;
         }
         return;
-
     }
     //recsive function
     searchImgsAtQuadTreeByRange(quadTree->topLeftTree, TL, BR, count, idArray );
@@ -428,7 +406,6 @@ void removeIfExist(UnitNodeLinkedList_t* node)
     tmp->next = NULL;
     tmp->prev = NULL;
     diskMangmantCb->linkedList->AmountOfLinks--;
-    //removeQuadNodeFromTree(node->positionOnTree_ptr);
     free(tmp);
 }
 
@@ -449,10 +426,10 @@ void removeData()
 
 UnitNodeLinkedList_t* removeNodeFromLinkedList()
 {
+    UnitNodeLinkedList_t* tmp;
     //Checking if it has links
     if (diskMangmantCb->linkedList->AmountOfLinks != 0)
     {
-        UnitNodeLinkedList_t* tmp;
         //Checking if it has when one link
         if (diskMangmantCb->linkedList->AmountOfLinks != 1)
         {
@@ -471,14 +448,12 @@ UnitNodeLinkedList_t* removeNodeFromLinkedList()
 
             return tmp;
         }
-
     }
     else
     {
         printf("no node to remove");
         return NULL;
     }
-
 }
 
 void removeFromdArraySearchInfo(int id)
@@ -615,8 +590,6 @@ bool removeQuadNodeFromTree(QuadNode_t* quadNode) {
         free(quadNode);
         return true;
     }
-
-
 }
 
 void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr)
@@ -633,15 +606,13 @@ void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr)
     nodePtr->next = diskMangmantCb->linkedList->head->next;
     diskMangmantCb->linkedList->head->next->prev = nodePtr;
     diskMangmantCb->linkedList->head->next = nodePtr;
-
 }
 
 bool loadImageFromDiskToCache(int imgId, int* addrassToLoading)
 {
     for (int i = 0; i < diskMangmantCb->lengthOfArraySearchInfo; i++) {
         if (diskMangmantCb->arraySearchInfo[i]->imgId == imgId) {
-            return loadImageToCache_Api(diskMangmantCb->arraySearchInfo[i]->disk_ptr, addrassToLoading);
-
+            return loadImageToCache(diskMangmantCb->arraySearchInfo[i]->disk_ptr, addrassToLoading);
         }
     }
     return false;
@@ -654,8 +625,7 @@ int getImagesIdInRangedByTwoPoints(Point_t topLeft, Point_t bottomRight, int* ar
     return diskMangmantCb->lengthOfArraySearchInfo;
 }
 
-
-void AddImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData)
+void addImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData)
 {
     //chack if it out the range
     if (!isCorrectPoints(TL, BR))
@@ -670,39 +640,34 @@ void AddImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData)
         throwExceptiontoFile(IMG_IS_NOT_IN_CORRECT_SIZE);
         return;
     }
-    if (!diskMangmantCb)//if this img is the first
-        initDiskMangmantCb();//init the struct
     if (diskMangmantCb->linkedList->AmountOfLinks == DISK_SIZE)
     {
         removeData();
     }
-
     initImg(TL, BR, imgData);//create and insert
 }
 
-
-
 void saveBeforeShutdown()
 {
-    saveTheQuadTreeToDisk_Api(diskMangmantCb->quadTree);
-    saveTheLinkedListToDisk_Api(diskMangmantCb->linkedList);
+    saveTheQuadTreeToDisk(diskMangmantCb->quadTree);
+    saveTheLinkedListToDisk(diskMangmantCb->linkedList);
     freeQuadTreeAndLinkedListAndArr();
 }
 
 void bootWhenTheDeviceIsTurnedOn()
 {
-    if (readFlushFlag() == 0)//if is a first time that turnd on
+    if (readingIsThisTheFirstTimeToTurnOn() == 0)//if is a first time that turnd on
     {
         initDiskMangmantCb();
-        wirteFlushFlag(1);
+        wirteItWasTrunedOn(1);
         return;
     }
     initDiskMangmantCb();
-    diskMangmantCb->linkedList = LoadTheLinkedlist_Api();
-    diskMangmantCb->quadTree = LoadTheQuadTree_Api();
+    diskMangmantCb->linkedList = loadTheLinkedlist();
+    diskMangmantCb->quadTree = loadTheQuadTree();
 }
 
-void saveTheQuadTreeToDisk_Api(QuadTree_t* pointerToQuadTreeTable)
+void saveTheQuadTreeToDisk(QuadTree_t* pointerToQuadTreeTable)
 {
     FILE* file;
     errno_t err = fopen_s(&file, ".\\diskMoceFolder\\DiskQuedTree.txt", "w");
@@ -716,7 +681,7 @@ void saveTheQuadTreeToDisk_Api(QuadTree_t* pointerToQuadTreeTable)
     fclose(file);
 }
 
-void saveTheLinkedListToDisk_Api(LinkedList_t* pointerToLinkedListTable)
+void saveTheLinkedListToDisk(LinkedList_t* pointerToLinkedListTable)
 {
     FILE* file;
     errno_t err = fopen_s(&file, ".\\diskMoceFolder\\DisklinkedList.txt", "w");
@@ -730,22 +695,21 @@ void saveTheLinkedListToDisk_Api(LinkedList_t* pointerToLinkedListTable)
     fclose(file);
 }
 
-bool loadImageToCache_Api(int* diskAddress, int* cachAddress)
+bool loadImageToCache(int* diskAddress, int* cachAddress)
 {
     //cachAddress = *(diskAddress);
     return true;
 }
 
-void DeleteImageFromDisk_Api(int* diskAdress)
+void deleteImageFromDisk(int* diskAdress)
 {
 
 }
 
-int* AddImgToDisk_Api(Point_t TL, Point_t BR, char* imgData, int imgId)
+int* addImgToDisk(Point_t TL, Point_t BR, char* imgData, int imgId)
 {
     FILE* file;
     errno_t err;
-
     // Attempt to open the file using fopen_s
     err = fopen_s(&file, ".\\diskMoceFolder\\Disk.txt", "a");
     if (err != 0) {
@@ -757,19 +721,17 @@ int* AddImgToDisk_Api(Point_t TL, Point_t BR, char* imgData, int imgId)
     // Write the exception to the file
     fprintf(file, "data:=%s ", imgData);
     fprintf(file, ",id image=%d TL.x=%d, TL.y=%d, BR.x=%d, BR.y=%d\n", imgId, TL.x, TL.y, BR.x, BR.y);
-
-
     // Close the file
     fclose(file);
 
     return NULL;
 }
 
-void wirteFlushFlag(int num)
+
+void wirteItWasTrunedOn(int num)
 {
     FILE* file;
     errno_t err;
-
     // Attempt to open the file using fopen_s
     err = fopen_s(&file, ".\\diskMoceFolder\\FlagFlush.txt", "w");
     if (err != 0) {
@@ -779,18 +741,16 @@ void wirteFlushFlag(int num)
     }
     // Write the exception to the file
     fprintf(file, "%d\n", num);
-
     // Close the file
     fclose(file);
 }
 
-int readFlushFlag()
+int readingIsThisTheFirstTimeToTurnOn()
 {
     char num = '0';
     int flag;
     FILE* file;
     errno_t err;
-
     // Attempt to open the file using fopen_s
     err = fopen_s(&file, ".\\diskMoceFolder\\FlagFlush.txt", "w");
     if (err != 0) {
@@ -807,73 +767,23 @@ int readFlushFlag()
     if (readCount == 0)
         num = '0';
     flag = num - '0';
-
-
     // Close the file
     fclose(file);
     return flag;
 }
 
-QuadTree_t* LoadTheQuadTree_Api()
+QuadTree_t* loadTheQuadTree()
 {
-
     return NULL;
 }
 
-LinkedList_t* LoadTheLinkedlist_Api()
+LinkedList_t* loadTheLinkedlist()
 {
-    ////char line[100]; // Buffer for reading the line
-    ////char* words[16];     // Array of pointers to words
-    ////int wordCount = 0;
-    ////// Attempt to open the file using fopen
-    ////FILE* file = fopen("..\\diskMoceFolder\\diskLInedList.txt", "r");
-    ////if (file == NULL) {
-    ////    printf("the file didnt open try again ---------------Exceptin");
-    ////    return;
-    ////}
-
-    ////size_t size = 256;
-    ////char* line = malloc(size);
-    ////if (line == NULL) {
-    ////    // Print an error message using perror or fprintf
-    ////    throwExceptiontoFile(ALLOCATE_ERROR);
-    ////    fclose(file);
-    ////    return;
-    ////}
-
-    ////if (fgets(line, sizeof(line), file)) 
-    ////{
-    ////    // Remove newline character if present
-    ////    line[strcspn(line, "\n")] = '\0';
-
-    ////    // cut the line by spaces
-    ////    char* word = strtok(line, " ");
-    ////    while (word != NULL && wordCount < 16) {
-    ////        // Allocate memory for the word
-    ////        words[wordCount] = malloc(strlen(word) + 1);
-    ////        if (words[wordCount] == NULL) {
-    ////            perror("Error allocating memory");
-    ////            return 1;
-    ////        }
-    ////        strcpy(words[wordCount], word); // Copy the word to the array
-    ////        wordCount++;
-    ////        word = strtok(NULL, " ");
-    ////    }
-    ////    Point_t tl = CreatePoint(words[5] - '0', words[7] - '0');
-    ////    Point_t br = CreatePoint(words[10] - '0', words[12] - '0');
-    ////    
-    ////    
-    ////    linkedList->head->next=
-    ////}
-
-    ////    free(line);
-    ////    fclose(file);
-    ////    return 0;
+    return NULL;
 }
 
 char* EnumToString(Exception exception)
 {
-
     switch (exception)
     {
     case POINT_NEGATIVE_ERORR:
@@ -887,10 +797,10 @@ char* EnumToString(Exception exception)
     }
 }
 
-void throwExceptiontoFile(Exception exception) {
+void throwExceptiontoFile(Exception exception) 
+{
     FILE* file;
     errno_t err;
-
     // Attempt to open the file using fopen_s
     err = fopen_s(&file, ".\\diskMoceFolder\\Exceptions.txt", "a");
     if (err != 0) {
@@ -901,10 +811,8 @@ void throwExceptiontoFile(Exception exception) {
     char* exceptionString = EnumToString(exception);
     // Write the exception to the file
     fprintf(file, "%s\n", exceptionString);
-
     // Close the file
     fclose(file);
-
 }
 
 void freeQuadTreeAndLinkedListAndArr() {
@@ -914,7 +822,6 @@ void freeQuadTreeAndLinkedListAndArr() {
     free(diskMangmantCb->linkedList->head);// free the linkedList head
     free(diskMangmantCb->linkedList->tail);// free the linkedList tail
     free(diskMangmantCb->linkedList);//free the linkedList
-    //free(diskMangmantCb->arraySearchInfo);
     free(diskMangmantCb);
 }
 
@@ -923,8 +830,9 @@ void initImg(Point_t TL, Point_t BR, int* imgData)
     ImagePoints_t tlrb = CreateImagePoint(TL, BR);
     ImageInfo_t* imgInfo = CreateImageInfo(tlrb, imgData);
     UnitNodeLinkedList_t* node = createNode(imgInfo);
-    QuadNode_t* quadNode = createQuadNode(tlrb, node);
-    //inserting it to the linkedList & quadTree
+    QuadNode_t* quadNode = createQuadNode(tlrb);
+    connectBetweenDatStructures(node, quadNode);
+    //inserting in to the linkedList & quadTree
     insertToLinkList(node);
     insertTotheQuadtree(quadNode, diskMangmantCb->quadTree);
     return;

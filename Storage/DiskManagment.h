@@ -67,6 +67,7 @@ typedef struct DiskMangmantStructCb_s {
     LinkedList_t* linkedList;
     ImageInfo_t* arraySearchInfo[SIZE_OF_CACHE];
     int lengthOfArraySearchInfo;
+    int imgIdCount;
 
 } DiskMangmantCb_t;
 
@@ -83,8 +84,8 @@ ImagePoints_t CreateImagePoint(Point_t TL, Point_t BR);
 ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData);
 bool isCorrectPoints(Point_t TL, Point_t BR);
 bool isCorrectSize(Point_t TL, Point_t BR);
+bool InvalidPoints(Point_t TL, Point_t BR);
 void initImg(Point_t TL, Point_t BR, int* imgData);
-void initDiskMangmantCb();
 
 //linkedList
 UnitNodeLinkedList_t* createNode(ImageInfo_t* imgInfo);
@@ -98,7 +99,7 @@ void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr);
 
 //QuadTree
 
-QuadNode_t* createQuadNode(ImagePoints_t imagePoint, UnitNodeLinkedList_t* nodePtr);
+QuadNode_t* createQuadNode(ImagePoints_t imagePoint);
 void connectBetweenDatStructures(UnitNodeLinkedList_t* nodePtr, QuadNode_t* quadNode);
 QuadTree_t* createQuadTree(Point_t TL, Point_t BR);
 void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, int* count, int* idArray);

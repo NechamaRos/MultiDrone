@@ -13,13 +13,16 @@ bool loadImageFromDiskToCache(int imgId, int* addrassToLoading);
 int getImagesIdInRangedByTwoPoints(Point_t topLeft, Point_t bottomRight, int* arrayOfImagesId);
 
 //gets img info and adds the img to the disk and to the data struct
-void AddImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData);
+void addImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData);
 
 //save the data struct before shutdown
 void saveBeforeShutdown();
 
 //Boot when the device is turned on
 void bootWhenTheDeviceIsTurnedOn();
+
+//init the data structs
+void initDiskMangmantCb();
 
 
 
