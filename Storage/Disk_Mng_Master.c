@@ -148,14 +148,11 @@ void array_firstInitialize() {
     }
 }
 void array_normalInitialize() {
-    disk_mng_CB->diskFreeIndexesInArray = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for array ", "array_normalInitialize");
+    disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for array ", "array_normalInitialize");
     int startAdress = 12 + disk_mng_CB->diskFreeIndexesInArray->size* sizeof(int);
     int howManyToLoad = DISK_SIZE * sizeof(ArrayInfo_t**);
     //load all the data from array
-    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startAdress, &howManyToLoad);
-
-
-
+    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->arrayForAllMApsInformation), &startAdress, &howManyToLoad);
 }
 
 void array_saveData()
@@ -203,32 +200,6 @@ MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft)
     mapRange->topLeft = topLeft;
     return mapRange;
 }
-
-
-
-
-void test_writeExceptionToFile(Exception exception, const char* source) {
-    FILE* file;
-    errno_t err = fopen_s(&file, "errors.log.txt", "a");
-    if (err != 0) {
-        fprintf(stderr, "Error opening file for writing\n");
-        return;
-    }
-
-    const char* error_message;
-    switch (exception) {
-    case Error_When_Allocating_Memory_Space:
-        error_message = "Error: Error when allocating memory space.";
-        break;
-    default:
-        error_message = "Error: Unknown exception.";
-        break;
-    }
-
-    fprintf(file, "%s:\n%s\n", source, error_message);
-    fclose(file);
-}
-
 int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree)
 {
     printTree(disk_mng_CB->disk_SortByMapSize->root);
@@ -607,10 +578,58 @@ bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map)
         test_writeExceptionToFile(Error_Worng_Size_Variable, "disk_mng_checkDataStructures_mapSize");
         return false;
     }
-    if (false)
+    if (isCorrectRange(range))
     {
         test_writeExceptionToFile(Error_Worng_Map_Range, "disk_mng_checkDataStructures_range");
         return false;
     }
+    return true;
+}
+void test_writeExceptionToFile(Exception exception, const char* source) {
+    FILE* file;
+    errno_t err = fopen_s(&file, "errors.log.txt", "a");
+    if (err != 0) {
+        fprintf(stderr, "Error opening file for writing\n");
+        return;
+    }
+    const char* error_message;
+    switch (exception) {
+    case Error_When_Allocating_Memory_Space:
+        error_message = "Error: Error when allocating memory space.";
+        break;
+    case Error_When_Deleting_Map_from_Disk:
+        error_message = "Error: Error when deleting map from disk.";
+        break;
+    case Error_When_Adding_Map_To_Disk:
+        error_message = "Error: Error when adding map to disk.";
+        break;
+    case Error_Worng_Size_Variable:
+        error_message = "Error: Error worng size variable.";
+        break;
+    case Error_Worng_Map_Variable:
+        error_message = "Error: Error worng map variable.";
+        break;
+    case Error_Worng_Map_Range:
+        error_message = "Error: Error worng map range.";
+        break;
+    default:
+        error_message = "Error: Unknown exception.";
+        break;
+    }
+
+    fprintf(file, "%s:\n%s\n", source, error_message);
+    fclose(file);
+}
+bool isCorrectRange(MapRange_t* range)
+{
+
+    if (range->topLeft.x < 0 || range->topLeft.y < 0 || range->bottomRight.x<0 || range->bottomRight.y<0//negetavie
+        || range->topLeft.x >  range->bottomRight.x || range->topLeft.y >  range->bottomRight.y //worng
+        || range->topLeft.x<POINT_TL_RANGE.x || range->topLeft.y<POINT_TL_RANGE.y //not in disk range
+        || range->bottomRight.x>POINT_BR_RANGE.x || range->bottomRight.y>POINT_BR_RANGE.y)//not in disk range
+    {
+        return false;
+    }
+
     return true;
 }
