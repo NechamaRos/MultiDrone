@@ -50,7 +50,7 @@ public:
 
 	const string& getCompressedData() const { return compressedData; }
 
-	void setCompressData(const string& compress) { compressedData = compress; }
+	void setCompressedData(const string& compress) { compressedData = compress; }
 
 	void addHuffmanCode(const map<unsigned char, string>& huffmanCode) { this->huffmanCode = huffmanCode; }
 

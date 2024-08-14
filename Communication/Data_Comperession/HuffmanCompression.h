@@ -117,7 +117,6 @@ string bestCompression(const string& huffmanCompressed, const string& rleCompres
 	size_t rleHufSize = rleHufCompression.size();
 
 	// Find the smallest size
-	//size_t minSize = min({ rawSize, huffmanSize, rleSize, rleHufSize });
 	array<size_t, 4> sizes = { rawSize, huffmanSize, rleSize, rleHufSize };
 	size_t minSize = *min_element(sizes.begin(), sizes.end());
 
