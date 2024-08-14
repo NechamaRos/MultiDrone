@@ -115,12 +115,12 @@ void printLinkList(FILE* file)
 {
     if (diskMangmantCb->linkedList->head->next != NULL)
     {
-        UnitNodeLinkedList_t* tmp = diskMangmantCb->linkedList->head->next;
-        while (tmp != diskMangmantCb->linkedList->tail)
+        UnitNodeLinkedList_t* movingTheLoop = diskMangmantCb->linkedList->head->next;
+        while (movingTheLoop != diskMangmantCb->linkedList->tail)
         {
-            fprintf(file, "imgId= %d , TL=( %d , %d ), BR=( %d , %d ), diskPtr= %s \n", tmp->imgInfo->imgId, tmp->imgInfo->imgPoints.TL.x, tmp->imgInfo->imgPoints.TL.y,
-                tmp->imgInfo->imgPoints.BR.x, tmp->imgInfo->imgPoints.BR.y, tmp->imgInfo->disk_ptr);
-            tmp = tmp->next;
+            fprintf(file, "imgId= %d , TL=( %d , %d ), BR=( %d , %d ), diskPtr= %s \n", movingTheLoop->imgInfo->imgId, movingTheLoop->imgInfo->imgPoints.TL.x, movingTheLoop->imgInfo->imgPoints.TL.y,
+                movingTheLoop->imgInfo->imgPoints.BR.x, movingTheLoop->imgInfo->imgPoints.BR.y, movingTheLoop->imgInfo->disk_ptr);
+            movingTheLoop = movingTheLoop->next;
         }
     }
 }
@@ -249,9 +249,9 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
         //If the point I want to add already exists
         if (quadTree->quadNode->imagePoints.TL.x == node->imagePoints.TL.x && quadTree->quadNode->imagePoints.TL.y == node->imagePoints.TL.y) {
             removeIfExist(quadTree->quadNode->LinkedList_ptr);
-            QuadNode_t* tmp = quadTree->quadNode;
+            QuadNode_t* saveToRemove = quadTree->quadNode;
             quadTree->quadNode = node;
-            free(tmp);
+            free(saveToRemove);
             return;
         }
         else
@@ -400,13 +400,13 @@ void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, i
 
 void removeIfExist(UnitNodeLinkedList_t* node)
 {
-    UnitNodeLinkedList_t* tmp = node;
+    UnitNodeLinkedList_t* saveToRemove = node;
     node->next->prev = node->prev;
     node->prev->next = node->next;
-    tmp->next = NULL;
-    tmp->prev = NULL;
+    saveToRemove->next = NULL;
+    saveToRemove->prev = NULL;
     diskMangmantCb->linkedList->AmountOfLinks--;
-    free(tmp);
+    free(saveToRemove);
 }
 
 void removeData()
@@ -426,27 +426,27 @@ void removeData()
 
 UnitNodeLinkedList_t* removeNodeFromLinkedList()
 {
-    UnitNodeLinkedList_t* tmp;
+    UnitNodeLinkedList_t* saveToRemove;
     //Checking if it has links
     if (diskMangmantCb->linkedList->AmountOfLinks != 0)
     {
         //Checking if it has when one link
         if (diskMangmantCb->linkedList->AmountOfLinks != 1)
         {
-            tmp = diskMangmantCb->linkedList->tail->prev;
+            saveToRemove = diskMangmantCb->linkedList->tail->prev;
             diskMangmantCb->linkedList->tail->prev = diskMangmantCb->linkedList->tail->prev->prev;
             diskMangmantCb->linkedList->tail->prev->next = diskMangmantCb->linkedList->tail;
             diskMangmantCb->linkedList->AmountOfLinks--;
-            return tmp;
+            return saveToRemove;
         }
         else
         {
-            tmp = diskMangmantCb->linkedList->tail->prev;
+            saveToRemove = diskMangmantCb->linkedList->tail->prev;
             diskMangmantCb->linkedList->head->next = NULL;
             diskMangmantCb->linkedList->tail->prev = NULL;
             diskMangmantCb->linkedList->AmountOfLinks--;
 
-            return tmp;
+            return saveToRemove;
         }
     }
     else
@@ -474,6 +474,7 @@ void removeFromdArraySearchInfo(int id)
 }
 
 bool removeQuadNodeFromTree(QuadNode_t* quadNode) {
+    QuadTree_t* saveToRemove;
     //check if has a grandFather
     if (quadNode->parent->parent != NULL)
     {
@@ -485,53 +486,53 @@ bool removeQuadNodeFromTree(QuadNode_t* quadNode) {
         if (grandfather->numOfNonNULLQuadTrees == 2) {
             //check if the second grandFather son is TL
             if (grandfather->topLeftTree != NULL && grandfather->topLeftTree->quadNode != NULL && grandfather->topLeftTree->quadNode != quadNode) {
-                QuadTree_t* tmp = grandfather->topLeftTree;
+                saveToRemove = grandfather->topLeftTree;
                 grandfather->topLeftTree->quadNode->parent = grandfather;
                 grandfather->quadNode = grandfather->topLeftTree->quadNode;
                 grandfather->topLeftTree = NULL;
                 grandfather->numOfNonNULLQuadTrees -= 1;
                 isTowSons = true;
-                free(tmp);
+                free(saveToRemove);
             }
             //check if the second grandFather son is TR
             if (grandfather->topRightTree != NULL && grandfather->topRightTree->quadNode != NULL && grandfather->topRightTree->quadNode != quadNode) {
-                QuadTree_t* tmp = grandfather->topRightTree;
+                saveToRemove = grandfather->topRightTree;
                 grandfather->topRightTree->quadNode->parent = grandfather;
                 grandfather->quadNode = grandfather->topRightTree->quadNode;
                 grandfather->topRightTree = NULL;
                 grandfather->numOfNonNULLQuadTrees -= 1;
                 isTowSons = true;
-                free(tmp);
+                free(saveToRemove);
             }
             //check if the second grandFather son is BL
             if (grandfather->botLeftTree != NULL && grandfather->botLeftTree->quadNode != NULL && grandfather->botLeftTree->quadNode != quadNode) {
-                QuadTree_t* tmp = grandfather->botLeftTree;
+                saveToRemove = grandfather->botLeftTree;
                 grandfather->botLeftTree->quadNode->parent = grandfather;
                 grandfather->quadNode = grandfather->botLeftTree->quadNode;
                 grandfather->botLeftTree = NULL;
                 grandfather->numOfNonNULLQuadTrees -= 1;
                 isTowSons = true;
-                free(tmp);
+                free(saveToRemove);
             }
             //check if the second grandFather son is BR
             if (grandfather->botRightTree != NULL && grandfather->botRightTree->quadNode != NULL && grandfather->botRightTree->quadNode != quadNode) {
-                QuadTree_t* tmp = grandfather->botRightTree;
+                saveToRemove = grandfather->botRightTree;
                 grandfather->botRightTree->quadNode->parent = grandfather;
                 grandfather->quadNode = grandfather->botRightTree->quadNode;
                 grandfather->botRightTree = NULL;
                 grandfather->numOfNonNULLQuadTrees -= 1;
                 isTowSons = true;
-                free(tmp);
+                free(saveToRemove);
             }
-            QuadTree_t* tmp;
+            
             //while the quadNode perent isn't the root and he singal son
             while (grandfather->parent != NULL && grandfather->parent->numOfNonNULLQuadTrees == 1 && isTowSons==true) {
                 ifWhile = true;
-                tmp = grandfather;
+                saveToRemove = grandfather;
                 grandfather->parent->quadNode = grandfather->quadNode;
                 grandfather->quadNode->parent = grandfather->parent;
                 grandfather = grandfather->parent;
-                free(tmp);
+                free(saveToRemove);
             }
 
 
