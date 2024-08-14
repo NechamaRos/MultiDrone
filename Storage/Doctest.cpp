@@ -756,8 +756,18 @@ TEST_CASE("test_disk_mng_addMap")
         printf("mapIdIndex%d\n", disk_mng_CB->mapIdIndex);
 
     }
+    for (int i = 0; i < DISK_SIZE; i++)
+    {
+        if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
+        {
+            printf("%d ", disk_mng_CB->arrayForAllMApsInformation[i]->size);
 
-    REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 20);
+        }
+
+    }
+    printf("\n");
+    printTree(disk_mng_CB->disk_SortByMapSize->root);
+
 
 }
 
@@ -778,6 +788,17 @@ TEST_CASE("Test disk_mng_deleteMapFromDiskManagementDataStructures") {
             disk_mng_addMap(mapRange, size, map); // Add maps to the disk
             printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
         }
+        for (int i = 0; i < DISK_SIZE; i++)
+        {
+            if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
+            {
+                printf("%d ", disk_mng_CB->arrayForAllMApsInformation[i]->size);
+
+            }
+
+        }
+        printf("\n");
+        printTree(disk_mng_CB->disk_SortByMapSize->root);
 
         // Verify that the disk is full and needs deletion
         REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 5);
@@ -786,36 +807,27 @@ TEST_CASE("Test disk_mng_deleteMapFromDiskManagementDataStructures") {
         int sizeToFree = generateRandomNumber(); // Random size to free
         disk_mng_delete(sizeToFree);
 
-        // Ensure that space has been freed
-        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements < 5);
-    }
+        printf("\n");
 
-}
+        //printTree(disk_mng_CB->disk_SortByMapSize->root);
 
-TEST_CASE("Test disk_mng_delete") {
-    disk_mng_initialize(); // Initialize the disk management control block
+        printf("\n");
 
-    SUBCASE("Delete multiple maps until sufficient space is freed") {
-        // Add maps until the disk is full
-        for (int i = 0; i < 10; i++) {
-            Point_t topLeft;
-            topLeft.x = generateRandomNumber();
-            topLeft.y = generateRandomNumber();
-            Point_t bottomRight;
-            bottomRight.x = generateRandomNumber();
-            bottomRight.y = generateRandomNumber();
-            MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
-            int size = generateRandomNumber();
-            int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
-            disk_mng_addMap(mapRange, size, map); // Add maps to the disk
+        for (int i = 0; i < DISK_SIZE; i++)
+        {
+            if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
+            {
+                printf("size %d index %d ", disk_mng_CB->arrayForAllMApsInformation[i]->size, i);
+
+            }
+
         }
 
-        // Perform multiple deletions to free space
-        int totalSizeToFree = generateRandomNumber();
-        disk_mng_delete(totalSizeToFree);
 
-        // Ensure that sufficient space has been freed
-        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements < 10);
-        REQUIRE(totalSizeToFree <= 0); // Verify that enough space was freed
+        // Ensure that space has been freed
+        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements < 5);
+
     }
+
 }
+

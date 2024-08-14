@@ -5,7 +5,8 @@
 #include <stddef.h>
 #include "Disk_Mng_Master_API.h"
 
-
+#define POINT_BR_RANGE (Point_t){100, 100}
+#define POINT_TL_RANGE (Point_t){0, 0}
 #define DISK_SIZE 1000
 
 // Forward declarations
@@ -78,11 +79,14 @@ struct DiskFreeIndexesInArray_s {
 struct Disk_Management_CB_s {
     int mapIdIndex;
     ArrayInfo_t** arrayForAllMApsInformation;
-    StackNode_t* stackNode;
     DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
     DiskSortByMapSize_t* disk_SortByMapSize;
 };
 extern Disk_Management_CB_t* disk_mng_CB;
+void printTree(AVLNode_t* root);
+void printNode(AVLNode_t* node);
+
+
 
 // Function declarations
 
@@ -247,3 +251,5 @@ int* disk_addMap(int* map);
 void disk_mng_addMap(MapRange_t* range, int size, int* map);
 
 bool disk_isThereEnoughSpace(int mapSize);
+
+bool isCorrectRange(MapRange_t* range);

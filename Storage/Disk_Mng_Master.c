@@ -140,18 +140,19 @@ int stack_top() {
 //array fuctions
 
 void array_firstInitialize() {
-    disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(DISK_SIZE*sizeof(ArrayInfo_t*), "Failed to allocate memory for stack ", "array_firstInitialize");
+    disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(DISK_SIZE*sizeof(ArrayInfo_t*), "Failed to allocate memory for array ", "array_firstInitialize");
+    if (disk_mng_CB->arrayForAllMApsInformation != NULL) {
+        for (int i = 0; i < DISK_SIZE; i++) {
+            disk_mng_CB->arrayForAllMApsInformation[i] = NULL;
+        }
+    }
 }
-
 void array_normalInitialize() {
-    disk_mng_CB->diskFreeIndexesInArray = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for stack ", "array_normalInitialize");
+    disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for array ", "array_normalInitialize");
     int startAdress = 12 + disk_mng_CB->diskFreeIndexesInArray->size* sizeof(int);
     int howManyToLoad = DISK_SIZE * sizeof(ArrayInfo_t**);
     //load all the data from array
-    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startAdress, &howManyToLoad);
-
-
-
+    disk_loadDataForInitializeDataStructers(&(disk_mng_CB->arrayForAllMApsInformation), &startAdress, &howManyToLoad);
 }
 
 void array_saveData()
@@ -199,46 +200,35 @@ MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft)
     mapRange->topLeft = topLeft;
     return mapRange;
 }
-
-
-
-
-void test_writeExceptionToFile(Exception exception, const char* source) {
-    FILE* file;
-    errno_t err = fopen_s(&file, "errors.log.txt", "a");
-    if (err != 0) {
-        fprintf(stderr, "Error opening file for writing\n");
-        return;
-    }
-
-    const char* error_message;
-    switch (exception) {
-    case Error_When_Allocating_Memory_Space:
-        error_message = "Error: Error when allocating memory space.";
-        break;
-    default:
-        error_message = "Error: Unknown exception.";
-        break;
-    }
-
-    fprintf(file, "%s:\n%s\n", source, error_message);
-    fclose(file);
-}
-
 int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree)
 {
-    AVLNodeInfo_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);//find the suitable map to delete
-    disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root,nodeToDelete);//delete the map from the AVL tree
-    ArrayInfo_t* arrayInfo = disk_mng_CB->arrayForAllMApsInformation[nodeToDelete->arrayIndex];//finding the object that corresponds to deletion in the array
+    printTree(disk_mng_CB->disk_SortByMapSize->root);
+
+    AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);//find the suitable map to delete
+    printNode(nodeToDelete);
+    ArrayInfo_t* arrayInfo = disk_mng_CB->arrayForAllMApsInformation[nodeToDelete->avlNodeInfo->arrayIndex];//finding the object that corresponds to deletion in the array
+    for (int i = 0; i < DISK_SIZE; i++)
+    {
+        if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
+        {
+            printf("size %d index %d ", disk_mng_CB->arrayForAllMApsInformation[i]->size,i);
+
+        }
+
+    }
+
     bool isDeleteSuccess=disk_deleteMap(arrayInfo->diskPointer);//send API to the disk to delete the map
     if (isDeleteSuccess)
     {
         cache_deleteMap(arrayInfo->mapid);//send API to the cache to delete the map
-        stack_push(nodeToDelete->arrayIndex);//push the index to the stack of free indexes
+        stack_push(nodeToDelete->avlNodeInfo->arrayIndex);//push the index to the stack of free indexes
         sizeToFree -= arrayInfo->size;//reducing the size that needs to be deleted
-        array_deleteFromArray(nodeToDelete->arrayIndex);//delete the map from the array
+        array_deleteFromArray(nodeToDelete->avlNodeInfo->arrayIndex);//delete the map from the array
         array_deleteArrayInfo(arrayInfo);//delete the array object
+        disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);//delete the map from the AVL tree
+        disk_mng_CB->disk_SortByMapSize->totalElements--;
         avlNode_delete(nodeToDelete);//delete the avl node
+
     }
     else
     {
@@ -473,6 +463,7 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
             if (temp == NULL) {
                 // Simply remove the current node
                 root = NULL;
+
             }
             else {
                 // One child case
@@ -481,7 +472,9 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
                 // Make sure to set the child pointers of the old node to NULL
                 root->left = temp->left;
                 root->right = temp->right;
+
             }
+
         }
         else {
             // Node with two children: Get the inorder successor (smallest in the right subtree)
@@ -492,6 +485,7 @@ AVLNode_t* avlTree_deleteNode(AVLNode_t* root, AVLNode_t* node) {
 
             // Delete the inorder successor
             root->right = avlTree_deleteNode(root->right, temp);
+
         }
     }
 
@@ -584,10 +578,58 @@ bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map)
         test_writeExceptionToFile(Error_Worng_Size_Variable, "disk_mng_checkDataStructures_mapSize");
         return false;
     }
-    if (false)
+    if (isCorrectRange(range))
     {
         test_writeExceptionToFile(Error_Worng_Map_Range, "disk_mng_checkDataStructures_range");
         return false;
     }
+    return true;
+}
+void test_writeExceptionToFile(Exception exception, const char* source) {
+    FILE* file;
+    errno_t err = fopen_s(&file, "errors.log.txt", "a");
+    if (err != 0) {
+        fprintf(stderr, "Error opening file for writing\n");
+        return;
+    }
+    const char* error_message;
+    switch (exception) {
+    case Error_When_Allocating_Memory_Space:
+        error_message = "Error: Error when allocating memory space.";
+        break;
+    case Error_When_Deleting_Map_from_Disk:
+        error_message = "Error: Error when deleting map from disk.";
+        break;
+    case Error_When_Adding_Map_To_Disk:
+        error_message = "Error: Error when adding map to disk.";
+        break;
+    case Error_Worng_Size_Variable:
+        error_message = "Error: Error worng size variable.";
+        break;
+    case Error_Worng_Map_Variable:
+        error_message = "Error: Error worng map variable.";
+        break;
+    case Error_Worng_Map_Range:
+        error_message = "Error: Error worng map range.";
+        break;
+    default:
+        error_message = "Error: Unknown exception.";
+        break;
+    }
+
+    fprintf(file, "%s:\n%s\n", source, error_message);
+    fclose(file);
+}
+bool isCorrectRange(MapRange_t* range)
+{
+
+    if (range->topLeft.x < 0 || range->topLeft.y < 0 || range->bottomRight.x<0 || range->bottomRight.y<0//negetavie
+        || range->topLeft.x >  range->bottomRight.x || range->topLeft.y >  range->bottomRight.y //worng
+        || range->topLeft.x<POINT_TL_RANGE.x || range->topLeft.y<POINT_TL_RANGE.y //not in disk range
+        || range->bottomRight.x>POINT_BR_RANGE.x || range->bottomRight.y>POINT_BR_RANGE.y)//not in disk range
+    {
+        return false;
+    }
+
     return true;
 }
