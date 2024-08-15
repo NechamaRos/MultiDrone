@@ -163,6 +163,7 @@ namespace MyAES {
             w[i + 3] = w[i + 3 - NUM_WORDS * NK] ^ temp[3];
             i += NUM_WORDS;
         }
+        API::writeLog("Expansion key: ");
         string s = "";
         for (unsigned int j = 0;NR + 1; j++) 
         {
@@ -245,7 +246,7 @@ namespace MyAES {
             MixColumns(state);
             AddRoundKey(state, roundKeys + round * NUM_WORDS * WORD);
         }
-        //בסיבוב האחרון מתבצע:
+        //the last round:
         SubBytes(state);
         ShiftRows(state);
         AddRoundKey(state, roundKeys + NR * NUM_WORDS * WORD);
@@ -327,14 +328,6 @@ namespace MyAES {
         ShiftRow(state, 1, 1);
         ShiftRow(state, 2, 2);
         ShiftRow(state, 3, 3);
-        //for (int i = 0; i < NUM_WORDS; i++)
-        //{
-        //    for (int j = 0; j < NUM_WORDS; j++)
-        //    {
-        //        cout << hex << static_cast<int>(state[i][j]) << " ";
-        //    }
-        //    cout << endl;
-        //}
     }
     /// <summary>
     /// The matrix moves a row a number of steps to the left in the matrix.
@@ -370,25 +363,6 @@ namespace MyAES {
                 }
             }
         }
-        //דוגמא:
-        //static const unsigned char CMDS[NUM_WORDS][NUM_WORDS] = {
-        //{2, 3, 1, 1}, 
-        //{1, 2, 3, 1},
-        //{1, 1, 2, 3},
-        //{3, 1, 1, 2} };
-        //unsigned char state[NUM_WORDS][NUM_WORDS] = {
-        //{0x87, 0xf2, 0x4d, 0x97},
-        //{0x6e, 0x4c, 0x90, 0xec},
-        //{0x46, 0xe7, 0x4a, 0xc3},
-        //{0xa6, 0x8c, 0xd8, 0x95}
-        //};
-        //{
-        //    0x87^2 ^3 ^1 ^1 ^CMD[1] ^CMD[2] ^CMD[3], 0xf2 ^ 2 ^ 3 ^ 1 ^ 1 ^ CMD[1] ^ CMD[2] ^ CMD[3], 0x4d ^ 2 ^ 3 ^ 1 ^ 1 ^ CMD[1] ^ CMD[2] ^ CMD[3], 0x97 ^ 2 ^ 3 ^ 1 ^ 1 ^ CMD[1] ^ CMD[2] ^ CMD[3],
-        //    0x6e^CMD[0] ^CMD[1] ^ CMD[2] ^ CMD[3], 0x4c ^ CMD[0] ^ CMD[1] ^ CMD[2] ^ CMD[3], 0x90^CMD[0] ^ CMD[1] ^ CMD[2] ^ CMD[3],... ,...
-        //    0x46,...,...,...
-        //    0xa6,...,...,...
-        //}
-
         for (size_t i = 0; i < NUM_WORDS; ++i) {
             memcpy(state[i], temp_state[i], NUM_WORDS);
         }

@@ -16,7 +16,7 @@ unsigned char* GenerateKey(size_t length = 16) {
 
 void API::writeLog(const std::string& message) {
     std::ofstream logFile;
-    logFile.open("log.txt", std::ios_base::app); // פתיחת הקובץ במצב הוספה
+    logFile.open("log.txt", std::ios_base::app); // open file with writting mode
     if (logFile.is_open()) {
         logFile << message << std::endl;
         logFile.close();
