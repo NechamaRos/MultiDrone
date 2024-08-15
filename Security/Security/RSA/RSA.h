@@ -9,31 +9,29 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/random.hpp>
 
+
 using namespace std;
 using namespace boost::multiprecision;
 
 class RSA {
 
 public:
-	cpp_int publicKey;
-	cpp_int privateKey;
-	cpp_int n;
+
+    static constexpr int num_tests = 25;
+
+   
+    cpp_int n;
 
 
-    void closeLogFile();
-    int bit_length(const cpp_int& n);
-    bool is_key_at_least_2048_bits(cpp_int n);
+    
     cpp_int mod_exp(cpp_int base, cpp_int exp, cpp_int mod);
-    bool miller_rabin_test(const cpp_int& n, int k);
-    cpp_int generate_random_cpp_int(int bit_length);
-    cpp_int generate_prime(int bit_length);
-    cpp_int gcd(cpp_int a, cpp_int b);
-    void set_private_and_public_keys();
+    bool miller_rabin_test(const cpp_int& number_to_test, int num_tests);
     cpp_int encrypt(cpp_int  message);
     cpp_int  decrypt(cpp_int  encrpyted_text);
+    cpp_int convert_aes_key_to_cpp_int(const unsigned char* aes_key, size_t key_length);
+    cpp_int encrypt_aes_key(const unsigned char* aes_key, size_t key_length);
+    std::vector<unsigned char> decrypt_aes_key(cpp_int encrypted_aes_key);
+
     vector<cpp_int> encoder(string message);
     string decoder(vector<cpp_int> encoded);
-    bool isPrime(const cpp_int& n, int k = 25);
-    cpp_int pollards_rho(const cpp_int& n);
-    std::pair<cpp_int, cpp_int> factorize(const cpp_int& n);
 };
