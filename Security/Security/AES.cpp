@@ -24,21 +24,20 @@ namespace MyAES {
             this->NR = 14;
             break;
         default:
-            throw invalid_argument("invalid AES key length");
+            this->NK = 8;
+            this->NR = 14;
         }
     }
     unsigned char* AES::EncryptCBC(const unsigned char in[], unsigned int& inLen, const unsigned char key[], const unsigned char* iv) {
+        API::writeLog("AES::EncryptCBC");
         // Adjust the input length and get the padded input
         unsigned char* paddedIn = CheckLength(in, inLen);
-        // Allocate output buffer
         unsigned char* out = new unsigned char[inLen];
         unsigned char block[blockBytesLen];
-        unsigned char* roundKeys = new unsigned char[4 * NB * (NR + 1)];
+        unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
-
         // Initialize block with IV
         memcpy(block, iv, blockBytesLen);
-
         // Encrypt each block
         for (unsigned int i = 0; i < inLen; i += blockBytesLen) {
             XorBlocks(block, paddedIn + i, block, blockBytesLen);
@@ -51,9 +50,10 @@ namespace MyAES {
     }
 
     unsigned char* AES::DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv) {
+        API::writeLog("AES::DecryptCBC");
         unsigned char* out = new unsigned char[inLen];
         unsigned char block[blockBytesLen];
-        unsigned char* roundKeys = new unsigned char[4 * NB * (NR + 1)];
+        unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
         memcpy(block, iv, blockBytesLen);
 
@@ -63,7 +63,6 @@ namespace MyAES {
             memcpy(block, in + i, blockBytesLen);
         }
         delete[] roundKeys;
-
         // Remove padding from the decrypted output
         unsigned char* unpaddedOut = RemovePadding(out, inLen);
         delete[] out;
@@ -72,12 +71,12 @@ namespace MyAES {
     }
     unsigned char* AES::EncryptECB(const unsigned char in[], unsigned int& inLen, const unsigned char key[])
     {
+        API::writeLog("AES::EncryptECB");
         // Check and pad the input length
         unsigned int originalLen = inLen;
         unsigned char* paddedIn = CheckLength(in, inLen);
-        // Allocate output buffer
         unsigned char* out = new unsigned char[inLen];
-        unsigned char* roundKeys = new unsigned char[4 * NB * (NR + 1)];
+        unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
         // Encrypt each block
         for (unsigned int i = 0; i < inLen; i += blockBytesLen) {
@@ -88,8 +87,9 @@ namespace MyAES {
         return out;
     }
     unsigned char* AES::DecryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]) {
+        API::writeLog("AES::DecryptECB");
         unsigned char* out = new unsigned char[inLen];
-        unsigned char* roundKeys = new unsigned char[4 * NB * (NR + 1)];
+        unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
         // Decrypt each block
         for (unsigned int i = 0; i < inLen; i += blockBytesLen) {
@@ -98,22 +98,21 @@ namespace MyAES {
         delete[] roundKeys;
         // Remove padding from the decrypted output
         unsigned char* unpaddedOut = RemovePadding(out, inLen);
-        delete[] out; // Clean up decrypted output with padding
+        delete[] out;
         return unpaddedOut;
     }
     unsigned char* AES::CheckLength(const unsigned char in[], unsigned int& inLen)
     {
-        //if (inLen % blockBytesLen == 0)
-        //{
-        //    // No padding needed, create a copy to return
-        //    unsigned char* paddedIn = new unsigned char[inLen];
-        //    memcpy(paddedIn, in, inLen);
-        //    return paddedIn;
-        //}
+        if (inLen % blockBytesLen == 0)
+        {
+            // No padding needed, create a copy to return
+            unsigned char* paddedIn = new unsigned char[inLen];
+            memcpy(paddedIn, in, inLen);
+            return paddedIn;
+        }
         // Calculate padding length
         unsigned int paddingLen = blockBytesLen - (inLen % blockBytesLen);
         unsigned int paddedLen = inLen + paddingLen;
-
         // Allocate new input with padding
         unsigned char* paddedIn = new unsigned char[paddedLen];
         for (unsigned int i = 0; i < inLen; ++i) {
@@ -125,54 +124,62 @@ namespace MyAES {
         }
         // Update the length of the input
         inLen = paddedLen;
-
+        API::writeLog("new input length allocated : "+to_string(paddedLen) +" origin length: "+to_string(inLen));
         return paddedIn;
     }
 
     void AES::KeyExpansion(const unsigned char key[], unsigned char w[])
     {
-        API::writeLog("AES::KeyExpansion");
-        unsigned char temp[4];
-        unsigned char rcon[4];
+        unsigned char temp[WORD];
+        unsigned char rcon[WORD];
         unsigned int i = 0;
-        while (i < 4 * NK)
+        while (i < WORD * NK)
         {
             w[i] = key[i];
             i++;
         }
-        i = 4 * NK;
-        while (i < 4 * NB * (NR + 1))
+        i = WORD * NK;
+        while (i < NUM_WORDS * WORD * (NR + 1))
         {
-            temp[0] = w[i - 4 + 0];
-            temp[1] = w[i - 4 + 1];
-            temp[2] = w[i - 4 + 2];
-            temp[3] = w[i - 4 + 3];
-            if (i / 4 % NK == 0)//בכל סיבוב יש 4 מילים. 11 סיבובים=44 מילים
+            temp[0] = w[i - WORD + 0];
+            temp[1] = w[i - WORD + 1];
+            temp[2] = w[i - WORD + 2];
+            temp[3] = w[i - WORD + 3];
+            //each roundKey has 4 words. word=4 bytes. 11 rounds=44 words
+            if (i / WORD % NK == 0)
             {
-                RotWord(temp);//מזיזה את הביטים של המילה צעד אחד שמאלה מעגלי
-                SubWord(temp);//מחליפה את הביטים של המילה בהתאם למטריצת בsbox
-                Rcon(rcon, i / (NK * 4));//
+                RotWord(temp);//Moves the bytes of the word one circular step to the left.
+                SubWord(temp);//Replaces the bytes of the word according to the sbox matrix.
+                Rcon(rcon, i / (NK * NUM_WORDS));
                 XorWords(temp, rcon, temp);//sbox^rcon
             }
-            else if (NK > 6 && i / 4 % NK == 4)
+            else if (NK > 6 && i / NUM_WORDS % NK == WORD)
             {
                 SubWord(temp);
             }
-            w[i + 0] = w[i - 4 * NK] ^ temp[0];
-            w[i + 1] = w[i + 1 - 4 * NK] ^ temp[1];
-            w[i + 2] = w[i + 2 - 4 * NK] ^ temp[2];
-            w[i + 3] = w[i + 3 - 4 * NK] ^ temp[3];
-            i += 4;
+            w[i + 0] = w[i - NUM_WORDS * NK] ^ temp[0];
+            w[i + 1] = w[i + 1 - NUM_WORDS * NK] ^ temp[1];
+            w[i + 2] = w[i + 2 - NUM_WORDS * NK] ^ temp[2];
+            w[i + 3] = w[i + 3 - NUM_WORDS * NK] ^ temp[3];
+            i += NUM_WORDS;
         }
-        for (unsigned int j = 0; j < 4 * NB * (NR + 1); j++) {
+        string s = "";
+        for (unsigned int j = 0;NR + 1; j++) 
+        {
+            for (unsigned int i = 0; i < WORD*NUM_WORDS; i++)
+            {
             printf("%02x ", w[j]);
+            s += w[j];
+            }
+            API::writeLog(s);
+            s = "";
+            printf("\n");
         }
         printf("\n");
     }
 
     void AES::RotWord(unsigned char* a)
     {
-        API::writeLog("AES::RotWord");
         unsigned char c = a[0];
         a[0] = a[1];
         a[1] = a[2];
@@ -182,7 +189,7 @@ namespace MyAES {
 
     void AES::SubWord(unsigned char* a)
     {
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < NUM_WORDS; ++i) {
             a[i] = sbox[a[i] / 16][a[i] % 16];
         }
     }
@@ -190,16 +197,16 @@ namespace MyAES {
     void AES::XorWords(unsigned char* a, unsigned char* b, unsigned char* c)
     {
         API::writeLog("AES::XorWords");
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < NUM_WORDS; i++)
         {
             c[i] = a[i] ^ b[i];
         }
     }
     /// <summary>
-    /// הפונקציה מחשבת את הערך עבור a[0] על ידי כפל ב-2 n-1 פעמים) 
+    ///The function calculates the value for a[0] by multiplying by 2 n-1 times 
     /// </summary>
-    /// <param name="a">Rconערך ה</param>
-    /// <param name="n">הסיבוב</param>
+    /// <param name="a">Rcon value</param>
+    /// <param name="n">num round</param>
     void AES::Rcon(unsigned char* a, unsigned int n)
     {
         unsigned char c = 1;
@@ -210,13 +217,11 @@ namespace MyAES {
         a[0] = c;
         a[1] = a[2] = a[3] = 0;
     }
-    // הפונקציה מבצעת את פעולת הכפל ב-2 בתוך השדה הגלואה (GF(2^8)), על ידי שימוש בפולינום 
+    // The function performs the operation of multiplying by 2 in the Galois field (GF(2^8)), by using a polynomial
     unsigned char AES::xtime(unsigned char b)
     {
-        //cout << (((b << 1)) ^ ((((b >> 7) & 1) * 0x1b)))<<endl;
         return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
     }
-
     void AES::XorBlocks(const unsigned char* a, const unsigned char* b, unsigned char* c, unsigned int len)
     {
         for (unsigned int i = 0; i < len; i++)
@@ -224,47 +229,46 @@ namespace MyAES {
             c[i] = a[i] ^ b[i];
         }
     }
-
     void AES::EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys)
     {
-        unsigned char state[4][NB];
+        unsigned char state[NUM_WORDS][WORD];
         unsigned int i, j, round;
-        for (i = 0; i < 4; i++)
-            for (j = 0; j < NB; j++)
-                state[i][j] = in[i + 4 * j];
+        for (i = 0; i < NUM_WORDS; i++)
+            for (j = 0; j < WORD; j++)
+                state[i][j] = in[i + WORD * j];
         AddRoundKey(state, roundKeys);
-        //בכל סיבוב חוץ מהאחרון מתבצעים השלבים הבאים:
+        //In every round except the last, the following steps are performed:
         for (round = 1; round <= NR - 1; round++)
         {
             SubBytes(state);
             ShiftRows(state);
             MixColumns(state);
-            AddRoundKey(state, roundKeys + round * 4 * NB);
+            AddRoundKey(state, roundKeys + round * NUM_WORDS * WORD);
         }
         //בסיבוב האחרון מתבצע:
         SubBytes(state);
         ShiftRows(state);
-        AddRoundKey(state, roundKeys + NR * 4 * NB);
-        for (i = 0; i < 4; i++)
-            for (j = 0; j < NB; j++)
-                out[i + 4 * j] = state[i][j];
+        AddRoundKey(state, roundKeys + NR * NUM_WORDS * WORD);
+        for (i = 0; i < NUM_WORDS; i++)
+            for (j = 0; j < WORD; j++)
+                out[i + NUM_WORDS * j] = state[i][j];
     }
     void AES::DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys) {
-        unsigned char state[4][NB];
+        unsigned char state[NUM_WORDS][WORD];
         unsigned int i, j, round;
 
-        for (i = 0; i < 4; i++) {
-            for (j = 0; j < NB; j++) {
-                state[i][j] = in[i + 4 * j];
+        for (i = 0; i < NUM_WORDS; i++) {
+            for (j = 0; j < WORD; j++) {
+                state[i][j] = in[i + NUM_WORDS * j];
             }
         }
 
-        AddRoundKey(state, roundKeys + NR * 4 * NB);
+        AddRoundKey(state, roundKeys + NR * NUM_WORDS * WORD);
 
         for (round = NR - 1; round >= 1; round--) {
             InvSubBytes(state);
             InvShiftRows(state);
-            AddRoundKey(state, roundKeys + round * 4 * NB);
+            AddRoundKey(state, roundKeys + round * NUM_WORDS * WORD);
             InvMixColumns(state);
         }
 
@@ -272,70 +276,60 @@ namespace MyAES {
         InvShiftRows(state);
         AddRoundKey(state, roundKeys);
 
-        for (i = 0; i < 4; i++) {
-            for (j = 0; j < NB; j++) {
-                out[i + 4 * j] = state[i][j];
+        for (i = 0; i < NUM_WORDS; i++) {
+            for (j = 0; j < WORD; j++) {
+                out[i + NUM_WORDS * j] = state[i][j];
             }
         }
     }
 
     unsigned char* AES::RemovePadding(const unsigned char* in, unsigned int& outLen)
     {
+        unsigned char* out = new unsigned char[outLen];
+        memcpy(out, in, outLen);
         // Get the padding length from the last byte of the decrypted text
         unsigned int paddingLen = in[outLen - 1];
-
-        // Validate padding length
+        // the last byte is no padding byte
         if (paddingLen > blockBytesLen || paddingLen == 0) {
-            throw std::runtime_error("Invalid padding bytes. in the end");
+            return out;
         }
-
         // Validate that the padding bytes are correct
         for (unsigned int i = 0; i < paddingLen; ++i) {
             if (in[outLen - 1 - i] != paddingLen) {
-                throw std::runtime_error("Invalid padding bytes.");
+                return out;
             }
         }
-        // Calculate the new output length without padding
+        delete[] out;
         outLen -= paddingLen;
-
-        // Create a new array without padding
         unsigned char* out = new unsigned char[outLen];
         memcpy(out, in, outLen);
-
         return out;
     }
 
     /// <summary>
-    /// החלפה של הביטים במטריצת המצב בהתאמה בביטים שבמטריצה הקבועה sbox
+    /// Replacement of the bits in the respective state matrix with the bits in the fixed matrix sbox.
     /// </summary>
-    /// <param name="state"></param>
-    void AES::SubBytes(unsigned char state[4][NB])
+    /// <param name="state">the state matrix</param>
+    void AES::SubBytes(unsigned char state[NUM_WORDS][WORD])
     {
         unsigned int i, j;
         unsigned char t;
-        for (i = 0; i < 4; i++)
-            for (j = 0; j < NB; j++)
+        for (i = 0; i < NUM_WORDS; i++)
+            for (j = 0; j < WORD; j++)
             {
                 t = state[i][j];
                 state[i][j] = sbox[t / 16][t % 16];
             }
     }
-    void AES::FindInSBox(int r, int c)
-    {
-        cout << sbox[r][c] << endl;
-    }
-    /// <summary>
-    /// הפונקציה מקבלת את מטריצת המצב ומבצעת הזזה של השורות.שורה שניה-1, שורה שלישית-2,שורה רביעית-3
-    /// </summary>
-    /// <param name="state"></param>
-    void AES::ShiftRows(unsigned char state[4][NB])
+    //The function receives the state matrix and moves the rows. Second row-1, third row-2, fourth row-3
+    void AES::ShiftRows(unsigned char state[NUM_WORDS][WORD])
     {
         ShiftRow(state, 1, 1);
         ShiftRow(state, 2, 2);
         ShiftRow(state, 3, 3);
-        //for (int i = 0; i < 4; i++)
+        //for (int i = 0; i < NUM_WORDS; i++)
         //{
-        //    for (int j = 0; j < 4; j++)
+        //    for (int j = 0; j < NUM_WORDS; j++)
         //    {
         //        cout << hex << static_cast<int>(state[i][j]) << " ";
         //    }
@@ -343,32 +337,32 @@ namespace MyAES {
         //}
     }
     /// <summary>
-    /// המטריצה מבצעת הזזה של שורה במספר צעדים שמאלה במטריצה.
+    /// The matrix moves a row a number of steps to the left in the matrix.
     /// </summary>
-    /// <param name="state"></param>
-    /// <param name="i">השורה</param>
-    /// <param name="n">מספר הצעדים שצריך לזוז</param>
-    void AES::ShiftRow(unsigned char state[4][NB], unsigned int i, unsigned int n)
+    /// <param name="state">the state matrix</param>
+    /// <param name="i">line</param>
+    /// <param name="n">num steps</param>
+    void AES::ShiftRow(unsigned char state[NUM_WORDS][WORD], unsigned int i, unsigned int n)
     {
-        unsigned char tmp[NB];
-        for (unsigned int j = 0; j < NB; j++)
+        unsigned char tmp[WORD];
+        for (unsigned int j = 0; j < WORD; j++)
         {
-            tmp[j] = state[i][(j + n) % NB];
+            tmp[j] = state[i][(j + n) % WORD];
         }
-        memcpy(state[i], tmp, NB * sizeof(unsigned char));
+        memcpy(state[i], tmp, WORD * sizeof(unsigned char));
     }
     /// <summary>
-    /// הפונקציה מבצעת טרנספורמציה על עמודות מטריצת המצב באמצעות פעולות חשבון של שדה גלואה
+    /// The function performs a transformation on the columns of the state matrix by Galois field arithmetic operations.
     /// </summary>
-    /// <param name="state"></param>
-    void AES::MixColumns(unsigned char state[4][NB])
+    /// <param name="state">the state matrix</param>
+    void AES::MixColumns(unsigned char state[NUM_WORDS][WORD])
     {
-        unsigned char temp_state[4][NB];
-        for (int i = 0; i < 4; i++)
-            memset(temp_state[i], 0, 4);
-        for (size_t i = 0; i < 4; ++i) {
-            for (size_t k = 0; k < 4; ++k) {
-                for (size_t j = 0; j < 4; ++j) {
+        unsigned char temp_state[NUM_WORDS][WORD];
+        for (int i = 0; i < NUM_WORDS; i++)
+            memset(temp_state[i], 0, NUM_WORDS);
+        for (size_t i = 0; i < NUM_WORDS; ++i) {
+            for (size_t k = 0; k < NUM_WORDS; ++k) {
+                for (size_t j = 0; j < NUM_WORDS; ++j) {
                     if (CMDS[i][k] == 1)
                         temp_state[i][j] ^= state[k][j];
                     else
@@ -377,12 +371,12 @@ namespace MyAES {
             }
         }
         //דוגמא:
-        //static const unsigned char CMDS[4][4] = {
+        //static const unsigned char CMDS[NUM_WORDS][NUM_WORDS] = {
         //{2, 3, 1, 1}, 
         //{1, 2, 3, 1},
         //{1, 1, 2, 3},
         //{3, 1, 1, 2} };
-        //unsigned char state[4][4] = {
+        //unsigned char state[NUM_WORDS][NUM_WORDS] = {
         //{0x87, 0xf2, 0x4d, 0x97},
         //{0x6e, 0x4c, 0x90, 0xec},
         //{0x46, 0xe7, 0x4a, 0xc3},
@@ -395,61 +389,47 @@ namespace MyAES {
         //    0xa6,...,...,...
         //}
 
-        for (size_t i = 0; i < 4; ++i) {
-            memcpy(state[i], temp_state[i], 4);
+        for (size_t i = 0; i < NUM_WORDS; ++i) {
+            memcpy(state[i], temp_state[i], NUM_WORDS);
         }
     }
-    /// <summary>
-    /// הפונקציה מקבצת XOR בין המטריצה הקבועה למפתח של הסיבוב הנוכחי
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="key"></param>
-    void AES::AddRoundKey(unsigned char state[4][NB], unsigned char* key)
+    // The function groups XOR between the constant matrix and the key of the current rotation.
+    void AES::AddRoundKey(unsigned char state[NUM_WORDS][WORD], unsigned char* key)
     {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < NB; j++)
-                state[i][j] = state[i][j] ^ key[i + j * 4];
+        for (int i = 0; i < NUM_WORDS; i++)
+            for (int j = 0; j < WORD; j++)
+                state[i][j] = state[i][j] ^ key[i + j * NUM_WORDS];
     }
-    void AES::InvSubBytes(unsigned char state[4][NB]) {
+    void AES::InvSubBytes(unsigned char state[NUM_WORDS][WORD]) {
         unsigned int i, j;
         unsigned char t;
-        for (i = 0; i < 4; i++) {
-            for (j = 0; j < NB; j++) {
+        for (i = 0; i < NUM_WORDS; i++) {
+            for (j = 0; j < WORD; j++) {
                 t = state[i][j];
                 state[i][j] = inv_sbox[t / 16][t % 16];
             }
         }
     }
-    void AES::InvShiftRows(unsigned char state[4][NB]) {
-        ShiftRow(state, 1, NB - 1);
-        ShiftRow(state, 2, NB - 2);
-        ShiftRow(state, 3, NB - 3);
+    void AES::InvShiftRows(unsigned char state[NUM_WORDS][WORD]) {
+        ShiftRow(state, 1, WORD - 1);
+        ShiftRow(state, 2, WORD - 2);
+        ShiftRow(state, 3, WORD - 3);
     }
-    void AES::InvMixColumns(unsigned char state[4][NB]) {
-        unsigned char temp_state[4][NB];
-        for (size_t i = 0; i < 4; ++i) {
-            memset(temp_state[i], 0, 4);
+    void AES::InvMixColumns(unsigned char state[NUM_WORDS][WORD]) {
+        unsigned char temp_state[NUM_WORDS][WORD];
+        for (size_t i = 0; i < NUM_WORDS; ++i) {
+            memset(temp_state[i], 0, NUM_WORDS);
         }
-        for (size_t i = 0; i < 4; ++i) {
-            for (size_t k = 0; k < 4; ++k) {
-                for (size_t j = 0; j < 4; ++j) {
+        for (size_t i = 0; i < NUM_WORDS; ++i) {
+            for (size_t k = 0; k < NUM_WORDS; ++k) {
+                for (size_t j = 0; j < NUM_WORDS; ++j) {
                     temp_state[i][j] ^= GF_MUL_TABLE[INV_CMDS[i][k]][state[k][j]];
                 }
             }
         }
-        for (size_t i = 0; i < 4; ++i) {
-            memcpy(state[i], temp_state[i], 4);
+        for (size_t i = 0; i < NUM_WORDS; ++i) {
+            memcpy(state[i], temp_state[i], NUM_WORDS);
         }
-    }
-    vector<unsigned char> AES::ArrayToVector(unsigned char* a, unsigned int len)
-    {
-        std::vector<unsigned char> v(a, a + len * sizeof(unsigned char));
-        return v;
-    }
-
-    unsigned char* AES::VectorToArray(std::vector<unsigned char>& a)
-    {
-        return a.data();
     }
 
 }
