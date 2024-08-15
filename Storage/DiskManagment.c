@@ -96,7 +96,7 @@ ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData)
     return img;
 }
 
-void initDiskMangmantCb() 
+void initDiskMangmantCb(void) 
 {
     diskMangmantCb = (DiskMangmantCb_t*)malloc(sizeof(DiskMangmantCb_t));
     if (!diskMangmantCb)
@@ -125,7 +125,7 @@ void printLinkList(FILE* file)
     }
 }
 
-LinkedList_t* createLinkedList()
+LinkedList_t* createLinkedList(void)
 {
     LinkedList_t* linkedList = (LinkedList_t*)malloc(sizeof(LinkedList_t));
     if (!linkedList)
@@ -409,7 +409,7 @@ void removeIfExist(UnitNodeLinkedList_t* node)
     free(saveToRemove);
 }
 
-void removeData()
+void removeData(void)
 {
     UnitNodeLinkedList_t* node = removeNodeFromLinkedList();
     //if the linkedLixt remove func return node
@@ -424,7 +424,7 @@ void removeData()
     }
 }
 
-UnitNodeLinkedList_t* removeNodeFromLinkedList()
+UnitNodeLinkedList_t* removeNodeFromLinkedList(void)
 {
     UnitNodeLinkedList_t* saveToRemove;
     //Checking if it has links
@@ -629,18 +629,11 @@ int getImagesIdInRangedByTwoPoints(Point_t topLeft, Point_t bottomRight, int* ar
 void addImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData)
 {
     //chack if it out the range
-    if (!isCorrectPoints(TL, BR))
+    if (!InvalidPoints)
     {
-        errno = POINT_NOT_IN_RANGE_ERORR;
-        throwExceptiontoFile(POINT_NOT_IN_RANGE_ERORR);
         return;
     }
-    if (!isCorrectSize(TL, BR))
-    {
-        errno = IMG_IS_NOT_IN_CORRECT_SIZE;
-        throwExceptiontoFile(IMG_IS_NOT_IN_CORRECT_SIZE);
-        return;
-    }
+    //disk is full
     if (diskMangmantCb->linkedList->AmountOfLinks == DISK_SIZE)
     {
         removeData();
@@ -648,14 +641,14 @@ void addImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData)
     initImg(TL, BR, imgData);//create and insert
 }
 
-void saveBeforeShutdown()
+void saveBeforeShutdown(void)
 {
     saveTheQuadTreeToDisk(diskMangmantCb->quadTree);
     saveTheLinkedListToDisk(diskMangmantCb->linkedList);
     freeQuadTreeAndLinkedListAndArr();
 }
 
-void bootWhenTheDeviceIsTurnedOn()
+void bootWhenTheDeviceIsTurnedOn(void)
 {
     if (readingIsThisTheFirstTimeToTurnOn() == 0)//if is a first time that turnd on
     {
@@ -773,12 +766,12 @@ int readingIsThisTheFirstTimeToTurnOn()
     return flag;
 }
 
-QuadTree_t* loadTheQuadTree()
+QuadTree_t* loadTheQuadTree(void)
 {
     return NULL;
 }
 
-LinkedList_t* loadTheLinkedlist()
+LinkedList_t* loadTheLinkedlist(void)
 {
     return NULL;
 }
@@ -816,7 +809,8 @@ void throwExceptiontoFile(Exception exception)
     fclose(file);
 }
 
-void freeQuadTreeAndLinkedListAndArr() {
+void freeQuadTreeAndLinkedListAndArr(void) 
+{
     while (diskMangmantCb->linkedList->AmountOfLinks!=0)//As long as there are nodes in the linkedList
         removeData();
     free(diskMangmantCb->quadTree);//free the root of a quadTree

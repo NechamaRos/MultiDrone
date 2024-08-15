@@ -90,9 +90,9 @@ void initImg(Point_t TL, Point_t BR, int* imgData);
 //linkedList
 UnitNodeLinkedList_t* createUnitNodeLinkedList(ImageInfo_t* imgInfo);
 void insertToLinkList(UnitNodeLinkedList_t* node);
-LinkedList_t* createLinkedList();
-void removeData();
-UnitNodeLinkedList_t* removeNodeFromLinkedList();
+LinkedList_t* createLinkedList(void);
+void removeData(void);
+UnitNodeLinkedList_t* removeNodeFromLinkedList(void);
 void removeIfExist(UnitNodeLinkedList_t* node);
 void removeFromdArraySearchInfo(int id);
 void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr);
@@ -105,7 +105,7 @@ QuadTree_t* createQuadTree(Point_t TL, Point_t BR);
 void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, int* count, int* idArray);
 void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree);
 bool removeQuadNodeFromTree(QuadNode_t* quadNode);
-void freeQuadTreeAndLinkedListAndArr();
+void freeQuadTreeAndLinkedListAndArr(void);
 
 
 //

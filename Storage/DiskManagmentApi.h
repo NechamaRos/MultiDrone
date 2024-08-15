@@ -16,13 +16,13 @@ int getImagesIdInRangedByTwoPoints(Point_t topLeft, Point_t bottomRight, int* ar
 void addImgToDiskMangmant(Point_t TL, Point_t BR, int* imgData);
 
 //save the data struct before shutdown
-void saveBeforeShutdown();
+void saveBeforeShutdown(void);
 
 //Boot when the device is turned on
-void bootWhenTheDeviceIsTurnedOn();
+void bootWhenTheDeviceIsTurnedOn(void);
 
 //init the data structs
-void initDiskMangmantCb();
+void initDiskMangmantCb(void);
 
 
 
