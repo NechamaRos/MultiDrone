@@ -5,8 +5,6 @@
 #include<stdio.h>
 #include <time.h>
 
-
-
 MasterCacheImg_cb_t* masterCacheImg_cb;
 
 void initMasterCacheImg_cb()
@@ -51,6 +49,7 @@ Point_t createPoint(int x, int y)
     p.y = y;
     return p;
 }
+
 int* init_imgData()
 {
     //allocate memory for imgData
@@ -62,14 +61,10 @@ int* init_imgData()
         throwExcptionToFile(ALLOCATE_ERROR);
         return;
     }
-    // Seed the random number generator with the current time
-    srand(time(0));
     // Generate a random number
     *imgData = rand() % 1000;
     return imgData;
 }
-
-
 
 ImgInfo_t* createImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
 {
@@ -89,10 +84,10 @@ ImgInfo_t* createImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
     imgInfo->arrayIndexPtr = NULL;
     imgInfo->unitNodePtr = NULL;
     int indexInCache = NULL;
-    //int indexInCache =  masterCacheImg_cb->emptyPlaceInCache->emptyPlaceInTheArray[masterCacheImg_cb->emptyPlaceInCache->length-1];
-    //imgInfo->cachePtr = &masterCacheImg_cb->cache[indexInCache];
+ 
     return imgInfo;
 }
+
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo)
 {
     //allocate memory for UnitNode_LRU_t
@@ -109,12 +104,13 @@ UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo)
     return node;
 }
 
- void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
+void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo)
 {
     //The pointers point to each other
     node->imgInfoPtr = imgInfo;
     imgInfo->unitNodePtr = node;
 }
+
 LinkedList_LRU_t* initLinkedList()
 {
     ////allocate memory for LinkedList_LRU_t
@@ -162,7 +158,6 @@ void insertInToLinedList(UnitNode_LRU_t* node)
         node->next->prev = node;
     }
     masterCacheImg_cb->LRU->AmountOfLinks += 1;
-
 }
 
 void moveToTheBeginning(UnitNode_LRU_t* node)
@@ -178,7 +173,6 @@ void moveToTheBeginning(UnitNode_LRU_t* node)
         masterCacheImg_cb->LRU->head->next = node;
     }
 }
-
  
 void removefromLinkedList()
 {
@@ -203,6 +197,7 @@ void removefromLinkedList()
     }
    
 }
+
 Stack_emptyPlace_t* initStack()
 {
     Stack_emptyPlace_t* stack = (Stack_emptyPlace_t*)malloc(sizeof(Stack_emptyPlace_t));
@@ -220,8 +215,6 @@ Stack_emptyPlace_t* initStack()
     stack->length = CACHE_SIZE;
     return stack;
 }
-
-
 
 void removeTenPercentFromCache()
 {
@@ -283,8 +276,13 @@ void removeFromImgArray(ImgInfo_t* imgInfo)
    masterCacheImg_cb->imgArray[index] = NULL;
    return;
 }
+
 void insertData(UnitNode_LRU_t* node, int* imgData)
 {
+    if (masterCacheImg_cb->emptyPlaceInCache->length == 0)
+    {
+        removeTenPercentFromCache();
+    }
     insertTocache(imgData,node->imgInfoPtr);
     insertToImgArray(node->imgInfoPtr);
     insertInToLinedList(node);
@@ -321,4 +319,59 @@ void throwExcptionToFile(ERRORS err)
     fprintf(&file, "%c\n",stringErr );
     //close file
     fclose(&file);
+}
+
+SlaveImgInfo_t* createSlaveImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
+{
+    //allocate memory for MasterCacheImg_cb_t
+    SlaveImgInfo_t* slaveImgInfo = (SlaveImgInfo_t*)malloc(sizeof(SlaveImgInfo_t));
+    //failed to assign
+    if (!slaveImgInfo)
+    {
+        errno = ALLOCATE_ERROR;
+        throwExcptionToFile(ALLOCATE_ERROR);
+    }
+    slaveImgInfo->imgId = imgId;
+    slaveImgInfo->slaveId = slaveId;
+    slaveImgInfo->BR = BR;
+    slaveImgInfo->TL = TL;
+    slaveImgInfo->data = init_imgData();
+    return slaveImgInfo;
+}
+
+void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* slaveBufferSize,int amountOfBuffers)
+{
+    // runs on all buffers
+    for (int i = 0;i < amountOfBuffers;i++)
+    {
+        insertBufferInToCache(slave[i], slaveBufferSize[i]);
+    }
+}
+
+void insertBufferInToCache(SlaveImgInfo_t** slave, int slaveBufferSize)
+{
+    ImgInfo_t* imgExist;
+    ImgInfo_t* imgInfo;
+    UnitNode_LRU_t* node;
+    //loop on the buffer by size
+    for (int i = 0;i < slaveBufferSize;i++)
+    {
+        imgExist = searchByImgId(slave[i]->imgId, slave[i]->slaveId);
+        //the img is not in the ram
+        if (!imgExist)
+        {
+            imgInfo=createImgInfo(slave[i]->imgId, slave[i]->slaveId, slave[i]->TL, slave[i]->BR);
+            node = createUnitNode_LRU(imgInfo);
+            insertData(node, slave[i]->data);
+        }
+        else
+        {
+            moveToTheBeginning(imgExist->unitNodePtr);
+        }
+    }
+}
+
+ImgInfo_t* searchByImgId(int imgId, int slaveId)
+{
+    return NULL;
 }
