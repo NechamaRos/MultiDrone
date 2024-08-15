@@ -8,6 +8,7 @@
 #define POINT_BR_RANGE (Point_t){100, 100}
 #define POINT_TL_RANGE (Point_t){0, 0}
 #define DISK_SIZE 1000
+#define CACHE_SIZE 1000
 
 // Forward declarations
 typedef struct AVLNode_s AVLNode_t;
@@ -19,6 +20,7 @@ typedef struct ArrayInfo_s ArrayInfo_t;
 typedef struct StackNode_s StackNode_t;
 typedef struct DiskFreeIndexesInArray_s DiskFreeIndexesInArray_t;
 typedef struct Disk_Management_CB_s Disk_Management_CB_t;
+typedef struct DiskMapsInLoadedToCache_s DiskMapsInLoadedToCache_t;
 
 // Enum declaration
 typedef enum {
@@ -27,7 +29,8 @@ typedef enum {
     Error_When_Adding_Map_To_Disk,
     Error_Worng_Size_Variable,
     Error_Worng_Map_Variable,
-    Error_Worng_Map_Range
+    Error_Worng_Map_Range,
+    Error_When_Load_Map_From_Disk_To_Cache
 } Exception;
 
 // Struct declarations
@@ -76,11 +79,19 @@ struct DiskFreeIndexesInArray_s {
     int size;
     StackNode_t* top;
 };
+
+struct DiskMapsInLoadedToCache_s
+{
+    int mapId;
+    int index;
+};
+
 struct Disk_Management_CB_s {
     int mapIdIndex;
     ArrayInfo_t** arrayForAllMApsInformation;
     DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
     DiskSortByMapSize_t* disk_SortByMapSize;
+    DiskMapsInLoadedToCache_t** disk_MapsInLoadedToCache;
 };
 extern Disk_Management_CB_t* disk_mng_CB;
 void printTree(AVLNode_t* root);
@@ -102,9 +113,17 @@ int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree);
 //disk_mng_delete-Deleting maps until there is enough space to add a new map with the resulting size to disk
 void disk_mng_delete(int mapSize);
 
-//disk_mng_checkDataStructures-check 
+//disk_mng_checkDataStructures-check if the data from the master is valid data
 bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map);
 
+//disk_mng_isTheMapInRange-check if the map in range
+bool disk_mng_isTheMapInRange(MapRange_t* rangeFromCache, MapRange_t* range);
+
+//disk_mng_loadMapFromDiskToCache- get mapId ,offset,size ,freeAddress load the map to the free address return completion
+bool disk_mng_loadMapFromDiskToCache(int mapId,int offset, int size, int* freeAddress);
+
+//disk_mng_searchForSuitableMapInLoadingArray-Search for a suitable map in the loading array
+int disk_mng_searchForSuitableMapInLoadingArray(int mapId);
 
 //initialize
 
@@ -120,6 +139,13 @@ void disk_mng_firstInitialize();
 // disk_mng_normalInitialize-Initializes the disk management system each time the computer opened
 void disk_mng_normalInitialize();
 
+//Array- range in loaded to the cache
+
+//arrayInLoaded_initialize-initialize the array to the cache size
+void arrayInLoaded_initialize();
+
+//arrayInLoaded_create- create new object to the array
+DiskMapsInLoadedToCache_t* arrayInLoaded_create(int mapId,int index);
 
 //AVL node info
 
@@ -224,19 +250,31 @@ void array_deleteFromArray(int index);
 // Frees or deletes information associated with an array.
 void array_deleteArrayInfo(ArrayInfo_t* arrayInfo);
 
-//disk_deleteMap the function get pointer to map in the disk and delete this map from disk
-bool disk_deleteMap(int* diskPointer);
-
-void cache_deleteMap(int mapId);
-
-
 //create a new arrayInfo with all the parameters
 ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range,AVLNodeInfo_t* avlNodeInfo);
 
+//array_addToArray- add map to the array
 void array_addToArray(ArrayInfo_t* arrayInfo, int index);
 
 //create a new range with 2 point which given
 MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft);
+
+//check if the range correct
+bool isCorrectRange(MapRange_t* range);
+
+//disk_mng_addMapToDiskManagementDataStructures-add new map to the data structers
+void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer);
+
+//disk_mng_addMap- add map to the disk managment
+void disk_mng_addMap(MapRange_t* range, int size, int* map);
+
+//disk-mock functions
+
+//disk_addMap-add map to the disk
+int* disk_addMap(int* map);
+
+//disk_isThereEnoughSpace- get size , check if there is enough space for this size
+bool disk_isThereEnoughSpace(int mapSize);
 
 //disk_loadDataForInitializeDataStructers the function get destination where to load and from where and how many to load
 void disk_loadDataForInitializeDataStructers(void* destination, void* startAddress, void* howManyToLoad);
@@ -244,12 +282,12 @@ void disk_loadDataForInitializeDataStructers(void* destination, void* startAddre
 //disk_loadDataForInitializeDataStructers the function get data where to save and from where and how many to save
 void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* howManyToLoad);
 
-void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer);
+//disk_deleteMap the function get pointer to map in the disk and delete this map from disk
+bool disk_deleteMap(int* diskPointer);
 
-int* disk_addMap(int* map);
+bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress);
 
-void disk_mng_addMap(MapRange_t* range, int size, int* map);
+//cache - mock functions
 
-bool disk_isThereEnoughSpace(int mapSize);
-
-bool isCorrectRange(MapRange_t* range);
+//cache_deleteMap- delete map from the cache
+void cache_deleteMap(int mapId);

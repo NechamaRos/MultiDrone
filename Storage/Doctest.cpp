@@ -18,9 +18,17 @@ struct GlobalSetup {
 };
 GlobalSetup globalSetup;
 
-int generateRandomNumber(int upper = DISK_SIZE) {
-    int lower = 0;
+int generateRandomNumber(int lower=0,int upper = DISK_SIZE) {
     return (rand() % (upper - lower + 1)) + lower;
+}
+void printPoint(const char* label, const Point_t& point) {
+    printf("%s: x = %d, y = %d\n", label, point.x, point.y);
+}
+
+// Function to print map ranges for debugging
+void printMapRange(const char* label, const MapRange_t* range) {
+    printf("%s: TopLeft (x = %d, y = %d), BottomRight (x = %d, y = %d)\n",
+        label, range->topLeft.x, range->topLeft.y, range->bottomRight.x, range->bottomRight.y);
 }
 void printTreeDetails(AVLNode_t* node) {
     if (node == NULL) {
@@ -143,6 +151,10 @@ int* disk_addMap(int* map)
 
 //the function get pointer to map in the disk and delete this map from disk
 bool disk_deleteMap(int* diskPointer) 
+{
+    return true;
+}
+bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress)
 {
     return true;
 }
@@ -421,10 +433,6 @@ TEST_CASE("test_avlTree_insert") {
         CHECK(disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->mapSize == mapSize);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->lru == 1);
         CHECK(disk_mng_CB->disk_SortByMapSize->totalElements == 1);
-
-        printf("first tree\n");
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-        printf("\n");
     }
 
     SUBCASE("Insert nodes and check balancing") {
@@ -439,11 +447,6 @@ TEST_CASE("test_avlTree_insert") {
 
         CHECK(disk_mng_CB->disk_SortByMapSize->root != nullptr);
         CHECK(disk_mng_CB->disk_SortByMapSize->totalElements == 7);
-
-        printf("second tree\n");
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-        printf("\n");
-
     }
 
     SUBCASE("Insert duplicate mapSize") {
@@ -464,10 +467,6 @@ TEST_CASE("test_avlTree_insert") {
         CHECK(disk_mng_CB->disk_SortByMapSize->root->right->avlNodeInfo->mapSize == mapSize);
         CHECK(disk_mng_CB->disk_SortByMapSize->root->right->avlNodeInfo->arrayIndex == arrayIndex2);     
         CHECK(disk_mng_CB->disk_SortByMapSize->totalElements == 2);
-
-        printf("third tree\n");
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-        printf("\n");
     }
 }
 TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
@@ -488,14 +487,6 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
 
         CHECK(result != nullptr);
         CHECK(result->avlNodeInfo->lru <= disk_mng_CB->disk_SortByMapSize->lruCounter * 0.7);
-        printf("Node suitable for deletion:\n");
-        printNode(result);
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-        printTreeDetails(disk_mng_CB->disk_SortByMapSize->root);
-        printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
-
-        printf("\n");
-
     }
 
     SUBCASE("All nodes are eligible for deletion") {
@@ -513,14 +504,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
 
         CHECK(result != nullptr);
         CHECK(result->avlNodeInfo->lru <= disk_mng_CB->disk_SortByMapSize->lruCounter * 0.7);
-        printf("Node suitable for deletion:\n");
-        printNode(result);
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-        printTreeDetails(disk_mng_CB->disk_SortByMapSize->root);
-        printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
-
-        printf("\n");
-
+ 
     }
 
     SUBCASE("No node is eligible for deletion") {
@@ -538,13 +522,7 @@ TEST_CASE("test_avlTree_FindingTheNodeThatIsSuitableForDeletion") {
 
         CHECK(result != nullptr);
         CHECK(result->avlNodeInfo->mapSize == avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root)->avlNodeInfo->mapSize);
-        printf("Node with largest mapSize:\n");
-        printNode(result);
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-        printTreeDetails(disk_mng_CB->disk_SortByMapSize->root);
-        printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
-
-        printf("\n");
+      
 
     }
 }
@@ -556,20 +534,11 @@ TEST_CASE("test_avlTree_deleteNode") {
         AVLNodeInfo_t* info1 = avlNodeInfo_create(generateRandomNumber(), generateRandomNumber());
         avlTree_insertElement(info1);
     }
-    printf("Tree before deletion:\n");
-    printTree(disk_mng_CB->disk_SortByMapSize->root);
 
     AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);
     if (nodeToDelete!=NULL)
     {
-        printf("the node to delete:\n");
-        printNode(nodeToDelete);
-
         disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);
-
-        printf("Tree after deletion:\n");
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-
     }
 }
 
@@ -718,7 +687,6 @@ TEST_CASE("test_array_addToArray")
         ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, mapRange,nodeInfo);
         array_addToArray(arrayInfo, index);
         CHECK(disk_mng_CB->arrayForAllMApsInformation[index] == arrayInfo);
-        printf("mapId%d\n", disk_mng_CB->mapIdIndex);
 
     }
 }
@@ -755,22 +723,8 @@ TEST_CASE("test_disk_mng_addMap")
         int size = generateRandomNumber();
         int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
         disk_mng_addMap(mapRange, size, map);
-        printf("totalElements%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
-        printf("mapIdIndex%d\n", disk_mng_CB->mapIdIndex);
 
     }
-    for (int i = 0; i < DISK_SIZE; i++)
-    {
-        if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
-        {
-            printf("%d ", disk_mng_CB->arrayForAllMApsInformation[i]->size);
-
-        }
-
-    }
-    printf("\n");
-    printTree(disk_mng_CB->disk_SortByMapSize->root);
-
 
 }
 
@@ -789,43 +743,13 @@ TEST_CASE("Test disk_mng_deleteMapFromDiskManagementDataStructures") {
             int size = generateRandomNumber();
             int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
             disk_mng_addMap(mapRange, size, map); // Add maps to the disk
-            printf("%d\n", disk_mng_CB->disk_SortByMapSize->totalElements);
         }
-        for (int i = 0; i < DISK_SIZE; i++)
-        {
-            if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
-            {
-                printf("%d ", disk_mng_CB->arrayForAllMApsInformation[i]->size);
-
-            }
-
-        }
-        printf("\n");
-        printTree(disk_mng_CB->disk_SortByMapSize->root);
-
         // Verify that the disk is full and needs deletion
         REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 5);
 
         // Perform deletion
         int sizeToFree = generateRandomNumber(); // Random size to free
         disk_mng_delete(sizeToFree);
-
-        printf("\n");
-
-        //printTree(disk_mng_CB->disk_SortByMapSize->root);
-
-        printf("\n");
-
-        for (int i = 0; i < DISK_SIZE; i++)
-        {
-            if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
-            {
-                printf("size %d index %d ", disk_mng_CB->arrayForAllMApsInformation[i]->size, i);
-
-            }
-
-        }
-
 
         // Ensure that space has been freed
         REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements < 5);
@@ -834,3 +758,102 @@ TEST_CASE("Test disk_mng_deleteMapFromDiskManagementDataStructures") {
 
 }
 
+TEST_CASE("test_arrayInLoaded_initialize") 
+{
+    arrayInLoaded_initialize();
+    CHECK(disk_mng_CB->disk_MapsInLoadedToCache != NULL); 
+    for (int i = 0; i < CACHE_SIZE; i++) {
+        CHECK(disk_mng_CB->disk_MapsInLoadedToCache[i] == NULL); 
+    }
+}
+
+TEST_CASE("arrayInLoaded_create") {
+    int mapId = generateRandomNumber();
+    int index = generateRandomNumber();
+    DiskMapsInLoadedToCache_t* obj = arrayInLoaded_create(mapId, index);
+
+    CHECK(obj != NULL); 
+    CHECK(obj->mapId == mapId); 
+    CHECK(obj->index == index); 
+
+}
+TEST_CASE("test_disk_mng_isTheMapInRange") {
+
+    disk_mng_initialize();
+
+    int x1 = generateRandomNumber(100);
+    int y1 = generateRandomNumber(100);
+    int x2 = generateRandomNumber(200, x1);
+    int y2 = generateRandomNumber(200, y1);
+    Point_t cacheTopLeft = { x1, y1 };
+    Point_t cacheBottomRight = { x2, y2 };
+    //MapRange_t* rangeFromCache = mapRange_create(cacheBottomRight, cacheTopLeft);
+
+    int x3 = generateRandomNumber(100);
+    int y3 = generateRandomNumber(100);
+    int x4 = generateRandomNumber(200, x3);
+    int y4 = generateRandomNumber(200, y3);
+    Point_t rangeTopLeft = { x3, y3 };
+    Point_t rangeBottomRight = { x4, y4 };
+    //MapRange_t* range = mapRange_create(rangeBottomRight, rangeTopLeft);
+    MapRange_t* range = mapRange_create({ 224,140 }, { 148,160 });
+    MapRange_t* rangeFromCache = mapRange_create({250,130}, {170,170});
+
+    printMapRange("Range From Cache", rangeFromCache);
+    printMapRange("Range To Check", range);
+
+    bool result = disk_mng_isTheMapInRange(rangeFromCache, range);
+
+    bool expected = (
+        (range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
+        (range->bottomRight.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->topLeft.y) ||
+        (range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
+        (range->bottomRight.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->topLeft.y) ||
+        (range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
+        (range->bottomRight.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->topLeft.y) ||
+        (range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
+        (range->bottomRight.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->topLeft.y));
+    printf("Result: %s\n", result ? "true" : "false");
+    printf("Expected: %s\n", expected ? "true" : "false");
+    CHECK(result == expected); 
+}
+
+TEST_CASE("test_disk_mng_loadMapFromDiskToCache") {
+    disk_mng_initialize();
+
+    for (int i = 0; i < CACHE_SIZE; i++) {
+        int mapId = generateRandomNumber();
+        int index = generateRandomNumber();
+
+        DiskMapsInLoadedToCache_t* map = arrayInLoaded_create(mapId, index);
+        disk_mng_CB->disk_MapsInLoadedToCache[i] = map;
+    }
+
+
+    int testMapId = disk_mng_CB->disk_MapsInLoadedToCache[0]->mapId; 
+    int testIndex= disk_mng_CB->disk_MapsInLoadedToCache[0]->index;
+
+    int* diskPointer = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for diskPointer", "test_disk_mng_loadMapFromDiskToCache");;
+    int size = generateRandomNumber();
+    Point_t topLeft;
+    topLeft.x = generateRandomNumber();
+    topLeft.y = generateRandomNumber();
+    Point_t bottomRight;
+    bottomRight.x = generateRandomNumber();
+    bottomRight.y = generateRandomNumber();
+    MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+    int index = generateRandomNumber();
+    AVLNodeInfo_t* nodeInfo = avlNodeInfo_create(size, index);
+
+    disk_mng_CB->arrayForAllMApsInformation[testIndex] = arrayInfo_create(diskPointer, size, mapRange, nodeInfo);
+    disk_mng_CB->arrayForAllMApsInformation[testIndex]->mapid = testMapId;
+
+    int offset = generateRandomNumber();
+    int length = generateRandomNumber(); 
+    int freeAddress = generateRandomNumber();
+
+    bool result = disk_mng_loadMapFromDiskToCache(testMapId, offset, length, &freeAddress);
+
+    // Check results
+    CHECK(result == true);
+}
