@@ -1,6 +1,13 @@
 #pragma once
 #include"Image.h"
+#include <stdexcept> // This for std::runtime_error
+#include <bitset>
 
+/// <summary>
+/// Converts a byte vector to a bit string.
+/// </summary>
+/// <param name="compressedData">The vector of bytes to convert.</param>
+/// <returns>A bit string.</returns>
 string bytesToBitString(const  vector<unsigned char>& compressedData);
 
 /// <summary>

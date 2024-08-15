@@ -43,9 +43,9 @@ struct Image {
 /// </summary>
 /// <type param name="D">The dimensionality of the image.</type param>
 /// <param name="dims">The dimensions of the image.</param>
-/// <returns>The created sample image.</returns>
+/// <returns>The created two color image.</returns>
 template<size_t D>
-Image<D> createSampleImage(const array<size_t, D>& dims) {
+Image<D> createTwoColorImage(const array<size_t, D>& dims) {
 	Image<D> img;
 	img.initImage(dims);
 	
@@ -53,6 +53,22 @@ Image<D> createSampleImage(const array<size_t, D>& dims) {
 		img.pixels[i] = i % 2 == 0 ? 255 : 0;
 	}
 
+	return img;
+}
+
+/// <summary>
+/// Creates an image with all characters
+/// </summary>
+/// <type param name="D">The dimensionality of the image.</type param>
+/// <param name="dims">The dimensions of the image.</param>
+/// <returns>The created all color image.</returns>
+template<size_t D>
+Image<D> createAllValuesImage(const array<size_t, D>& dims) {
+	Image<2> img;
+	img.initImage(dims);
+	for (size_t i = 0; i < img.pixels.size(); ++i) {
+		img.pixels[i] = static_cast<unsigned char>(i % 256);
+	}
 	return img;
 }
 

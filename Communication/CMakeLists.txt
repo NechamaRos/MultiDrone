@@ -4,14 +4,17 @@ project(communication)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB COMMUNICATION_FILES "Communication/*.cpp")
-file(GLOB VALIDATION_FILES "Validation/*.cpp")
-file(GLOB DATATRANSFERRING_FILES "Data_transferring/*.cpp")
+file(GLOB COMMUNICATION_FILES "Communication/Communication/*.cpp")
+file(GLOB VALIDATION_FILES "Communication/Validation/*.cpp")
+file(GLOB DATA_COMPRESSION_FILES "Communication/Data_Compression/*.cpp")
+file(GLOB DATA_TRANSFERRING_FILES "Communication/Data_Transferring/*.cpp")
 
-include_directories("Communication" "Validation" "Data_transferring")
+include_directories("Communication/Communication" "Communication/Validation" "Communication/Data_Compression" "Communication/Data_Transferring")
+
 set(SOURCE_FILES ${VALIDATION_FILES})
 list(APPEND SOURCE_FILES ${COMMUNICATION_FILES} )
-list(APPEND SOURCE_FILES ${DATATRANSFERRING_FILES} )
+list(APPEND SOURCE_FILES ${DATA_TRANSFERRING_FILES} )
+list(APPEND SOURCE_FILES ${DATA_COMPRESSION_FILES} )
 add_executable(communication ${SOURCE_FILES})
 
 find_package(Threads REQUIRED)

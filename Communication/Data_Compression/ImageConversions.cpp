@@ -1,5 +1,4 @@
-#include"Image.h"
-#include <bitset>
+#include "ImageConversions.h"
 
 string bytesToBitString(const vector<unsigned char>& compressedData)
 {

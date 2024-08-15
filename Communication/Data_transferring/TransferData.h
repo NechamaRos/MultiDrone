@@ -30,7 +30,7 @@ public:
 		}
 		catch (const exception&)
 		{
-			throw exception("The send failed");
+			throw runtime_error("The send failed");
 		}
 	}
 	template<size_t D>
@@ -45,14 +45,14 @@ public:
 		}
 		catch (const exception&)
 		{
-			throw exception("The send failed");
+			throw runtime_error("The send failed");
 		}
 	}
 	template<size_t D>
 	void sendsAsynchronously(const string& dataAsStr, const Meta_Data<D>& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
 	{
 		if (dataAsStr.empty()) {
-			throw runtime_error("Data is empty");
+			throw std::runtime_error("Data is empty");
 		}
 		size_t str_size = dataAsStr.size();
 		//open the threads and send to socket function.
@@ -74,10 +74,9 @@ public:
 				}
 			}
 			// Submit the block in a new thread
-			futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk));
+			futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i));
 		}
-		futures.push_back(async(launch::async, &TransferData::sendMetaData<D>, this, cref(metaData)));
-
+		futures.push_back(async(launch::async, &TransferData::sendMetaData<D>, this, std::cref(metaData)));
 		// Wait for all remaining threads to finish
 		waiting(futures);
 	}

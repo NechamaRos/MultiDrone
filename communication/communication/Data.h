@@ -1,14 +1,15 @@
 #pragma once
 constexpr auto TO_RECYCLE = true;
 #include <iostream>
+#include <cmath>
 #include "Meta_Data.h"
 #include "Message.h"
 #include "../Validation/Validation.h"
 #include "../Validation/MatValidation.h"
 #include "../Validation/VecValidation.h"
 #include "../Validation/D3Validation.h"
-#include "../Data_Comperession/HuffmanCompression.h"
-#include "../Data_Comperession/HuffmanRescue.h"
+#include "../Data_Compression/HuffmanCompression.h"
+#include "../Data_Compression/HuffmanRescue.h"
 #include "VecMessage.h"
 #include "MatMessage.h"
 #include "D3Message.h"
@@ -18,7 +19,7 @@ template<size_t D>
 class Data
 {
 	Meta_Data<D> metaData;
-	Message* message=nullptr;
+	Message* message = nullptr;
 	Message* copyMessage(Message* mes);
 
 	void compressByType();
@@ -29,7 +30,7 @@ class Data
 
 	void checkTheValidation(Message* m, Validation* v);
 public:
-	Data(Meta_Data<D>& metaData, Message* message):metaData(metaData), message(message)
+	Data(Meta_Data<D>& metaData, Message* message) :metaData(metaData), message(message)
 	{
 		if (checkData(metaData, message)) {
 			this->message = copyMessage(message);
@@ -39,7 +40,7 @@ public:
 		}
 		compressByType();
 	}
-	Data(Data<D>& data) :metaData(data.metaData), message(data.message ? copyMessage(data.message) : nullptr){}
+	Data(Data<D>& data) :metaData(data.metaData), message(data.message ? copyMessage(data.message) : nullptr) {}
 	~Data() {
 		if (this->message != nullptr) {
 			delete this->message;
@@ -96,7 +97,6 @@ public:
 	}
 	bool checkData(Meta_Data<D>& metaData, Message* message)
 	{
-
 		Message* m = message;
 		Validation* v = metaData.getValidation();
 
@@ -269,7 +269,7 @@ inline void Data<D>::addTheValidation(Message* m, Validation* v)
 			break;
 		}
 		default:
-			break;
+			throw invalid_argument("Unknown validation type");
 		}
 	}
 	catch (exception& e) {

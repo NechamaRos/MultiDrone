@@ -20,6 +20,42 @@ void buildMinHeap(MinHeap& minHeap,const map<unsigned char, int>& freq_)
 	}
 }
 
+//void generateCodes(Node* root, string code, map<unsigned char, string>& huffmanCode) {
+//	if (root == nullptr) return;
+//
+//	// If this is a leaf node, store the code
+//	if (!root->left && !root->right) {
+//		huffmanCode[root->value] = (code.empty() ? "0" : code); // Ensure every symbol has a code
+//	}
+//
+//	generateCodes(root->left, code + "0", huffmanCode);
+//	generateCodes(root->right, code + "1", huffmanCode);
+//}
+
+//template<size_t D>
+//Node* buildHuffmanTree(const Image<D>& img) {
+//	check(img, "Cannot build Huffman tree for empty image");
+//	const map<unsigned char, int> freq_ = freq(img);
+//	MinHeap minHeap;
+//	buildMinHeap(minHeap, freq_);
+//
+//	// Build the tree
+//	while (minHeap.size() > 1) {
+//		Node* left = minHeap.top();
+//		minHeap.pop();
+//		Node* right = minHeap.top();
+//		minHeap.pop();
+//
+//		Node* parent = new Node('\0', left->frequency + right->frequency);
+//		parent->left = left;
+//		parent->right = right;
+//
+//		minHeap.push(parent);
+//	}
+//
+//	return minHeap.top();
+//}
+
 void generateCodes(Node* root, string code, map<unsigned char, string>& huffmanCode) {
 	if (root == nullptr) return;
 

@@ -1,10 +1,3 @@
-#include <iostream>     
-#include <future>      
-#include <thread>
-#include <chrono>
-#include <vector>
-#include <bitset>
-#include <stdexcept>
 #include "TransferData.h"
 
 using namespace std;
@@ -36,7 +29,7 @@ bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex) {
 	}
 	catch (const  exception&)
 	{
-		throw exception("The send failed");
+		throw runtime_error("The send failed");
 	}
 }
 

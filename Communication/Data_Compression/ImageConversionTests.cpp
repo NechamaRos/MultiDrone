@@ -1,39 +1,29 @@
-#include "doctest.h"
-#include <vector>
-#include <algorithm>
+#include "../Communication/doctest.h"
 #include "ImageConversions.h"
+#include <algorithm>
 using namespace std;
 
-TEST_CASE("Simple Message Conversion") {
-     vector<char> message = { 'H', 'e', 'l', 'l', 'o' };
-    auto img = convertSimpleMessageToImage(message);
-    auto convertedMessage = convertImageToSimpleMessage(img);
-    CHECK(message == convertedMessage);
-}
+TEST_CASE("Image Conversions Tests") {
 
-TEST_CASE("Black and White Image Conversion") {
-     vector< vector<uint8_t>> bwImage = { {0, 255}, {255, 0} };
-    auto img = convertBlackWhiteToImage(bwImage);
-    auto convertedBwImage = convertImageToBlackWhite(img);
-    CHECK(bwImage == convertedBwImage);
-}
+    SUBCASE("Test simple Message Conversion") {
+        vector<char> message = { 'H', 'e', 'l', 'l', 'o' };
+        auto img = convertSimpleMessageToImage(message);
+        auto convertedMessage = convertImageToSimpleMessage(img);
+        CHECK(message == convertedMessage);
+    }
 
-TEST_CASE("Color Image Conversion") {
-     vector< vector< vector<uint8_t>>> colorImage = {
-        {{255, 0, 0}, {0, 255, 0}},
-        {{0, 0, 255}, {255, 255, 255}}
-    };
-    auto img = convertColorToImage(colorImage);
-    auto convertedColorImage = convertImageToColor(img);
-    CHECK(colorImage == convertedColorImage);
-}
-
-TEST_CASE("Image Conversions Additional Tests") {
     SUBCASE("Test simple message conversion with special characters") {
         vector<char> message = { 'H', 'e', 'l', 'l', 'o', '!', '\n', '\t', '\0' };
         auto img = convertSimpleMessageToImage(message);
         auto convertedMessage = convertImageToSimpleMessage(img);
         CHECK(message == convertedMessage);
+    }
+
+    SUBCASE("Test black and White Image Conversion") {
+        vector< vector<uint8_t>> bwImage = { {0, 255}, {255, 0} };
+        auto img = convertBlackWhiteToImage(bwImage);
+        auto convertedBwImage = convertImageToBlackWhite(img);
+        CHECK(bwImage == convertedBwImage);
     }
 
     SUBCASE("Test black and white image conversion with checkerboard pattern") {
@@ -46,6 +36,16 @@ TEST_CASE("Image Conversions Additional Tests") {
         auto img = convertBlackWhiteToImage(checkerboard);
         auto convertedBwImage = convertImageToBlackWhite(img);
         CHECK(checkerboard == convertedBwImage);
+    }
+
+    SUBCASE("Test color Image Conversion") {
+        vector< vector< vector<uint8_t>>> colorImage = {
+           {{255, 0, 0}, {0, 255, 0}},
+           {{0, 0, 255}, {255, 255, 255}}
+        };
+        auto img = convertColorToImage(colorImage);
+        auto convertedColorImage = convertImageToColor(img);
+        CHECK(colorImage == convertedColorImage);
     }
 
     SUBCASE("Test color image conversion with RGB color wheel") {

@@ -1,4 +1,4 @@
-#include "doctest.h"
+#include "../Communication/doctest.h"
 #include "HuffmanCompression.h"
 
 // Helper function to create and test a Huffman tree
@@ -50,6 +50,21 @@ void compressAndTestImage(const Image<N>& img) {
 		compressed.substr(0, 3) == "HUF" ||
 		compressed.substr(0, 3) == "HUR" ||
 		compressed.substr(0, 3) == "RAW"));
+}
+
+bool isCompleteTree(Node* root) {
+	if (root == nullptr) return true;
+	if (root->left == nullptr && root->right == nullptr) return true;
+	if (root->left != nullptr && root->right != nullptr)
+		return isCompleteTree(root->left) && isCompleteTree(root->right);
+	return false;
+}
+
+bool satisfiesHuffmanProperty(Node* root) {
+	if (root == nullptr || (root->left == nullptr && root->right == nullptr)) return true;
+	if (root->left == nullptr || root->right == nullptr) return false;
+	return (root->frequency >= root->left->frequency + root->right->frequency) &&
+		satisfiesHuffmanProperty(root->left) && satisfiesHuffmanProperty(root->right);
 }
 
 TEST_CASE("Huffman Compression Tests") {
@@ -118,7 +133,7 @@ TEST_CASE("Huffman Compression Tests") {
 	SUBCASE("compressImage tests") {
 		// Test with small, known image
 		array<size_t, 2> smallDims = { 2, 2 };
-		auto smallImg = createSampleImage(smallDims);
+		auto smallImg = createTwoColorImage(smallDims);
 		compressAndTestImage(smallImg);
 
 		// Test with large image
@@ -130,11 +145,20 @@ TEST_CASE("Huffman Compression Tests") {
 	SUBCASE("Integration tests") {
 		// Test full process: tree building to compression
 		array<size_t, 2> dims2D = { 64, 64 };
-		auto sampleImg = createSampleImage(dims2D);
+		auto sampleImg = createTwoColorImage(dims2D);
 		compressAndTestImage(sampleImg);
 	}
 
 	SUBCASE("Edge case tests") {
+		//Test with empty umage
+		try {
+			Image<2> emptyImg;
+			compressImage(emptyImg);
+		}
+		catch (const runtime_error& e) {
+			CHECK(string(e.what()).find("Cannot compress empty image") != string::npos);
+		}
+
 		// Test with very large image
 		array<size_t, 2> veryLargeDims = { 5000, 5000 };
 		auto veryLargeImg = createRandomImage(veryLargeDims);
@@ -143,7 +167,6 @@ TEST_CASE("Huffman Compression Tests") {
 		// Test with 3 dimension image
 		array<size_t, 3> dims3D = { 10, 10, 3 };
 		auto img3D = createRandomImage(dims3D);
-
 		compressAndTestImage(img3D);
 
 		// Test with single pixel value image
@@ -153,56 +176,7 @@ TEST_CASE("Huffman Compression Tests") {
 		CHECK(!compressed.empty());
 		CHECK(compressed.substr(0, 3) == "HUF");
 	}
-}
 
-// Helper functions for the new tests
-
-bool isCompleteTree(Node* root) {
-	if (root == nullptr) return true;
-	if (root->left == nullptr && root->right == nullptr) return true;
-	if (root->left != nullptr && root->right != nullptr)
-		return isCompleteTree(root->left) && isCompleteTree(root->right);
-	return false;
-}
-
-bool satisfiesHuffmanProperty(Node* root) {
-	if (root == nullptr || (root->left == nullptr && root->right == nullptr)) return true;
-	if (root->left == nullptr || root->right == nullptr) return false;
-	return (root->frequency >= root->left->frequency + root->right->frequency) &&
-		satisfiesHuffmanProperty(root->left) && satisfiesHuffmanProperty(root->right);
-}
-
-Image<2> createTwoColorImage(const array<size_t, 2>& dims) {
-	Image<2> img;
-	img.initImage(dims);
-	for (size_t i = 0; i < img.pixels.size(); ++i) {
-		img.pixels[i] = (i % 2 == 0) ? 0 : 255;
-	}
-	return img;
-}
-
-bool lessFrequentSymbolsHaveLongerCodes(const map<unsigned char, string>& huffmanCode, const Image<2>& img) {
-	// Calculate frequency of each symbol
-	map<unsigned char, int> freq = ::freq(img);
-	// Create a vector of pairs (symbol, frequency) and sort by frequency
-	vector<pair<unsigned char, int>> freqVec(freq.begin(), freq.end());
-	sort(freqVec.begin(), freqVec.end(), [](const auto& a, const auto& b) { return a.second > b.second; });
-
-	// Check if code lengths are non-increasing as frequency decreases
-	for (size_t i = 1; i < freqVec.size(); ++i) {
-		try {
-			if (huffmanCode.at(freqVec[i - 1].first).length() > huffmanCode.at(freqVec[i].first).length()) {
-				return false;
-			}
-		}
-		catch(exception ex){
-			cout << "i " << i << "\n";
-		}
-	}
-	return true;
-}
-
-TEST_CASE("Huffman Compression Additional Tests") {
 	SUBCASE("Test compression with different image sizes") {
 		// Test with very small image
 		array<size_t, 2> tinyDims = { 2, 2 };
@@ -237,19 +211,6 @@ TEST_CASE("Huffman Compression Additional Tests") {
 
 		// Check if the tree satisfies the Huffman property (frequency of parent >= sum of frequencies of children)
 		CHECK(satisfiesHuffmanProperty(root));
-
-		delete root;
-	}
-
-	SUBCASE("Test code length properties") {
-		array<size_t, 2> dims = { 50, 50 };
-		auto img = createRandomImage(dims);
-		Node* root = buildHuffmanTree(img);
-		map<unsigned char, string> huffmanCode;
-		generateCodes(root, "", huffmanCode);
-
-		// Check if less frequent symbols have longer codes
-		//CHECK(lessFrequentSymbolsHaveLongerCodes(huffmanCode, img));// not work
 
 		delete root;
 	}

@@ -137,6 +137,7 @@ string bestCompression(const string& huffmanCompressed, const string& rleCompres
 		return "HUR" + rleHufCompression;
 	}
 }
+
 /// <summary>
 /// Compresses the image
 /// </summary>

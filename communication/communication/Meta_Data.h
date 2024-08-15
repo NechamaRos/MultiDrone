@@ -1,6 +1,6 @@
 #pragma once
 #include "../Validation/Validation.h"
-#include "../Data_Comperession/Data_Compression.h"
+#include "../Data_Compression/Data_Compression.h"
 #include "../Validation/VecValidation.h"
 #include "../Validation/MatValidation.h"
 #include "../Validation/D3Validation.h"
