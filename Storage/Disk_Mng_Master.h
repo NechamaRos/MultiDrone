@@ -64,7 +64,7 @@ struct ArrayInfo_s {
     int* diskPointer;
     int size;
     MapRange_t* range;
-
+    AVLNodeInfo_t* avlNodeInfo;
 };
 
 struct StackNode_s {
@@ -231,7 +231,7 @@ void cache_deleteMap(int mapId);
 
 
 //create a new arrayInfo with all the parameters
-ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range);
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range,AVLNodeInfo_t* avlNodeInfo);
 
 void array_addToArray(ArrayInfo_t* arrayInfo, int index);
 

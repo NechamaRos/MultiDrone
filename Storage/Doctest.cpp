@@ -690,7 +690,9 @@ TEST_CASE("test_arrayInfo_create")
     bottomRight.x = generateRandomNumber();
     bottomRight.y = generateRandomNumber();
     MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
-    ArrayInfo_t* arrayInfo= arrayInfo_create(diskPointer, size, mapRange);
+    int index = generateRandomNumber();
+    AVLNodeInfo_t* nodeInfo = avlNodeInfo_create(size, index);
+    ArrayInfo_t* arrayInfo= arrayInfo_create(diskPointer, size, mapRange,nodeInfo);
     CHECK(arrayInfo->mapid == 1);
     CHECK(arrayInfo->diskPointer == NULL);
     CHECK(arrayInfo->size == size);
@@ -711,8 +713,9 @@ TEST_CASE("test_array_addToArray")
         bottomRight.x = generateRandomNumber();
         bottomRight.y = generateRandomNumber();
         MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
-        ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, mapRange);
         int index = stack_pop();
+        AVLNodeInfo_t* nodeInfo = avlNodeInfo_create(size, index);
+        ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, mapRange,nodeInfo);
         array_addToArray(arrayInfo, index);
         CHECK(disk_mng_CB->arrayForAllMApsInformation[index] == arrayInfo);
         printf("mapId%d\n", disk_mng_CB->mapIdIndex);
