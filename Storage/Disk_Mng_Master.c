@@ -164,7 +164,7 @@ void array_saveData()
 }
 
 
-ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range,AVLNodeInfo_t* avlNodeInfo)
 {
     ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for avlTree", "arrayInfo_create");
     disk_mng_CB->mapIdIndex++;
@@ -172,6 +172,7 @@ ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
     arrayInfo ->diskPointer = diskPointer;
     arrayInfo->size = size;
     arrayInfo->range =range;
+    arrayInfo->avlNodeInfo = avlNodeInfo;
     return arrayInfo;
 }
 
@@ -559,11 +560,11 @@ void disk_mng_addMap(MapRange_t* range, int size, int* map)
 void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer)
 {
     int index = stack_pop();
-    ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer,size,range);
-    array_addToArray(arrayInfo,index);
-    AVLNodeInfo_t* avlNode = avlNodeInfo_create(size, index);
-    avlTree_insertElement(avlNode);
-
+    AVLNodeInfo_t* avlNodeInfo = avlNodeInfo_create(size, index);
+    avlTree_insertElement(avlNodeInfo);
+    ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, range,avlNodeInfo);
+    array_addToArray(arrayInfo, index);
+     
 }
 
 bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map)
