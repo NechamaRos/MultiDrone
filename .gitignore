@@ -1,5 +1,8 @@
 # Prerequisites
 *.d
+# Ignore Visual Studio ipch files
+.vs/
+*.ipch
 
 # Compiled Object files
 *.slo
