@@ -150,7 +150,7 @@ TEST_CASE("Huffman Compression Tests") {
 	}
 
 	SUBCASE("Edge case tests") {
-		//Test with empty umage
+		//Test with empty image
 		try {
 			Image<2> emptyImg;
 			compressImage(emptyImg);
