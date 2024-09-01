@@ -649,8 +649,8 @@ bool disk_mng_isTheMapInRange(MapRange_t* rangeFromCache, MapRange_t* range)
 {
     if ((range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
         (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y)   )
+        (range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y) ||
+        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y)   )
     {
     return true;
     }
