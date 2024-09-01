@@ -1,4 +1,4 @@
-#include "doctest.h"
+#include "../Communication/doctest.h"
 #include "Server_function.h"
 #ifndef _ws2tcpip
 #define ws2tcpip
@@ -50,7 +50,6 @@ TEST_CASE("the central while") {
 		if (result == 1) continue;
 		checking_incoming_data_for_each_client(fds, clientSockets, recvbuf, recvbuflen);
 	}
-
 }
 
 TEST_CASE("clean up") {

@@ -1,27 +1,27 @@
 #include "MatMessage.h"
 #include "../Validation/CRCalgoritm.h"
 
-void MatMessage::copyCol(vector<uint8_t>& arr, int numCol) {
-	int len = this->message.size();
+void MatMessage::copyCol(vector<uint8_t>& arr, size_t numCol) {
+	size_t len = this->message.size();
 	if (numCol >= this->message[0].size()) {
 		throw invalid_argument("invalid num col");
 	}
-	for (int i = 0; i < len; i++) {
+	for (size_t i = 0; i < len; i++) {
 		arr.push_back(this->message[i][numCol]);
 	}
 }
 
 
-vector<vector<vector<uint8_t>>> MatMessage::getreminder(int, int, vector<uint8_t>& key)
+vector<vector<vector<uint8_t>>> MatMessage::getReminder(size_t, size_t, vector<uint8_t>& key)
 {
-	int rows = this->message.size(),cols=this->message[0].size();
+	size_t rows = this->message.size(),cols=this->message[0].size();
 	vector<vector<vector<uint8_t>>> res(2);
 	vector<vector<uint8_t>> rowsReminder(rows);
 	vector<vector<uint8_t>> colsReminder(cols);
 	vector<uint8_t> oneCol(rows);
-	CRCalgoritm crc;
+	CRCAlgorithm crc;
 
-	for (int i = 0; i < rows; i++) {
+	for (size_t i = 0; i < rows; i++) {
 		try
 		{
 			rowsReminder[i] = crc.getRemainder(this->message[i], key);
@@ -32,7 +32,7 @@ vector<vector<vector<uint8_t>>> MatMessage::getreminder(int, int, vector<uint8_t
 		}
 	}
 
-	for (int j = 0; j < cols; j++) {
+	for (size_t j = 0; j < cols; j++) {
 		oneCol.clear();
 		copyCol(oneCol, j);
 		colsReminder[j]=crc.getRemainder(oneCol, key);
@@ -45,13 +45,13 @@ vector<vector<vector<uint8_t>>> MatMessage::getreminder(int, int, vector<uint8_t
 
 void MatMessage::checkInReceive(vector<vector<vector<uint8_t>>>& valiDationData, vector<uint8_t>& key)
 {
-	CRCalgoritm crc;
+	CRCAlgorithm crc;
 	vector<uint8_t> tmp;
-	int lenKey = key.size();
-	int rows = valiDationData[0].size();
-	int cols = valiDationData[1].size();
+	size_t lenKey = key.size();
+	size_t rows = valiDationData[0].size();
+	size_t cols = valiDationData[1].size();
 
-	for (int i = 0; i < rows; i++) {
+	for (size_t i = 0; i < rows; i++) {
 		tmp.clear();
 		tmp = this->message[i];
 		crc.copyArr(valiDationData[0][i], tmp, lenKey-1);
@@ -65,7 +65,7 @@ void MatMessage::checkInReceive(vector<vector<vector<uint8_t>>>& valiDationData,
 		}
 	}
 
-	for (int i = 0; i < cols; i++) {
+	for (size_t i = 0; i < cols; i++) {
 		tmp.clear();
 		copyCol(tmp, i);
 		crc.copyArr(valiDationData[1][i], tmp, lenKey-1);
