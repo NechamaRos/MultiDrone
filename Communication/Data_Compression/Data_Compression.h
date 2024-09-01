@@ -11,13 +11,13 @@ struct Data_Compression
 private:
 	string compressedData;
 	map<unsigned char, string> huffmanCode;
-	array<size_t, D> dims;
+	array<size_t, D> dimensions;
 public:
-	Data_Compression(string compressedData) :compressedData(compressedData), dims{} {}
+	Data_Compression(string compressedData) :compressedData(compressedData), dimensions{} {}
 
 	// Copy constructor
 	Data_Compression(const Data_Compression<D>& other)
-		: compressedData(other.compressedData), huffmanCode(other.huffmanCode), dims(other.dims) {
+		: compressedData(other.compressedData), huffmanCode(other.huffmanCode), dimensions(other.dimensions) {
 	}
 
 	// Copy assignment operator
@@ -25,14 +25,14 @@ public:
 		if (this != &other) {
 			compressedData = other.compressedData;
 			huffmanCode = other.huffmanCode;
-			dims = other.dims;
+			dimensions = other.dimensions;
 		}
 		return *this;
 	}
 
 	// Move constructor
 	Data_Compression(Data_Compression<D>&& other) noexcept
-		: compressedData(move(other.compressedData)), huffmanCode(move(other.huffmanCode)), dims(move(other.dims)) {
+		: compressedData(move(other.compressedData)), huffmanCode(move(other.huffmanCode)), dimensions(move(other.dimensions)) {
 	}
 
 	// Move assignment operator
@@ -40,7 +40,7 @@ public:
 		if (this != &other) {
 			compressedData = move(other.compressedData);
 			huffmanCode = move(other.huffmanCode);
-			dims = move(other.dims);
+			dimensions = move(other.dimensions);
 		}
 		return *this;
 	}
@@ -56,13 +56,13 @@ public:
 
 	const map<unsigned char, string>& getHuffmanCode() const { return this->huffmanCode; }
 
-	const array<size_t, D>& getDimension() const { return this->dims; }
+	const array<size_t, D>& getDimension() const { return this->dimensions; }
 
 	const size_t size() const {
 		size_t dims = 1;
 		for (size_t i = 0; i < D; i++)
 		{
-			dims *= this->dims[i];
+			dims *= this->dimensions[i];
 		}
 		return dims;
 	}
@@ -70,7 +70,7 @@ public:
 	void setDimension(const array<size_t, D> dims) {
 		for (size_t i = 0; i < D; i++)
 		{
-			this->dims[i] = dims[i];
+			this->dimensions[i] = dims[i];
 		}
 	}
 };

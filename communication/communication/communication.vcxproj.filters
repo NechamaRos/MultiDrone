@@ -229,6 +229,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\CMakeLists.txt" />
+    <Text Include="..\..\CMakeLists.txt" />
   </ItemGroup>
 </Project>
