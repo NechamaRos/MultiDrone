@@ -29,6 +29,7 @@ void disk_mng_initialize()
     {
         disk_mng_normalInitialize();
     }
+    arrayInLoaded_initialize();
 }
 
 
@@ -58,6 +59,24 @@ void disk_mng_normalInitialize()
     stack_normalInitialize();
     array_normalInitialize();
     avlTree_normalInitialize();
+}
+
+void arrayInLoaded_initialize()
+{
+    disk_mng_CB->disk_MapsInLoadedToCache = (DiskMapsInLoadedToCache_t**)allocate_memory(CACHE_SIZE *sizeof(DiskMapsInLoadedToCache_t*), "Failed to allocate memory for array in loaded ", "arrayInLoaded_initialize");
+    if (disk_mng_CB->disk_MapsInLoadedToCache != NULL) {
+        for (int i = 0; i < CACHE_SIZE; i++) {
+            disk_mng_CB->disk_MapsInLoadedToCache[i] = NULL;
+        }
+    }
+}
+
+DiskMapsInLoadedToCache_t* arrayInLoaded_create(int mapId, int index)
+{
+    DiskMapsInLoadedToCache_t* arrayInfo = (DiskMapsInLoadedToCache_t*)allocate_memory(sizeof(DiskMapsInLoadedToCache_t), "Failed to allocate memory for array in loaded info", "arrayInLoaded_create");
+    arrayInfo->mapId = mapId;
+    arrayInfo->index = index;
+    return arrayInfo;
 }
 
 //initialize on the first time we turn o the computer the stack will initialize with all the indexes.
@@ -164,7 +183,7 @@ void array_saveData()
 }
 
 
-ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
+ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range,AVLNodeInfo_t* avlNodeInfo)
 {
     ArrayInfo_t* arrayInfo = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for avlTree", "arrayInfo_create");
     disk_mng_CB->mapIdIndex++;
@@ -172,6 +191,7 @@ ArrayInfo_t* arrayInfo_create(int* diskPointer, int size, MapRange_t* range)
     arrayInfo ->diskPointer = diskPointer;
     arrayInfo->size = size;
     arrayInfo->range =range;
+    arrayInfo->avlNodeInfo = avlNodeInfo;
     return arrayInfo;
 }
 
@@ -202,37 +222,28 @@ MapRange_t* mapRange_create(Point_t bottomRight, Point_t topLeft)
 }
 int disk_mng_deleteMapFromDiskManagementDataStructures(int sizeToFree)
 {
-    printTree(disk_mng_CB->disk_SortByMapSize->root);
-
     AVLNode_t* nodeToDelete = avlTree_FindingTheNodeThatIsSuitableForDeletion(disk_mng_CB->disk_SortByMapSize->root);//find the suitable map to delete
-    printNode(nodeToDelete);
     ArrayInfo_t* arrayInfo = disk_mng_CB->arrayForAllMApsInformation[nodeToDelete->avlNodeInfo->arrayIndex];//finding the object that corresponds to deletion in the array
-    for (int i = 0; i < DISK_SIZE; i++)
+    if (disk_mng_searchForSuitableMapInLoadingArray(arrayInfo->mapid)==-1)//check if the map not in loaded to the cache
     {
-        if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL)
+        bool isDeleteSuccess = disk_deleteMap(arrayInfo->diskPointer);//send API to the disk to delete the map
+        if (isDeleteSuccess)
         {
-            printf("size %d index %d ", disk_mng_CB->arrayForAllMApsInformation[i]->size,i);
+            cache_deleteMap(arrayInfo->mapid);//send API to the cache to delete the map
+            stack_push(nodeToDelete->avlNodeInfo->arrayIndex);//push the index to the stack of free indexes
+            sizeToFree -= arrayInfo->size;//reducing the size that needs to be deleted
+            array_deleteFromArray(nodeToDelete->avlNodeInfo->arrayIndex);//delete the map from the array
+            array_deleteArrayInfo(arrayInfo);//delete the array object
+            disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);//delete the map from the AVL tree
+            disk_mng_CB->disk_SortByMapSize->totalElements--;
+            avlNode_delete(nodeToDelete);//delete the avl node
 
         }
+        else
+        {
+            test_writeExceptionToFile(Error_When_Deleting_Map_from_Disk, "disk_mng_deleteMapFromDiskManagementDataStructures");
+        }
 
-    }
-
-    bool isDeleteSuccess=disk_deleteMap(arrayInfo->diskPointer);//send API to the disk to delete the map
-    if (isDeleteSuccess)
-    {
-        cache_deleteMap(arrayInfo->mapid);//send API to the cache to delete the map
-        stack_push(nodeToDelete->avlNodeInfo->arrayIndex);//push the index to the stack of free indexes
-        sizeToFree -= arrayInfo->size;//reducing the size that needs to be deleted
-        array_deleteFromArray(nodeToDelete->avlNodeInfo->arrayIndex);//delete the map from the array
-        array_deleteArrayInfo(arrayInfo);//delete the array object
-        disk_mng_CB->disk_SortByMapSize->root = avlTree_deleteNode(disk_mng_CB->disk_SortByMapSize->root, nodeToDelete);//delete the map from the AVL tree
-        disk_mng_CB->disk_SortByMapSize->totalElements--;
-        avlNode_delete(nodeToDelete);//delete the avl node
-
-    }
-    else
-    {
-        test_writeExceptionToFile(Error_When_Deleting_Map_from_Disk,"disk_mng_deleteMapFromDiskManagementDataStructures");
     }
 }
 
@@ -559,11 +570,11 @@ void disk_mng_addMap(MapRange_t* range, int size, int* map)
 void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, int* diskPointer)
 {
     int index = stack_pop();
-    ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer,size,range);
-    array_addToArray(arrayInfo,index);
-    AVLNodeInfo_t* avlNode = avlNodeInfo_create(size, index);
-    avlTree_insertElement(avlNode);
-
+    AVLNodeInfo_t* avlNodeInfo = avlNodeInfo_create(size, index);
+    avlTree_insertElement(avlNodeInfo);
+    ArrayInfo_t* arrayInfo = arrayInfo_create(diskPointer, size, range,avlNodeInfo);
+    array_addToArray(arrayInfo, index);
+     
 }
 
 bool disk_mng_isTheDataCorrect(MapRange_t* range, int size, int* map)
@@ -632,4 +643,52 @@ bool isCorrectRange(MapRange_t* range)
     }
 
     return true;
+}
+
+bool disk_mng_isTheMapInRange(MapRange_t* rangeFromCache, MapRange_t* range)
+{
+    if ((range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
+        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y) ||
+        (range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
+        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y)   )
+    {
+    return true;
+    }
+    return false;
+}
+
+
+bool disk_mng_loadMapFromDiskToCache(int mapId, int offset, int size, int* freeAddress)
+{
+    int* diskPointer;
+    int startAddress;
+    bool isLoadedSuccess=false;
+    int index = disk_mng_searchForSuitableMapInLoadingArray(mapId);
+    if (index!=-1)//Checking whether the map was found in the loading array
+    {
+        diskPointer = disk_mng_CB->arrayForAllMApsInformation[index]->diskPointer;//Finding the appropriate disk pointer
+        disk_mng_CB->arrayForAllMApsInformation[index] = NULL;
+        startAddress = diskPointer+(offset*sizeof(int));
+        isLoadedSuccess = disk_loadMapToCache(startAddress, size, freeAddress);
+        if (!isLoadedSuccess)
+        {
+            test_writeExceptionToFile(Error_When_Load_Map_From_Disk_To_Cache, "disk_mng_loadMapFromDiskToCache");
+        }
+
+    }
+    return isLoadedSuccess;
+}
+
+int disk_mng_searchForSuitableMapInLoadingArray(int mapId)
+{
+    DiskMapsInLoadedToCache_t* map;
+    for (int i = 0; i < CACHE_SIZE; i++)
+    {
+        map = disk_mng_CB->disk_MapsInLoadedToCache[i];
+        if (map!=NULL&&mapId == map->mapId)
+        {
+            return map->index;
+        }
+    }
+    return -1;
 }
