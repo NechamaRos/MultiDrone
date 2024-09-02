@@ -22,8 +22,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1d6d4943-c27b-4a08-b501-18f4db784fa2}</ProjectGuid>
-    <RootNamespace>MasterSlaveManagment</RootNamespace>
+    <ProjectGuid>{f9edcb29-48b8-43a3-a1e9-803a0a1c9b61}</ProjectGuid>
+    <RootNamespace>MasterSlaveManagement</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
