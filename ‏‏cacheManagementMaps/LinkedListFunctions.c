@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "cacheManagement.h"
 
+extern controlBlock_t* controlBlock;
+
 #pragma region Node & LnkdLst function
 // to create a new node of mapInfo
 Node_t* createNode(int location, int sizeOfBytes) {
@@ -39,10 +41,18 @@ void freeLinkedList(Node_t* head) {
 	Node_t* temp;
 	while (head != NULL) {
 		temp = head;
-		deleteNodeFromEmptyPlacesByLocation(temp->data.location);
-		deleteNodeFromEmptyPlacesBySize(&temp->data);
+		addNode(controlBlock->emptyPlacesByLocation, &((RangeInDataStorage_t*)temp));
+
+		addNode(controlBlock->emptyPlacesBySize, &((RangeInDataStorage_t*)temp));
+		if (FindRangeByLocation(controlBlock->emptyPlacesByLocation->root,(RangeInDataStorage_t*)temp ) != NULL)
+			printf("true\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		else
+			printf("false\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		printf(" %d \n",((RangeInDataStorage_t*)(controlBlock->emptyPlacesByLocation->root->data))->sizeOfBytes);
+		printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
 		head = (Node_t*)head->next;
 		free(temp);
+		
 	}
 }
 #pragma endregion

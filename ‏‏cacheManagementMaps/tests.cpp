@@ -46,58 +46,6 @@ extern "C" {
 		printLinkedList(lst);
 	}
 
-	TEST_CASE("TestMapInfoTree")
-	{
-		// יצירת עץ AVL עבור MapInfo
-		//linkedList for the mapInfo
-		Node_t* lst = createNode(id, size);
-		Node_t* tail = lst;
-		insertInTail(&tail, 0, 5);
-		insertInTail(&tail, 9, 10);
-
-		AVLTree_t mapInfoTree;
-		mapInfoTree.root = NULL;
-		mapInfoTree.compare = compareMapInfo;
-
-		MapInfo_t* mapInfoL = (MapInfo_t*)malloc(sizeof(MapInfo_t));
-		mapInfoL->mapID = 8;
-		mapInfoL->mapSizeInBytes = 1024;
-		mapInfoL->linkedList = lst;
-
-		MapInfo_t* mapInfoS = (MapInfo_t*)malloc(sizeof(MapInfo_t));
-		mapInfoS->mapID = 5;
-		mapInfoS->mapSizeInBytes = 100;
-		mapInfoS->linkedList = lst;
-
-		MapInfo_t* mapInfoM = (MapInfo_t*)malloc(sizeof(MapInfo_t));
-		mapInfoM->mapID = 7;
-		mapInfoM->mapSizeInBytes = 200;
-		mapInfoM->linkedList = lst;
-
-		addNode(&mapInfoTree, mapInfoL);
-		CHECK(Abs(height(mapInfoTree.root->left) - height(mapInfoTree.root->right)) <= 1);
-		addNode(&mapInfoTree, mapInfoS);
-		CHECK(Abs(height(mapInfoTree.root->left) - height(mapInfoTree.root->right)) <= 1);
-		addNode(&mapInfoTree, mapInfoM);
-		CHECK(Abs(height(mapInfoTree.root->left) - height(mapInfoTree.root->right)) <= 1);
-
-#pragma region check that eact node in the righr location in tree
-		CHECK(mapInfoTree.root->data == mapInfoM);
-		CHECK(mapInfoTree.root->left->data == mapInfoS);
-		CHECK(mapInfoTree.root->right->data == mapInfoL);
-#pragma endregion
-		CHECK(FindMapInfoByID(mapInfoTree.root, 8)->data == mapInfoL);
-
-
-		printf("\n\n");
-		printMapInfoTree(&mapInfoTree);
-
-		//after i delete the root, the new root has to be mapinfoL
-		CHECK(RucursiveDeleteMapFromMapsSortedByID(mapInfoTree.root, 7)->data == mapInfoL);
-		CHECK(FindMapInfoByID(mapInfoTree.root, 7) == NULL);
-		CHECK(mapInfoTree.root->data == mapInfoL);
-		CHECK(mapInfoTree.root->left->data == mapInfoS);
-	}
 
 	TEST_CASE("TestRangeInDataStorageByLocation") {
 
@@ -194,8 +142,7 @@ extern "C" {
 #pragma endregion
 		printf("\n\n\n");
 		printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
-		deleteNodeFromEmptyPlacesBySize(&r2);
-		deleteNodeFromEmptyPlacesBySize(&r3);
+		deleteNodeFromEmptyPlacesBySize(&r1);
 		printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 		printf("\n\n\n");
 
@@ -203,6 +150,63 @@ extern "C" {
 		//CHECK(findNextNode(&rangesBySize, &r2, &compareRangeBySize)->data ==(void*)& r2);
 	   // AVLNode_t* nextNode = findNextNode(rangesBySize.root,(AVLNode_t*) & r2, compareRangeBySize);
 	   // CHECK(nextNode == (AVLNode_t*)&r3);
+	}
+
+
+
+	TEST_CASE("TestMapInfoTree")
+	{
+		// יצירת עץ AVL עבור MapInfo
+		//linkedList for the mapInfo
+		Node_t* lst = createNode(id, size);
+		Node_t* tail = lst;
+		insertInTail(&tail, 0, 5);
+		insertInTail(&tail, 9, 10);
+
+
+		MapInfo_t* mapInfoL = (MapInfo_t*)malloc(sizeof(MapInfo_t));
+		mapInfoL->mapID = 8;
+		mapInfoL->mapSizeInBytes = 1024;
+		mapInfoL->linkedList = lst;
+
+		MapInfo_t* mapInfoS = (MapInfo_t*)malloc(sizeof(MapInfo_t));
+		mapInfoS->mapID = 5;
+		mapInfoS->mapSizeInBytes = 100;
+		mapInfoS->linkedList = lst;
+
+		MapInfo_t* mapInfoM = (MapInfo_t*)malloc(sizeof(MapInfo_t));
+		mapInfoM->mapID = 7;
+		mapInfoM->mapSizeInBytes = 200;
+		mapInfoM->linkedList = lst;
+
+		addNode(controlBlock->MapsSortedByID, mapInfoL);
+		CHECK(Abs(height(controlBlock->MapsSortedByID->root->left) - height(controlBlock->MapsSortedByID->root->right)) <= 1);
+		addNode(controlBlock->MapsSortedByID, mapInfoS);
+		CHECK(Abs(height(controlBlock->MapsSortedByID->root->left) - height(controlBlock->MapsSortedByID->root->right)) <= 1);
+		addNode(controlBlock->MapsSortedByID, mapInfoM);
+		CHECK(Abs(height(controlBlock->MapsSortedByID->root->left) - height(controlBlock->MapsSortedByID->root->right)) <= 1);
+
+		//add each node synchronyzed to MapsSortedByID and to 
+#pragma region check that eact node in the righr location in tree
+		CHECK(controlBlock->MapsSortedByID->root->data == mapInfoM);
+		CHECK(controlBlock->MapsSortedByID->root->left->data == mapInfoS);
+		CHECK(controlBlock->MapsSortedByID->root->right->data == mapInfoL);
+#pragma endregion
+		CHECK(FindMapInfoByID(controlBlock->MapsSortedByID->root, 8)->data == mapInfoL);
+
+
+		removeMapFromCache(7);
+
+		printf("\n\n");
+		//printMapInfoTree(controlBlock->MapsSortedByID);
+
+		//after i delete the root, the new root has to be mapInfoL
+		//CHECK(RucursiveDeleteMapFromMapsSortedByID(controlBlock->MapsSortedByID->root, 7)->data == mapInfoL);
+		CHECK(FindMapInfoByID(controlBlock->MapsSortedByID->root, 7) == NULL);
+		CHECK(controlBlock->MapsSortedByID->root->data == mapInfoL);
+		CHECK(controlBlock->MapsSortedByID->root->left->data == mapInfoS);
+		CHECK(FindRangeByLocation(controlBlock->emptyPlacesByLocation->root ,777) != NULL);
+		printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
 	}
 
 	TEST_CASE("queueTest") {

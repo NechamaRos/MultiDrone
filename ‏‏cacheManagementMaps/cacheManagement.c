@@ -2,17 +2,21 @@
 #include <stdlib.h>
 #include "cacheManagement.h"
 
-controlBlock_t* controlBlock;
+extern controlBlock_t* controlBlock;
 
 void removeMapFromCache(int id)
 {
 	//The map I search
-	AVLNode_t* map = FindMapInfoByID(controlBlock->MapsSortedByID, id);
+	AVLNode_t* map = FindMapInfoByID(controlBlock->MapsSortedByID->root, id);
 
 	//If the map is found
-	if (map != NULL)
+	if (map->data != NULL)
 	{
-		MapInfo_t* mi = (MapInfo_t*)map;
+		MapInfo_t* mi = (MapInfo_t*)malloc(sizeof(MapInfo_t));
+		mi->linkedList = ((MapInfo_t*)map->data)->linkedList;
+		mi->mapID = ((MapInfo_t*)map->data)->mapID;
+		mi->mapSizeInBytes = ((MapInfo_t*)map->data)->mapSizeInBytes;
+
 
 		//delete the map from MapsSortedByID, and free the linkedList
 		deleteNodeFromMapsSortedByID(mi->mapID);
@@ -21,6 +25,8 @@ void removeMapFromCache(int id)
 		//increase the counter of empty places in cache
 		controlBlock->EmptyPlaceInCache += mi->mapSizeInBytes;
 		free(mi);
+		printf("queueAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATest");
+
 	}
 }
 
@@ -127,7 +133,8 @@ void fetchFromDisk(int id,int offset, int location, int size)
 	return;
 }
 
-void overrideInternal(int size) {
+void overrideInternal(int size) 
+{
 	MapInfo_t* temp = (MapInfo_t*)malloc(sizeof(MapInfo_t));
 	int counter = 0;
 	while (size > counter)

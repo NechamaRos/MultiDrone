@@ -258,7 +258,7 @@ void deleteNodeFromEmptyPlacesByLocation(int location)
 //wrap function of delete from emptyPlacesBySize
 void deleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* range)
 {
-
+	printf("\n- ----------- - - - -\n");
 	printf("\nrange->location %d\n", range->location);
 	printf("\nrange->sizeOfBytes %d\n", range->sizeOfBytes);
 
@@ -268,7 +268,7 @@ void deleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* range)
 //wrap function of delete from MapsSortedByID
 void deleteNodeFromMapsSortedByID(int id)
 {
-	RucursiveDeleteMapFromMapsSortedByID(controlBlock->MapsSortedByID, id);
+	RucursiveDeleteMapFromMapsSortedByID(controlBlock->MapsSortedByID->root, id);
 }
 
 //recursive function of delete EmptyPlacesByLocation
@@ -406,11 +406,11 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 	RangeInDataStorage_t* range = (RangeInDataStorage_t*)root->data;
 	printf("\n- - - - - is enter  \n");
 
-	//printf("\nitem->sizeOfBytes %d\n", item->sizeOfBytes);
-	//printf("\nrange->sizeOfBytes %d\n", range->sizeOfBytes);
+	printf("\nitem->sizeOfBytes %d\n", item->sizeOfBytes);
+	printf("\nrange->sizeOfBytes %d\n", range->sizeOfBytes);
 
-	//printf("\nitem->location %d\n", item->location);
-	//printf("\nrange->location %d\n", range->location);
+	printf("\nitem->location %d\n", item->location);
+	printf("\nrange->location %d\n", range->location);
 
 	int cmp = item->sizeOfBytes - range->sizeOfBytes;
 
@@ -430,13 +430,12 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 		// Node to be deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
-			//if (root->data != NULL)
+				//if (root->data != NULL)
 			//{
 			//	free(root->data); // Free the data if necessary
-				free(root);
+				//free(root);
 			//}
-			printf("\n");
-			printRangeInDataStorage(temp);
+
 			return temp;
 		}
 
@@ -445,10 +444,8 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 			//if (root->data != NULL)
 			//{
 			//	free(root->data); // Free the data if necessary
-				free(root);
+				//free(root);
 			//}
-			printf("\n");
-			printRangeInDataStorage(temp);
 			return temp;
 		}
 
@@ -456,7 +453,7 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 		printf("s %d\n", ((RangeInDataStorage_t*)temp->data)->location);
 		printf("l %d\n", ((RangeInDataStorage_t*)temp->data)->sizeOfBytes);
 		root->data = temp->data;//הבן הימני והאבא שווים
-		root->right = RecursiveDeleteNodeFromEmptyPlacesBySize(root->right, ((RangeInDataStorage_t*)temp));
+		root->right = RecursiveDeleteNodeFromEmptyPlacesBySize(root->right,(RangeInDataStorage_t*)temp->data);
 		printRangeInDataStorage(root->right->data);
 		printf("\n");
 		//printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);

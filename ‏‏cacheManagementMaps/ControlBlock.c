@@ -22,4 +22,10 @@ void initControlBlock() {
 	controlBlock->emptyPlacesBySize = (AVLTree_t*)malloc(sizeof(AVLTree_t));
 	controlBlock->emptyPlacesBySize->compare = compareRangeBySize;
 	controlBlock->emptyPlacesBySize->root = NULL;
+
+
+	controlBlock->MapsSortedByID = (AVLTree_t*)malloc(sizeof(AVLTree_t));
+	controlBlock->MapsSortedByID = (AVLTree_t*)malloc(sizeof(AVLTree_t));
+	controlBlock->MapsSortedByID->compare = compareRangeBySize;
+	controlBlock->MapsSortedByID->root = NULL;
 }
