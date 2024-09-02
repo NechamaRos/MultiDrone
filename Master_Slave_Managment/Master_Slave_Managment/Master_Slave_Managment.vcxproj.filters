@@ -14,4 +14,74 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\doctest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\dynamicBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\masterEventManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\mockDataManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Priority.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\slaveEventManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\DynamicBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MasterEventManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MockDataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\SlaveEventManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

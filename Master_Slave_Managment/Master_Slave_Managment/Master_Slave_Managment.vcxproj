@@ -17,7 +17,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -53,27 +52,24 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared" >
+  <ImportGroup Label="Shared">
   </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -130,8 +126,32 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\doctest.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\dynamicBuffer.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\event.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileHandler.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileInfo.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\masterEventManager.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageParams.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageType.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\mockDataManager.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Priority.h" />
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\slaveEventManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\DynamicBuffer.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Event.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileHandler.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileInfo.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MasterEventManager.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MockDataManager.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\SlaveEventManager.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Source.cpp" />
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\tests.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
