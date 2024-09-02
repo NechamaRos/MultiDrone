@@ -288,19 +288,6 @@ void insertData(UnitNode_LRU_t* node, int* imgData)
     insertInToLinedList(node);
 }
 
-char* stringError(ERRORS err)
-{
-    //switch the error to string
-    switch (err)
-    {
-    case ALLOCATE_ERROR:
-        return "allcocate error";
-    default:
-        return "";
-        break;
-    }
-}
-
 void throwExcptionToFile(ERRORS err)
 {
     FILE file;
@@ -313,10 +300,8 @@ void throwExcptionToFile(ERRORS err)
         printf("The file didn't open, try again ---------------Exception\n");
         return;
     }
-    //convert err to string
-    char* stringErr=stringError( err);
     //write error to file
-    fprintf(&file, "%c\n",stringErr );
+    fprintf(&file, "Throw exeption");
     //close file
     fclose(&file);
 }
@@ -369,6 +354,10 @@ void insertBufferInToCache(SlaveImgInfo_t** slave, int slaveBufferSize)
             moveToTheBeginning(imgExist->unitNodePtr);
         }
     }
+}
+
+void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size)
+{
 }
 
 ImgInfo_t* searchByImgId(int imgId, int slaveId)

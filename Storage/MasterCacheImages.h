@@ -106,7 +106,6 @@ void insertToImgArray(ImgInfo_t* imgInfo);
 void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
 //help func
-char* stringError(ERRORS err);
 void throwExcptionToFile(ERRORS);
 
 //insertBuffer
