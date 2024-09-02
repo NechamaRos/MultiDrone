@@ -56,4 +56,4 @@ void InitialPointerToFunction() {
     dataOfMessageVector[static_cast<size_t>(MessageType::STM_GET_EVENTS)].func = &receiveEventsFromSlave;
     dataOfMessageVector[static_cast<size_t>(MessageType::STM_GET_EVENTS)].priority = Priority::MediumHigh;
 }
-void getTheSlavesThatDidntCommunicate(Message* message);//MTM_SLAVES_NOT_COMMUNICATE
+void getTheSlavesThatDidntCommunicate(Message* message);//MTM_SLAVES_NOT_COMMUNICATE#pragma once

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1d6d4943-c27b-4a08-b501-18f4db784fa2}</ProjectGuid>
-    <RootNamespace>MasterSlaveManagment</RootNamespace>
+    <ProjectGuid>{1f2ffa9e-bc10-4430-866d-053f6befc127}</ProjectGuid>
+    <RootNamespace>MasterSlaveManagement</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClInclude Include="dataOfMessage.h" />
     <ClInclude Include="event.h" />
-    <ClInclude Include="ImagefromSlave.h" />
+    <ClInclude Include="ImageFromSlave.h" />
     <ClInclude Include="mapRequest.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageParams.h" />
@@ -140,11 +140,12 @@
     <ClInclude Include="RealImage.h" />
     <ClInclude Include="Scheduling.h" />
     <ClInclude Include="Slave.h" />
-    <ClInclude Include="SlaveManager.h" />
+    <ClInclude Include="SlavesManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MessageParams.cpp" />
+    <ClCompile Include="MessageType.cpp" />
     <ClCompile Include="Queue.cpp" />
     <ClCompile Include="Scheduling.cpp" />
   </ItemGroup>

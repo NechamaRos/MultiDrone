@@ -1,7 +1,7 @@
 #pragma once
+#pragma once
 #include "ImageFromSlave.h"
 #include "MessageParams.h"
-
 
 using namespace std;
 class Slave
