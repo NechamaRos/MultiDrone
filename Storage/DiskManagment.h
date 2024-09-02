@@ -82,10 +82,12 @@ typedef enum {
 Point_t CreatePoint(int x, int y);
 ImagePoints_t CreateImagePoint(Point_t TL, Point_t BR);
 ImageInfo_t* CreateImageInfo(ImagePoints_t imgPoints, int* imgData);
+void initImg(Point_t TL, Point_t BR, int* imgData);
+
+//check func
 bool isCorrectPoints(Point_t TL, Point_t BR);
 bool isCorrectSize(Point_t TL, Point_t BR);
 bool InvalidPoints(Point_t TL, Point_t BR);
-void initImg(Point_t TL, Point_t BR, int* imgData);
 
 //linkedList
 UnitNodeLinkedList_t* createUnitNodeLinkedList(ImageInfo_t* imgInfo);
@@ -98,7 +100,6 @@ void removeFromdArraySearchInfo(int id);
 void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr);
 
 //QuadTree
-
 QuadNode_t* createQuadNode(ImagePoints_t imagePoint);
 void connectBetweenDatStructures(UnitNodeLinkedList_t* nodePtr, QuadNode_t* quadNode);
 QuadTree_t* createQuadTree(Point_t TL, Point_t BR);
