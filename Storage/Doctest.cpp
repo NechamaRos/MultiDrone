@@ -211,10 +211,15 @@ TEST_CASE("remove when cach is full")
 		a = init_imgData();
 		insertData(node,a);
 	}
+	tl = createPoint(9, 5);
+	br = createPoint(18, 5);
+	imgInfo = createImgInfo(8, 1, tl, br);
+	node = createUnitNode_LRU(imgInfo);
+	a = init_imgData();
 	//act
-	removeTenPercentFromCache();
+	insertData(node, a);
 	//assert
-	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10));
+	CHECK(masterCacheImg_cb->LRU->AmountOfLinks ==CACHE_SIZE- (CACHE_SIZE /10)+1);
 	freeMasterCacheImg_cb();
 }
 TEST_CASE("Pop first empty place in cache stack ")
@@ -276,11 +281,36 @@ TEST_CASE("init stack all place is empty")
 	CHECK(stack->emptyPlaceInTheArray[CACHE_SIZE - 1] == 0);
 	free(stack);
 }
+TEST_CASE("Testing insert buffer in to cache")
+{
+	//arrange
+	initMasterCacheImg_cb();
+	Point_t tl = createPoint(7, 5);
+	Point_t br = createPoint(5, 12);
+	SlaveImgInfo_t* slave = createSlaveImgInfo(0, 0, tl, br);
+	SlaveImgInfo_t* slaveA = createSlaveImgInfo(0, 2, tl, br);
+	SlaveImgInfo_t* slaveB = createSlaveImgInfo(1, 1, tl, br);
+	SlaveImgInfo_t* slaveArr[] = { slave,slaveA,slaveB };
+	//Act
+	insertBufferInToCache(slaveArr, 3);
+	//assert
+	CHECK(masterCacheImg_cb->cache[0] == slave->data);
+	CHECK(masterCacheImg_cb->cache[1] == slaveA->data);
+	CHECK(masterCacheImg_cb->cache[2] == slaveB->data);
+
+	//free
+	free(slave);
+	free(slaveA);
+	free(slaveB);
+	freeMasterCacheImg_cb();
+
+
+}
 //TEST_CASE("insert to cache")
 //{
 //	//arrange
 //	int* imgData = NULL;
-//	//int index = CACHE_SIZE - (masterCacheImg_cb->emptyPlaceInCache->length + 1);
+//	int index = CACHE_SIZE - (masterCacheImg_cb->emptyPlaceInCache->length + 1);
 //	//act
 //	insertTocache(imgData,);
 //	//assert

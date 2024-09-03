@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Mock.h"
 #define CACHE_SIZE 100
 
 typedef enum 
@@ -7,7 +7,6 @@ typedef enum
 	ALLOCATE_ERROR
 }ERRORS;
  
-typedef struct Point_s Point_t;
 typedef struct ImgInfo_s ImgInfo_t;
 typedef struct Stack_emptyPlace_s Stack_emptyPlace_t;
 typedef struct UnitNode_LRU_s UnitNode_LRU_t;
@@ -16,12 +15,6 @@ typedef struct UnitNode_emptyPlaceInCache_s UnitNode_emptyPlaceInCache_t;
 typedef struct Queue_emptyPlaceInCache_s Queue_emptyPlaceInCache_t;
 typedef struct MasterCacheImg_cb_s MasterCacheImg_cb_t;
 
-struct Point_s
-{
-	int x;
-	int y;
-
-};
 
 struct ImgInfo_s
 {
@@ -113,8 +106,11 @@ void insertToImgArray(ImgInfo_t* imgInfo);
 void removeFromImgArray(ImgInfo_t* imgInfoPtr);
 
 //help func
-char* stringError(ERRORS err);
 void throwExcptionToFile(ERRORS);
 
+//insertBuffer
+void insertBufferInToCache(SlaveImgInfo_t** slave, int size);
+void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size);
 
-
+//search
+ImgInfo_t* searchByImgId(int imgId, int slaveId);
