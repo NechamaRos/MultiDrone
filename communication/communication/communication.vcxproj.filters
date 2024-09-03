@@ -111,10 +111,10 @@
     <ClCompile Include="..\Data_transferring\TransferData.cpp">
       <Filter>Source Files\DataTransferring</Filter>
     </ClCompile>
-    <ClCompile Include="..\Socket_communication\Server_test.cpp">
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager_test.cpp">
       <Filter>Test\Socket_communication</Filter>
     </ClCompile>
-    <ClCompile Include="..\Socket_communication\Server_function.cpp">
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager.cpp">
       <Filter>Source Files\Socket_communication</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,7 +161,7 @@
     <ClInclude Include="..\Data_transferring\TransferData.h">
       <Filter>Header Files\DataTransferring</Filter>
     </ClInclude>
-    <ClInclude Include="..\Socket_communication\Server_function.h">
+    <ClInclude Include="..\Socket_communication\DroneCommunicationManager.h">
       <Filter>Header Files\Socket_communication</Filter>
     </ClInclude>
   </ItemGroup>

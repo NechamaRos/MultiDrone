@@ -1,27 +1,24 @@
-#include "Server_function.h"
+#include "DroneCommunicationManager.h"
 #include <winsock2.h>
-//#include <stdio.h>
+#include <stdio.h>
 #include <iostream>
-#include <vector>
-#include "../Communication/Meta_Data.h"
-#include <thread>
-#ifndef _ws2tcpip
-#define ws2tcpip
-#include <ws2tcpip.h>
-#endif // !_ws2tcpip
-
 #pragma comment(lib, "Ws2_32.lib")
 
-#define DEFAULT_PORT "27015"
-//#define DEFAULT_BUFLEN 512
-#define BACKLOG 10
-
 using namespace std;
+
+
+int DroneCommunicationManager::getSockfd() {
+    return this->sockfd;
+}
+
+WSAPOLLFD* DroneCommunicationManager::getFds() {
+    return this->fds;
+}
+
 #pragma region regular connection
-int initialize_winsock() {
+int DroneCommunicationManager::initialize_winsock() {
     WSADATA wsaData;
     int iResult;
-
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         fprintf(stderr, "WSAStartup failed: %d\n", iResult);
@@ -29,7 +26,7 @@ int initialize_winsock() {
     }
     return 0;
 }
-int setupAddressInfo(struct addrinfo** servinfo) {
+int DroneCommunicationManager::setupAddressInfo(struct addrinfo** servinfo) {
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -45,7 +42,7 @@ int setupAddressInfo(struct addrinfo** servinfo) {
     }
     return 0;
 }
-int bind_to_first_available_socket(struct addrinfo* servinfo) {
+int DroneCommunicationManager::bind_to_first_available_socket(struct addrinfo* servinfo) {
     struct addrinfo* p;
     int sockfd;
     for (p = servinfo; p != NULL; p = p->ai_next) {
@@ -84,7 +81,7 @@ int bind_to_first_available_socket(struct addrinfo* servinfo) {
 }
 #pragma endregion
 
-int establishing_a_communication_infrastructure() {
+int DroneCommunicationManager::establishing_a_communication_infrastructure() {
     struct addrinfo* servinfo;
     if (initialize_winsock() == 0) {
         if (setupAddressInfo(&servinfo) == 0)
@@ -95,11 +92,12 @@ int establishing_a_communication_infrastructure() {
     return 1;
 }
 
-int start_listening(int& sockfd) {
-    if (listen(sockfd, BACKLOG) == -1) {
+int DroneCommunicationManager::start_listening() {
+    if (listen(this->sockfd, BACKLOG) == -1) {
         perror("listen");
-        closesocket(sockfd);
+        closesocket(this->sockfd);
         WSACleanup();
+        cout << "===error in start_listening===";
         return 1;
     }
 
@@ -107,12 +105,11 @@ int start_listening(int& sockfd) {
     return 0;
 }
 
+int DroneCommunicationManager::define_clients_sockets_and_poll() {
+    int numFds = this->clientSockets.size() + 1;
 
-int define_clients_sockets_and_poll(std::vector<int>& clientSockets, WSAPOLLFD fds[FD_SETSIZE]) {
-    int numFds = clientSockets.size() + 1;
-
-    for (int i = 0; i < clientSockets.size(); i++) {
-        fds[i + 1].fd = clientSockets[i];
+    for (int i = 0; i < this->clientSockets.size(); i++) {
+        fds[i + 1].fd = this->clientSockets[i];
         fds[i + 1].events = POLLRDNORM;
     }
     int pollResult = WSAPoll(fds, numFds, 1000); // 1 second timeout
@@ -122,26 +119,28 @@ int define_clients_sockets_and_poll(std::vector<int>& clientSockets, WSAPOLLFD f
     }
     return 0;
 }
-int check_about_new_client_connection(int ListenSocket,const WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets) {
+
+int DroneCommunicationManager::check_about_new_client_connection() {
     // Check if there's a new connection
     if (fds[0].revents & POLLRDNORM) {
-        int ClientSocket = accept(ListenSocket, NULL, NULL);
+        int ClientSocket = accept(this->sockfd, NULL, NULL);
         if (ClientSocket == INVALID_SOCKET) {
             printf("accept failed: %d\n", WSAGetLastError());
             return 1;
         }
         clientSockets.push_back(ClientSocket);
         printf("Client connected\n");
+        send_message_to_drone(clientSockets.size() - 1, "you are connected to the master");
     }
     return 0;
 }
-int accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
+
+int DroneCommunicationManager::accept_message(int& i, char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
     int iResult = recv(clientSockets[i], recvbuf, recvbuflen, 0);
     if (iResult > 0) {
         recvbuf[iResult] = '\0';
         printf("Received from client: %s\n", recvbuf); 
-        thread echo_message_to_the_drone(send_message_to_drone,clientSockets[i],"Successfully accepted");
-        echo_message_to_the_drone.join();
+        this->send_message_to_drone(i, "Successfully accepted");
         return 0;
     }
     else if (iResult == 0) {
@@ -161,56 +160,63 @@ int accept_message(std::vector<int>& clientSockets, int& i, char recvbuf[DEFAULT
     return 1;
 }
 
-int send_message_to_drone(int clientSocket, const char* message) {
+int DroneCommunicationManager::send_message_to_drone(int num_drone, const char* message) {
     if (message == "") {
         // Echo the received message back to the client
         char sendbuf[DEFAULT_BUFLEN];
         std::cout << "Enter echo to client: ";
         std::cin.getline(sendbuf, DEFAULT_BUFLEN);
-        int result = send(clientSocket, message, (int)strlen(message), 0);
+        int result = send(clientSockets[num_drone], message, (int)strlen(message), 0);
         return result;
     }
 
-    int result = send(clientSocket, message, (int)strlen(message), 0);
+    int result = send(clientSockets[num_drone], message, (int)strlen(message), 0);
     return result;
 }
 
-
-
-int checking_incoming_data_for_each_client(const WSAPOLLFD fds[FD_SETSIZE], std::vector<int>& clientSockets, char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
+int DroneCommunicationManager::checking_incoming_data_for_each_client(char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
     int num = 0;
     for (int i = 0; i < clientSockets.size(); i++) {
         if (fds[i + 1].revents & POLLRDNORM) {
-            num += accept_message(clientSockets, i, recvbuf, recvbuflen);
+            num += accept_message(i, recvbuf, recvbuflen);
         }
     }
     return num == 0;
 }
 
-void infinite_checking_for_incoming_messages(int sockfd) {
-    std::vector<int> clientSockets;
-    WSAPOLLFD fds[FD_SETSIZE];
+void DroneCommunicationManager::infinite_checking_for_incoming_messages() {
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
-    fds[0].fd = sockfd;
+    fds[0].fd = this->sockfd;
     fds[0].events = POLLRDNORM;
     while (true)
     {
-        int result = define_clients_sockets_and_poll(clientSockets, fds);
+        int result = define_clients_sockets_and_poll();
         if (result == 1) break;
-        result = check_about_new_client_connection(sockfd, fds, clientSockets);
+        result = check_about_new_client_connection();
         if (result == 1) continue;
-        result = checking_incoming_data_for_each_client(fds, clientSockets, recvbuf, recvbuflen);
+        result = checking_incoming_data_for_each_client(recvbuf, recvbuflen);
     }
 
 }
 
-void cleanup(int ListenSocket) {
+void DroneCommunicationManager::cleanup(int ListenSocket) {
     closesocket(ListenSocket);
     WSACleanup();
 }
-void send_message_to_all(const int& sockfd, const char* message) {}
 
-int send_mataData_to_drone(int clientSocket, const Meta_Data& metaData){
+void DroneCommunicationManager::send_message_to_all(char* message) {
+    if (message == "") {
+        // Echo the received message back to the client
+        char sendbuf[DEFAULT_BUFLEN];
+        std::cout << "Enter echo to client: ";
+        std::cin.getline(message, DEFAULT_BUFLEN);
+    }
+    for (int drone_socket : clientSockets) {
+        int result = send(drone_socket, message, (int)strlen(message), 0);
+    }
+}
+
+int DroneCommunicationManager::send_mataData_to_drone(int clientSocket, const Meta_Data& metaData){
     return 0;
 }

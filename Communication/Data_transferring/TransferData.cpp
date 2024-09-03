@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include "TransferData.h"
 #include "../Communication/Meta_Data.h"
-#include "../Socket_communication/Server_function.h"
+#include "../Socket_communication/DroneCommunicationManager.h"
 using namespace std;
 
 int TransferData::num_cores() {
@@ -23,14 +23,13 @@ void TransferData::waiting(vector<future<bool>>& futures) {
     }
 }
 
-bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, int client_socket) {
+bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, int num_drone) {
     try
     {
         if (chunk.empty()) {
             throw std::runtime_error("Chunk is empty");
         }
-        //Noa function, open the socket.
-        int result= send_message_to_drone(client_socket, chunk.c_str());
+        int result= droneCommunicationManager->send_message_to_drone(num_drone, chunk.c_str());
         //Add verification of whether the data was sent
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << "Sent chunk: " << chunk << std::endl;
@@ -43,13 +42,12 @@ bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, in
         throw std::runtime_error("The send failed");
     }
 }
-bool TransferData::sendMetaData(const Meta_Data& metaData, int client_socket)
+bool TransferData::sendMetaData(const Meta_Data& metaData, int num_drone)
 {
 
     try
     {
-        //Noa function
-        int result = send_mataData_to_drone(client_socket, metaData);
+        int result = droneCommunicationManager->send_mataData_to_drone(num_drone, metaData);
         //Add verification of whether the data was sent
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << "Sent metaData validation " << std::endl; //<< metaData 
@@ -61,16 +59,15 @@ bool TransferData::sendMetaData(const Meta_Data& metaData, int client_socket)
     }
 
 }
-bool TransferData::sendData(const string& data, const Meta_Data& metaData, int client_socket) {
+bool TransferData::sendData(const string& data, const Meta_Data& metaData, int num_drone) {
     try
     {
         if (data.empty()) {
             throw std::runtime_error("Data string is empty");
         }
-        //Noa function
-        int result = send_message_to_drone(client_socket, data.c_str());
+        int result = droneCommunicationManager->send_message_to_drone(num_drone, data.c_str());
         //Add verification of whether the data was sent
-        result = send_mataData_to_drone(client_socket, metaData);
+        result = droneCommunicationManager->send_mataData_to_drone(num_drone, metaData);
         //Add verification of whether the data was sent
         return true;
     }
@@ -81,7 +78,7 @@ bool TransferData::sendData(const string& data, const Meta_Data& metaData, int c
 }
 
 
-void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int client_socket)
+void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int num_drone)
 {
     if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
@@ -106,23 +103,23 @@ void TransferData::sendsAsynchronously(const string& dataAsStr, const Meta_Data&
             }
         }
         // Submit the block in a new thread
-        futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i,client_socket));
+        futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i, num_drone));
     }
 
-    futures.push_back(async(launch::async, &TransferData::sendMetaData, this, std::cref(metaData),client_socket));
+    futures.push_back(async(launch::async, &TransferData::sendMetaData, this, std::cref(metaData), num_drone));
     // Wait for all remaining threads to finish
     waiting(futures);
 }
 
-void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData, int client_socket)
+void TransferData::sendsSynchronously(const string& dataAsStr, const Meta_Data& metaData, int num_drone)
 {
     if (dataAsStr.empty()) {
         throw std::runtime_error("Data is empty");
     }
-    this->sendData(dataAsStr, metaData,client_socket);
+    this->sendData(dataAsStr, metaData, num_drone);
 }
 
-void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int client_socket)
+void TransferData::preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data& metaData, int num_drone)
 {
     //count of threads.
     const int num_cores = this->num_cores(); // The maximum number of threads
@@ -140,10 +137,10 @@ void TransferData::preparingTheDataForTransferring(const string& dataAsStr, cons
     size_t option = OPTION_TO_SEND;
     if (option == 1)
     {
-        sendsSynchronously(dataAsStr, metaData,client_socket);
+        sendsSynchronously(dataAsStr, metaData, num_drone);
     }
     else
-        sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores,client_socket);
+        sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores, num_drone);
 }
 void TransferData::addChunk(const string& chunk, size_t chunkIndex) {
     lock_guard<mutex> lock(dataMutex);

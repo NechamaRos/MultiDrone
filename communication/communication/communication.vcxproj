@@ -129,8 +129,8 @@
   <ItemGroup>
     <ClCompile Include="..\Data_transferring\TransferData.cpp" />
     <ClCompile Include="..\Data_transferring\TransferData_test.cpp" />
-    <ClCompile Include="..\Socket_communication\Server_function.cpp" />
-    <ClCompile Include="..\Socket_communication\Server_test.cpp" />
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager.cpp" />
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager_test.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Data_transferring\TransferData.h" />
-    <ClInclude Include="..\Socket_communication\Server_function.h" />
+    <ClInclude Include="..\Socket_communication\DroneCommunicationManager.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
