@@ -161,6 +161,7 @@ int DroneCommunicationManager::accept_message(int& i, char recvbuf[DEFAULT_BUFLE
 }
 
 int DroneCommunicationManager::send_message_to_drone(int num_drone, const char* message) {
+    if(clientSockets.size()>=1){
     if (message == "") {
         // Echo the received message back to the client
         char sendbuf[DEFAULT_BUFLEN];
@@ -172,6 +173,7 @@ int DroneCommunicationManager::send_message_to_drone(int num_drone, const char* 
 
     int result = send(clientSockets[num_drone], message, (int)strlen(message), 0);
     return result;
+    }
 }
 
 int DroneCommunicationManager::checking_incoming_data_for_each_client(char recvbuf[DEFAULT_BUFLEN], int& recvbuflen) {
