@@ -25,7 +25,6 @@ void removeMapFromCache(int id)
 		//increase the counter of empty places in cache
 		controlBlock->EmptyPlaceInCache += mi->mapSizeInBytes;
 		free(mi);
-		printf("queueAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATest");
 
 	}
 }
