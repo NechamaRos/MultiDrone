@@ -797,7 +797,7 @@ TEST_CASE("test_disk_mng_isTheMapInRange") {
     Point_t rangeBottomRight = { x4, y4 };
     //MapRange_t* range = mapRange_create(rangeBottomRight, rangeTopLeft);
     MapRange_t* range = mapRange_create({ 224,140 }, { 148,160 });
-    MapRange_t* rangeFromCache = mapRange_create({250,130}, {170,170});
+    MapRange_t* rangeFromCache = mapRange_create({300,100}, {230,120});
 
     printMapRange("Range From Cache", rangeFromCache);
     printMapRange("Range To Check", range);

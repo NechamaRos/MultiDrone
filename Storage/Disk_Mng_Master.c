@@ -21,7 +21,7 @@ void disk_mng_initialize()
     disk_loadDataForInitializeDataStructers(&address, &startAdress,&howManyToLoad);
     if (address != 1)//להחליט מה אומר שזה  הפעם  ראשונה
     {
-        ////restart the first address int disk with 1 to know if its first time or not
+        //restart the first address int disk with 1 to know if its first time or not
         disk_saveDataFromStructersToDisk(&address, &startAdress, &howManyToLoad);
         disk_mng_firstInitialize();
     }
@@ -647,10 +647,10 @@ bool isCorrectRange(MapRange_t* range)
 
 bool disk_mng_isTheMapInRange(MapRange_t* rangeFromCache, MapRange_t* range)
 {
-    if ((range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y)   )
+    if (((range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y)) ||
+        ((range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y)) ||
+        ((range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y)) ||
+        ((range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y)))
     {
     return true;
     }
@@ -692,3 +692,35 @@ int disk_mng_searchForSuitableMapInLoadingArray(int mapId)
     }
     return -1;
 }
+
+//#include <CL/sycl.hpp>
+//#include <iostream>
+//#include <vector>
+//using namespace cl::sycl;
+//
+//int disk_mng_getMapsIdsInRange(MapRange_t* rangeFromCache, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize) {
+//    int count = 0;
+//    queue q;
+//    buffer<int> bufferCount(&count, 1);
+//    buffer<ArrayInfo_t**> bufferInputArray(disk_mng_CB->arrayForAllMApsInformation, range<1>(arraySize));
+//    buffer<ArrayInfo_t> bufferOutputArray(*arrayOfMapsIdsInRange, range<1>(arraySize));
+//
+//    q.submit([&](handler& h) {
+//        auto inputArrayAccess = bufferInputArray.get_access<access::mode::read>(h);
+//        auto outputArrayAccess = bufferOutputArray.get_access<access::mode::write>(h);
+//        auto countAccess = bufferCount.get_access<access::mode::read_write>(h);
+//
+//        h.parallel_for(range<1>(arraySize), [=](id<1> i) {
+//            if (inputArrayAccess[i].range != NULL &&
+//                disk_mng_isTheMapInRange(rangeFromCache, inputArrayAccess[i]->range)) {
+//                int idx = atomic_fetch_add(countAccess[0], 1);
+//                outputArrayAccess[idx] = inputArrayAccess[i];
+//                disk_mng_CB->disk_MapsInLoadedToCache[idx] = arrayInLoaded_create(inputArrayAccess[i]->mapid, i);
+//            }
+//            });
+//        }).wait();
+//
+//        count = bufferCount.get_access<access::mode::read>()[0];
+//
+//        return count;
+//}
