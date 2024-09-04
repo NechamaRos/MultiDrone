@@ -12,15 +12,16 @@
 using namespace std;
 
 int TransferData::num_cores() {
-    unsigned int numCores = std::thread::hardware_concurrency();
-    std::cout << "Number of cores: " << numCores << std::endl;
-    return numCores;
+	unsigned int numCores = thread::hardware_concurrency();
+	cout << "Number of cores: " << numCores << endl;
+	return numCores;
 }
+
 void TransferData::waiting(vector<future<bool>>& futures) {
-    for (auto& future : futures) {
-        bool result = future.get();
-        std::cout << "Result: " << std::boolalpha << result << std::endl;
-    }
+	for (auto& future : futures) {
+		bool result = future.get();
+		cout << "Result: " << boolalpha << result << endl;
+	}
 }
 
 bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, int num_drone) {
@@ -34,7 +35,13 @@ bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, in
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << "Sent chunk: " << chunk << std::endl;
 
-        addChunk(chunk, chunkIndex);
+		return true;
+	}
+	catch (const  exception&)
+	{
+		throw runtime_error("The send failed");
+	}
+}
 
         return true;
     }
@@ -143,10 +150,12 @@ void TransferData::preparingTheDataForTransferring(const string& dataAsStr, cons
         sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores, num_drone);
 }
 void TransferData::addChunk(const string& chunk, size_t chunkIndex) {
-    lock_guard<mutex> lock(dataMutex);
-    collectedDataMap[chunkIndex] = chunk;
+	lock_guard<mutex> lock(dataMutex);
+	collectedDataMap[chunkIndex] = chunk;
 }
+
 string TransferData::getCollectedData() {
+<<<<<<< HEAD
     lock_guard<mutex> lock(dataMutex);
     string collectedData;
     for (const auto& pair : collectedDataMap) {

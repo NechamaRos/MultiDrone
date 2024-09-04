@@ -104,6 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>Default</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +133,14 @@
     <ClCompile Include="..\Data_transferring\TransferData_test.cpp" />
     <ClCompile Include="..\Socket_communication\DroneCommunicationManager.cpp" />
     <ClCompile Include="..\Socket_communication\DroneCommunicationManager_test.cpp" />
+    <ClCompile Include="..\Data_Compression\CompressionTests.cpp" />
+    <ClCompile Include="..\Data_Compression\HuffmanCompression.cpp" />
+    <ClCompile Include="..\Data_Compression\HuffmanNode.cpp" />
+    <ClCompile Include="..\Data_Compression\HuffmanRescue.cpp" />
+    <ClCompile Include="..\Data_Compression\ImageConversions.cpp" />
+    <ClCompile Include="..\Data_Compression\ImageConversionTests.cpp" />
+    <ClCompile Include="..\Data_Compression\RescueTests.cpp" />
+    <ClCompile Include="..\Data_transferring\TransferData.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -140,10 +150,8 @@
     <ClCompile Include="..\Validation\Validation.cpp" />
     <ClCompile Include="..\Validation\Validation_test.cpp" />
     <ClCompile Include="..\Validation\VecValidation.cpp" />
-    <ClCompile Include="communication.cpp" />
     <ClCompile Include="D3Message.cpp" />
     <ClCompile Include="D3Message_test.cpp" />
-    <ClCompile Include="Data.cpp" />
     <ClCompile Include="Data_test.cpp" />
     <ClCompile Include="MatMessage.cpp" />
     <ClCompile Include="MatMessage_test.cpp" />
@@ -155,6 +163,12 @@
   <ItemGroup>
     <ClInclude Include="..\Data_transferring\TransferData.h" />
     <ClInclude Include="..\Socket_communication\DroneCommunicationManager.h" />
+    <ClInclude Include="..\Data_Compression\Data_Compression.h" />
+    <ClInclude Include="..\Data_Compression\HuffmanCompression.h" />
+    <ClInclude Include="..\Data_Compression\HuffmanNode.h" />
+    <ClInclude Include="..\Data_Compression\HuffmanRescue.h" />
+    <ClInclude Include="..\Data_Compression\Image.h" />
+    <ClInclude Include="..\Data_Compression\ImageConversions.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
@@ -168,6 +182,9 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="Meta_Data.h" />
     <ClInclude Include="VecMessage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
