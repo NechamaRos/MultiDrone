@@ -805,14 +805,21 @@ TEST_CASE("test_disk_mng_isTheMapInRange") {
     bool result = disk_mng_isTheMapInRange(rangeFromCache, range);
 
     bool expected = (
-        (range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
-        (range->bottomRight.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->topLeft.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
-        (range->bottomRight.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->topLeft.y) ||
-        (range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
-        (range->bottomRight.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->topLeft.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
-        (range->bottomRight.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->topLeft.y));
+
+        ((range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->bottomRight.y)) ||
+
+        ((range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->bottomRight.y)) ||
+
+        ((range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->bottomRight.y)) ||
+
+        ((range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->bottomRight.y)) ||
+        (range->topLeft.y< rangeFromCache->topLeft.y && range->bottomRight.y>rangeFromCache->bottomRight.y) ||
+        (range->topLeft.x > rangeFromCache->topLeft.x && range->bottomRight.x < rangeFromCache->bottomRight.x)
+        );
     printf("Result: %s\n", result ? "true" : "false");
     printf("Expected: %s\n", expected ? "true" : "false");
     CHECK(result == expected); 

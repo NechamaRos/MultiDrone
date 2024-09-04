@@ -276,3 +276,9 @@ disk_mng_checkDataStructures_mapSize:
 Error: Unknown exception.
 disk_mng_checkDataStructures_mapSize:
 Error: Unknown exception.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.

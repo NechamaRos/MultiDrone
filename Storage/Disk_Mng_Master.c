@@ -667,18 +667,26 @@ bool isCorrectRange(MapRange_t* range)
     return true;
 }
 
-bool disk_mng_isTheMapInRange(MapRange_t* rangeFromCache, MapRange_t* range)
-{
-    if ((range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->topLeft.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->topLeft.y >= range->bottomRight.y) ||
-        (range->bottomRight.x >= rangeFromCache->bottomRight.x >= range->topLeft.x) && (range->topLeft.y >= rangeFromCache->bottomRight.y >= range->bottomRight.y))
-    {
+bool disk_mng_isTheMapInRange(MapRange_t* rangeFromCache, MapRange_t* range) {
+    if (
+        ((range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->bottomRight.y)) ||
+
+        ((range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->bottomRight.y)) ||
+
+        ((range->bottomRight.x >= rangeFromCache->bottomRight.x && rangeFromCache->bottomRight.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->topLeft.y && rangeFromCache->topLeft.y >= range->bottomRight.y)) ||
+
+        ((range->bottomRight.x >= rangeFromCache->topLeft.x && rangeFromCache->topLeft.x >= range->topLeft.x) &&
+            (range->topLeft.y >= rangeFromCache->bottomRight.y && rangeFromCache->bottomRight.y >= range->bottomRight.y)) ||
+        (range->topLeft.y< rangeFromCache->topLeft.y && range->bottomRight.y>rangeFromCache->bottomRight.y) ||
+        (range->topLeft.x > rangeFromCache->topLeft.x && range->bottomRight.x < rangeFromCache->bottomRight.x)
+        ) {
         return true;
     }
     return false;
 }
-
 
 bool disk_mng_loadMapFromDiskToCache(int mapId, int offset, int size, int* freeAddress)
 {
