@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Validation">
+      <UniqueIdentifier>{cb473ce1-24d2-4a8c-bcdb-80aa5fb37b0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Validation">
+      <UniqueIdentifier>{7e352378-f50c-4b0d-8ed9-a24013b8ca7f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Test">
       <UniqueIdentifier>{b3759107-df86-4c70-b9ae-ec7f4de9b43d}</UniqueIdentifier>
     </Filter>
@@ -9,6 +27,142 @@
     </Filter>
     <Filter Include="Source Files\DataTransferring">
       <UniqueIdentifier>{2ca812b8-2118-48ca-a283-512da5067653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\DataTransferring">
+      <UniqueIdentifier>{16521998-4719-4cdc-b681-94a69e469f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Socket_communication">
+      <UniqueIdentifier>{f6ccebe7-7420-44c3-8cdd-edec5e9783a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Socket_communication">
+      <UniqueIdentifier>{93a32beb-2514-4cbc-a3ee-76a547ebe3c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Socket_communication">
+      <UniqueIdentifier>{104ce04d-22db-4eff-bc23-204b164ce714}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DataTransferring">
+      <UniqueIdentifier>{c3649d93-a798-4637-813c-1fc6d22d2111}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D3Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MatMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VecMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3Message_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Data_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MatMessage_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="VecMessage_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Convert.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\CRCalgoritm.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\D3Validation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\MatValidation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Validation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\VecValidation.cpp">
+      <Filter>Source Files\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Convert_test.cpp">
+      <Filter>Test\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\CRCalgoritm_test.cpp">
+      <Filter>Test\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Validation\Validation_test.cpp">
+      <Filter>Test\Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_transferring\TransferData_test.cpp">
+      <Filter>Test\DataTransferring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Data_transferring\TransferData.cpp">
+      <Filter>Source Files\DataTransferring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager_test.cpp">
+      <Filter>Test\Socket_communication</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager.cpp">
+      <Filter>Source Files\Socket_communication</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D3Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Meta_Data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VecMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="doctest.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\Convert.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\CRCalgoritm.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\D3Validation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\MatValidation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\Validation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Validation\VecValidation.h">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Data_transferring\TransferData.h">
+      <Filter>Header Files\DataTransferring</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Socket_communication\DroneCommunicationManager.h">
+      <Filter>Header Files\Socket_communication</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Test">
+      <UniqueIdentifier>{b3759107-df86-4c70-b9ae-ec7f4de9b43d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Validation">
+      <UniqueIdentifier>{8dfbaf11-f5ef-407c-80bb-48e7fd1f1900}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Data_Compression">
       <UniqueIdentifier>{b465e5c8-4282-44c3-a66b-e35902e72adb}</UniqueIdentifier>
     </Filter>
@@ -72,15 +226,6 @@
     <Filter Include="Test\Data_Transferring">
       <UniqueIdentifier>{16521998-4719-4cdc-b681-94a69e469f1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Socket">
-      <UniqueIdentifier>{9a7e46c3-c201-4d6e-955b-5d0932e2ad3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Test\Socket">
-      <UniqueIdentifier>{b0ca9116-4940-40a1-bc69-c1855af65bf6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\DataTransferring">
-      <UniqueIdentifier>{c3649d93-a798-4637-813c-1fc6d22d2111}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Validation\Convert_test.cpp">
@@ -93,13 +238,6 @@
       <Filter>Test\Validation</Filter>
     </ClCompile>
     <ClCompile Include="..\Data_transferring\TransferData_test.cpp">
-      <Filter>Test\DataTransferring</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Data_transferring\TransferData.cpp">
-      <Filter>Source Files\DataTransferring</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Socket_communication\DroneCommunicationManager_test.cpp">
-      <Filter>Test\Socket_communication</Filter>
       <Filter>Test\Data_Transferring</Filter>
     </ClCompile>
     <ClCompile Include="Data_test.cpp">
@@ -168,15 +306,6 @@
     <ClCompile Include="..\Data_Compression\RescueTests.cpp">
       <Filter>Test\Data_Compression</Filter>
     </ClCompile>
-    <ClCompile Include="..\Socket\Server_function.cpp">
-      <Filter>Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Socket\Socket_test.cpp">
-      <Filter>Test\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Socket_communication\DroneCommunicationManager.cpp">
-      <Filter>Source Files\Socket_communication</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="doctest.h">
@@ -201,10 +330,6 @@
       <Filter>Validation\VecValidation</Filter>
     </ClInclude>
     <ClInclude Include="..\Data_transferring\TransferData.h">
-      <Filter>Header Files\DataTransferring</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Socket_communication\DroneCommunicationManager.h">
-      <Filter>Header Files\Socket_communication</Filter>
       <Filter>Data_Transferring</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
@@ -242,9 +367,6 @@
     </ClInclude>
     <ClInclude Include="..\Data_Compression\Image.h">
       <Filter>Data_Compression\Stracts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Socket\Server_function.h">
-      <Filter>Socket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

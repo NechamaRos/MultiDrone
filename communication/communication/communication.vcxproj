@@ -140,7 +140,6 @@
     <ClCompile Include="..\Data_Compression\ImageConversions.cpp" />
     <ClCompile Include="..\Data_Compression\ImageConversionTests.cpp" />
     <ClCompile Include="..\Data_Compression\RescueTests.cpp" />
-    <ClCompile Include="..\Data_transferring\TransferData.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -156,7 +155,6 @@
     <ClCompile Include="MatMessage.cpp" />
     <ClCompile Include="MatMessage_test.cpp" />
     <ClCompile Include="Message.cpp" />
-    <ClCompile Include="Meta_Data.cpp" />
     <ClCompile Include="VecMessage.cpp" />
     <ClCompile Include="VecMessage_test.cpp" />
   </ItemGroup>

@@ -218,7 +218,3 @@ void DroneCommunicationManager::send_message_to_all(char* message) {
         int result = send(drone_socket, message, (int)strlen(message), 0);
     }
 }
-
-int DroneCommunicationManager::send_mataData_to_drone(int clientSocket, const Meta_Data& metaData){
-    return 0;
-}

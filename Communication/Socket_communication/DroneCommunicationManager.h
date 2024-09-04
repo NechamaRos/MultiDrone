@@ -38,7 +38,10 @@ public:
 	void cleanup(int ListenSocket);
 	void send_message_to_all(char* message);
 	int send_message_to_drone(int clientSocket, const char* message);
-	int send_mataData_to_drone(int clientSocket, const Meta_Data& metaData);
+	template<size_t D>
+	int send_mataData_to_drone(int clientSocket, const Meta_Data<D>& metaData) {
+		return 0;
+	}
 
 private:
 	int sockfd;
