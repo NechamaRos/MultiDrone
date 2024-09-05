@@ -1,5 +1,14 @@
-#include "TransferData.h"
 
+#include <iostream>     
+#include <future>      
+#include <thread>
+#include <chrono>
+#include <vector>
+#include <bitset>
+#include <stdexcept>
+#include "TransferData.h"
+#include "../Communication/Meta_Data.h"
+#include "../Socket_communication/DroneCommunicationManager.h"
 using namespace std;
 
 int TransferData::num_cores() {
@@ -15,15 +24,16 @@ void TransferData::waiting(vector<future<bool>>& futures) {
 	}
 }
 
-bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex) {
-	try {
-		if (chunk.empty()) {
-			throw  runtime_error("Chunk is empty");
-		}
-		//Noa function, open the socket.
-		this_thread::sleep_for(chrono::milliseconds(100));
-		cout << "Sent chunk: " << chunk << endl;
-		addChunk(chunk, chunkIndex);
+bool TransferData::sendMessageByChunk(const string& chunk, size_t chunkIndex, int num_drone) {
+    try
+    {
+        if (chunk.empty()) {
+            throw std::runtime_error("Chunk is empty");
+        }
+        int result= droneCommunicationManager->send_message_to_drone(num_drone, chunk.c_str());
+        //Add verification of whether the data was sent
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::cout << "Sent chunk: " << chunk << std::endl;
 
 		return true;
 	}
@@ -39,10 +49,10 @@ void TransferData::addChunk(const string& chunk, size_t chunkIndex) {
 }
 
 string TransferData::getCollectedData() {
-	lock_guard<mutex> lock(dataMutex);
-	string collectedData;
-	for (const auto& pair : collectedDataMap) {
-		collectedData += pair.second;
-	}
-	return collectedData;
+    lock_guard<mutex> lock(dataMutex);
+    string collectedData;
+    for (const auto& pair : collectedDataMap) {
+        collectedData += pair.second;
+    }
+    return collectedData;
 }

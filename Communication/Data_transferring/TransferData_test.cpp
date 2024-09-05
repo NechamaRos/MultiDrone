@@ -1,3 +1,4 @@
+
 #include "../Communication/doctest.h"
 #include <vector>
 #include <future>
@@ -24,10 +25,10 @@ Meta_Data<3> mdd4(&d3v4);
 D3Message d3m14({ { {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } ,{ {1,1,1,0 },{1,1,1,0 },{1,1,1,0 } } });
 Data<3> d3d4(mdd4, &d3m14);
 
+int num_drone=0;
+TransferData td;
 
 TEST_CASE("TransferData::num_cores function") {
-	TransferData td;
-
 	SUBCASE("Check number of cores") {
 		int cores = td.num_cores();
 		CHECK(cores > 0);
@@ -35,8 +36,7 @@ TEST_CASE("TransferData::num_cores function") {
 }
 
 TEST_CASE("TransferData::waiting function") {
-	TransferData td;
-	vector<future<bool>> futures;
+    vector<future<bool>> futures;
 
 	SUBCASE("Wait for futures to complete") {
 		futures.push_back(async(launch::async, [] { return true; }));
@@ -57,41 +57,42 @@ TEST_CASE("TransferData::waiting function") {
 }
 
 TEST_CASE("TransferData::sendMessageByChunk function") {
-	TransferData td;
-	string chunk = "Test chunk";
+    string chunk = "Test chunk";
 
-	SUBCASE("Successful send") {
-		CHECK(td.sendMessageByChunk(chunk, 0) == true);
-	}
+    SUBCASE("Successful send") {
+        CHECK(td.sendMessageByChunk(chunk, 0, num_drone) == true);
+    }
 
-	SUBCASE("Send with exception") {
-		CHECK_THROWS_AS(td.sendMessageByChunk("", 0), std::exception);
-	}
+    SUBCASE("Send with exception") {
+        CHECK_THROWS_AS(td.sendMessageByChunk("", 0, num_drone), exception);
+    }
 }
 
 TEST_CASE("TransferData::sendMetaData function") {
-	TransferData td;
-	Meta_Data<1> metaData(&vv4);
+    Meta_Data<1> metaData(&vv4);
 
+    SUBCASE("Successful send") {
+        CHECK(td.sendMetaData(metaData, num_drone) == true);
+    }
 	SUBCASE("Successful send") {
-		CHECK(td.sendMetaData(metaData) == true);
+		CHECK(td.sendMetaData(metaData, num_drone) == true);
 	}
 
 }
 
-TEST_CASE("TransferData::sendData function") {
-	TransferData td;
-	string data = "Test data";
-	Meta_Data<1> metaData(&vv4);
 
-	SUBCASE("Successful send") {
-		CHECK(td.sendData(data, metaData) == true);
-	}
+TEST_CASE("TransferData::sendData function") {
+    //TransferData td;
+    string data = "Test data";
+    Meta_Data<1> metaData(&vv4);
+
+    SUBCASE("Successful send") {
+        CHECK(td.sendData(data, metaData, num_drone) == true);
+    }
 
 }
 
 TEST_CASE("TransferData::sendsAsynchronously function") {
-	TransferData td;
 	string data = "Test data for async send";
 	Meta_Data<1> metaData(&vv4);
 	size_t numChunks = 3;
@@ -99,33 +100,32 @@ TEST_CASE("TransferData::sendsAsynchronously function") {
 	size_t numThreads = 2;
 
 	SUBCASE("Successful asynchronous send") {
-		CHECK_NOTHROW(td.sendsAsynchronously(data, metaData, numChunks, chunk_size, numThreads));
+		CHECK_NOTHROW(td.sendsAsynchronously(data, metaData, numChunks, chunk_size, numThreads, num_drone));
 	}
 
 	SUBCASE("Asynchronous send with failure") {
 		// Simulate failure by sending empty data
 		string failingData = "";
 
-		CHECK_THROWS_AS(td.sendsAsynchronously(failingData, metaData, numChunks, chunk_size, numThreads), runtime_error);
+		CHECK_THROWS_AS(td.sendsAsynchronously(failingData, metaData, numChunks, chunk_size, numThreads, num_drone), runtime_error);
 	}
 }
-
 TEST_CASE("TransferData::sendsSynchronously function") {
-	TransferData td;
-	string data = "Test data for sync send";
-	Meta_Data<1> metaData(&vv4);
+    //TransferData td;
+    string data = "Test data for sync send";
+    Meta_Data<1> metaData(&vv4);
 
-	SUBCASE("Successful synchronous send") {
-		CHECK_NOTHROW(td.sendsSynchronously(data, metaData));
-	}
+    SUBCASE("Successful synchronous send") {
+        CHECK_NOTHROW(td.sendsSynchronously(data, metaData, num_drone));
+    }
 
-	SUBCASE("Synchronous send with exception") {
-		CHECK_THROWS_AS(td.sendsSynchronously("", metaData), runtime_error);
-	}
+    SUBCASE("Synchronous send with exception") {
+        CHECK_THROWS_AS(td.sendsSynchronously("", metaData, num_drone), runtime_error);
+    }
 }
 
 TEST_CASE("TransferData::preparingTheDataForTransferring function") {
-	TransferData td;
+	//TransferData td;
 	string data = "Test data for transfer";
 	Meta_Data<1> metaData(&vv4);
 
@@ -134,18 +134,23 @@ TEST_CASE("TransferData::preparingTheDataForTransferring function") {
 		istringstream input("1");
 		cin.rdbuf(input.rdbuf());
 
-		CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData));
-	}
+		SUBCASE("Preparing data for synchronous transfer") {
+			// Redirect cin for testing
+			istringstream input("1");
+			cin.rdbuf(input.rdbuf());
 
-	SUBCASE("Preparing data for asynchronous transfer") {
-		// Redirect cin for testing
-		istringstream input("2");
-		cin.rdbuf(input.rdbuf());
+			CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData, num_drone));
+		}
 
-		CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData));
+		SUBCASE("Preparing data for asynchronous transfer") {
+			// Redirect cin for testing
+			istringstream input("2");
+			cin.rdbuf(input.rdbuf());
+
+			CHECK_NOTHROW(td.preparingTheDataForTransferring(data, metaData, num_drone));
+		}
 	}
 }
-
 TEST_CASE("TransferData::addChunk and getCollectedData functions") {
 	TransferData td;
 

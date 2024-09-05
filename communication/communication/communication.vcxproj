@@ -129,6 +129,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Data_transferring\TransferData.cpp" />
+    <ClCompile Include="..\Data_transferring\TransferData_test.cpp" />
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager.cpp" />
+    <ClCompile Include="..\Socket_communication\DroneCommunicationManager_test.cpp" />
     <ClCompile Include="..\Data_Compression\CompressionTests.cpp" />
     <ClCompile Include="..\Data_Compression\HuffmanCompression.cpp" />
     <ClCompile Include="..\Data_Compression\HuffmanNode.cpp" />
@@ -136,10 +140,6 @@
     <ClCompile Include="..\Data_Compression\ImageConversions.cpp" />
     <ClCompile Include="..\Data_Compression\ImageConversionTests.cpp" />
     <ClCompile Include="..\Data_Compression\RescueTests.cpp" />
-    <ClCompile Include="..\Data_transferring\TransferData.cpp" />
-    <ClCompile Include="..\Data_transferring\TransferData_test.cpp" />
-    <ClCompile Include="..\Socket\Server_function.cpp" />
-    <ClCompile Include="..\Socket\Socket_test.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -159,14 +159,14 @@
     <ClCompile Include="VecMessage_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Data_transferring\TransferData.h" />
+    <ClInclude Include="..\Socket_communication\DroneCommunicationManager.h" />
     <ClInclude Include="..\Data_Compression\Data_Compression.h" />
     <ClInclude Include="..\Data_Compression\HuffmanCompression.h" />
     <ClInclude Include="..\Data_Compression\HuffmanNode.h" />
     <ClInclude Include="..\Data_Compression\HuffmanRescue.h" />
     <ClInclude Include="..\Data_Compression\Image.h" />
     <ClInclude Include="..\Data_Compression\ImageConversions.h" />
-    <ClInclude Include="..\Data_transferring\TransferData.h" />
-    <ClInclude Include="..\Socket\Server_function.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />

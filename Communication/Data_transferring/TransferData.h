@@ -9,22 +9,24 @@
 #include <bitset>
 #include <stdexcept> // This for std::runtime_error
 #include "../Communication/Meta_Data.h" 
+#include "../Socket_communication/DroneCommunicationManager.h" 
 constexpr size_t MAX_DATA_SIZE_FOR_THREAD = 4;//4 bytes 1048576=1mb
 constexpr size_t OPTION_TO_SEND = 2; //sends Asynchronously
 using namespace std;
 
 class TransferData {
-public:
+
+public:	
 	int num_cores();
 	void waiting(vector<future<bool>>& futures);
-	bool sendMessageByChunk(const string& chunk, size_t chunkIndex);
+	bool sendMessageByChunk(const string& chunk, size_t chunkIndex, int num_drone);
 	template<size_t D>
-	bool sendMetaData(const Meta_Data<D>& metaData)
+	bool sendMetaData(const Meta_Data<D>& metaData, int num_drone)
 	{
 		try
 		{
-			//Noa function
-			this_thread::sleep_for(chrono::milliseconds(100));
+			int result = droneCommunicationManager->send_mataData_to_drone(num_drone, metaData);
+			//Add verification of whether the data was sent			this_thread::sleep_for(chrono::milliseconds(100));
 			cout << "Sent metaData validation " << endl; //<< metaData 
 			return true;
 		}
@@ -34,13 +36,16 @@ public:
 		}
 	}
 	template<size_t D>
-	bool sendData(const string& data, const Meta_Data<D>& metaData) {
+	bool sendData(const string& data, const Meta_Data<D>& metaData, int num_drone) {
 		try
 		{
 			if (data.empty()) {
 				throw runtime_error("Data string is empty");
 			}
-			//Noa function
+			int result = droneCommunicationManager->send_message_to_drone(num_drone, data.c_str());
+			//Add verification of whether the data was sent
+			result = droneCommunicationManager->send_mataData_to_drone(num_drone, metaData);
+			//Add verification of whether the data was sent
 			return true;
 		}
 		catch (const exception&)
@@ -49,7 +54,7 @@ public:
 		}
 	}
 	template<size_t D>
-	void sendsAsynchronously(const string& dataAsStr, const Meta_Data<D>& metaData, size_t numChunks, size_t chunk_size, size_t numThreads)
+	void sendsAsynchronously(const string& dataAsStr, const Meta_Data<D>& metaData, size_t numChunks, size_t chunk_size, size_t numThreads, int num_drone)
 	{
 		if (dataAsStr.empty()) {
 			throw std::runtime_error("Data is empty");
@@ -74,22 +79,22 @@ public:
 				}
 			}
 			// Submit the block in a new thread
-			futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i));
+			futures.push_back(async(launch::async, &TransferData::sendMessageByChunk, this, chunk, i,num_drone));
 		}
-		futures.push_back(async(launch::async, &TransferData::sendMetaData<D>, this, std::cref(metaData)));
+		futures.push_back(async(launch::async, &TransferData::sendMetaData<D>, this, std::cref(metaData),num_drone));
 		// Wait for all remaining threads to finish
 		waiting(futures);
 	}
 	template<size_t D>
-	void sendsSynchronously(const string& dataAsStr, const Meta_Data<D>& metaData)
+	void sendsSynchronously(const string& dataAsStr, const Meta_Data<D>& metaData, int num_drone)
 	{
 		if (dataAsStr.empty()) {
 			throw runtime_error("Data is empty");
 		}
-		this->sendData(dataAsStr, metaData);
+		this->sendData(dataAsStr, metaData, num_drone);
 	}
 	template<size_t D>
-	void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data<D>& metaData)
+	void preparingTheDataForTransferring(const string& dataAsStr, const Meta_Data<D>& metaData, int num_drone)
 	{
 		//count of threads.
 		const int num_cores = this->num_cores(); // The maximum number of threads
@@ -107,10 +112,10 @@ public:
 		size_t option = OPTION_TO_SEND;
 		if (option == 1)
 		{
-			sendsSynchronously(dataAsStr, metaData);
+			sendsSynchronously(dataAsStr, metaData, num_drone);
 		}
 		else
-			sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores);
+			sendsAsynchronously(dataAsStr, metaData, numChunks, chunk_size, num_cores, num_drone);
 	}
 	void addChunk(const string& chunk, size_t chunkIndex);
 	string getCollectedData();
@@ -118,4 +123,5 @@ public:
 private:
 	map<size_t, string> collectedDataMap;
 	mutex dataMutex;
+    DroneCommunicationManager* droneCommunicationManager=new DroneCommunicationManager();
 };
