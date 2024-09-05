@@ -63,66 +63,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\DynamicBuffer.cpp">
+    <ClCompile Include="DynamicBuffer.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Event.cpp">
+    <ClCompile Include="Event.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileHandler.cpp">
+    <ClCompile Include="FileHandler.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileInfo.cpp">
+    <ClCompile Include="FileInfo.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MasterEventManager.cpp">
+    <ClCompile Include="MasterEventManager.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.cpp">
+    <ClCompile Include="Message.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MockDataManager.cpp">
+    <ClCompile Include="MockDataManager.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\SlaveEventManager.cpp">
+    <ClCompile Include="SlaveEventManager.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\doctest.h">
+    <ClInclude Include="doctest.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\dynamicBuffer.h">
+    <ClInclude Include="dynamicBuffer.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\event.h">
+    <ClInclude Include="event.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileHandler.h">
+    <ClInclude Include="fileHandler.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileInfo.h">
+    <ClInclude Include="fileInfo.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\masterEventManager.h">
+    <ClInclude Include="masterEventManager.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.h">
+    <ClInclude Include="Message.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageParams.h">
+    <ClInclude Include="MessageParams.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageType.h">
+    <ClInclude Include="MessageType.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\mockDataManager.h">
+    <ClInclude Include="mockDataManager.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Priority.h">
+    <ClInclude Include="Priority.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\slaveEventManager.h">
+    <ClInclude Include="slaveEventManager.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>

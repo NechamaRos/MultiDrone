@@ -127,28 +127,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\doctest.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\dynamicBuffer.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\event.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileHandler.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileInfo.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\masterEventManager.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageParams.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageType.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\mockDataManager.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Priority.h" />
-    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\slaveEventManager.h" />
+    <ClInclude Include="doctest.h" />
+    <ClInclude Include="dynamicBuffer.h" />
+    <ClInclude Include="event.h" />
+    <ClInclude Include="fileHandler.h" />
+    <ClInclude Include="fileInfo.h" />
+    <ClInclude Include="masterEventManager.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageParams.h" />
+    <ClInclude Include="MessageType.h" />
+    <ClInclude Include="mockDataManager.h" />
+    <ClInclude Include="Priority.h" />
+    <ClInclude Include="slaveEventManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\DynamicBuffer.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Event.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileHandler.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileInfo.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MasterEventManager.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MockDataManager.cpp" />
-    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\SlaveEventManager.cpp" />
+    <ClCompile Include="DynamicBuffer.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="FileHandler.cpp" />
+    <ClCompile Include="FileInfo.cpp" />
+    <ClCompile Include="MasterEventManager.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MockDataManager.cpp" />
+    <ClCompile Include="SlaveEventManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
