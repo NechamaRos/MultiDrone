@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Scheduler">
+      <UniqueIdentifier>{78043801-badf-463a-b0df-4a974e8666d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\QueueManagement">
+      <UniqueIdentifier>{98d2ea06-79f0-4ce3-9019-2e4b2fff5f58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MotionControl">
+      <UniqueIdentifier>{b48ba11c-7727-4ccd-819c-501fb8b4f038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MessageTemplate">
+      <UniqueIdentifier>{75020150-ba30-415c-ba9e-c19d462e8efb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MapCreator">
+      <UniqueIdentifier>{4fb06026-9376-484f-9200-c84b4e3e8798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{5d1f5a64-edac-4a27-b530-f4ce043d97e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ErrorHandling">
+      <UniqueIdentifier>{c708ece6-5463-437f-a6b6-f4e59035b159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DroneTrack">
+      <UniqueIdentifier>{b168b3a4-c031-4b2f-9d03-d534c6435208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scheduler">
+      <UniqueIdentifier>{e8ae3445-d90a-42b0-9a81-5f966ddfa684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\QueueManagement">
+      <UniqueIdentifier>{909a77b1-3950-422c-8141-e5c94db47db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MotionControl">
+      <UniqueIdentifier>{7d801908-7e8b-4e5b-8055-6f9b0b582456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MessageTemplate">
+      <UniqueIdentifier>{f9640ab2-2f10-4d48-93ea-4a76d94c0e75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MapCreator">
+      <UniqueIdentifier>{6cda3e81-0e11-4593-bc70-3aecf002737f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{7e58d928-439e-4dd0-85c0-d16e8f4df96f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ErrorHandling">
+      <UniqueIdentifier>{65db8d92-5692-4397-a1f7-f008e44902ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DroneTrack">
+      <UniqueIdentifier>{2854cb75-ba29-441b-8dff-4947a76a6041}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\DynamicBuffer.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Event.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileHandler.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\FileInfo.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MasterEventManager.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MockDataManager.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\SlaveEventManager.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\doctest.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\dynamicBuffer.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\event.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileHandler.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\fileInfo.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\masterEventManager.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Message.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageParams.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\MessageType.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\mockDataManager.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\Priority.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\‏‏Log_Infrastructure - עותק\Log_Infrastructure\slaveEventManager.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
