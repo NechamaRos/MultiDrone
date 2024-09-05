@@ -664,7 +664,7 @@ void bootWhenTheDeviceIsTurnedOn(void)
 void saveTheQuadTreeToDisk(QuadTree_t* pointerToQuadTreeTable)
 {
     FILE* file;
-    errno_t err = fopen_s(&file, ".\\diskMoceFolder\\DiskQuedTree.txt", "w");
+    errno_t err = fopen_s(&file, ".\\diskMockFolder\\DiskQuedTree.txt", "w");
     //if didn't succeed to open
     if (err != 0)
     {
@@ -678,7 +678,7 @@ void saveTheQuadTreeToDisk(QuadTree_t* pointerToQuadTreeTable)
 void saveTheLinkedListToDisk(LinkedList_t* pointerToLinkedListTable)
 {
     FILE* file;
-    errno_t err = fopen_s(&file, ".\\diskMoceFolder\\DisklinkedList.txt", "w");
+    errno_t err = fopen_s(&file, ".\\diskMockFolder\\DisklinkedList.txt", "w");
     // If failed to open the file
     if (err != 0)
     {
@@ -705,7 +705,7 @@ int* addImgToDisk(Point_t TL, Point_t BR, char* imgData, int imgId)
     FILE* file;
     errno_t err;
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, ".\\diskMoceFolder\\Disk.txt", "a");
+    err = fopen_s(&file, ".\\diskMockFolder\\Disk.txt", "a");
     if (err != 0) {
         // Print an error message using perror or fprintf
 
@@ -727,7 +727,7 @@ void wirteItWasTrunedOn(int num)
     FILE* file;
     errno_t err;
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, ".\\diskMoceFolder\\FlagFlush.txt", "w");
+    err = fopen_s(&file, ".\\diskMockFolder\\FlagFlush.txt", "w");
     if (err != 0) {
         // Print an error message using perror or fprintf
         printf("the file didnt open try again ---------------Exceptin");
@@ -746,7 +746,7 @@ int readingIsThisTheFirstTimeToTurnOn()
     FILE* file;
     errno_t err;
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, ".\\diskMoceFolder\\FlagFlush.txt", "w");
+    err = fopen_s(&file, ".\\diskMockFolder\\FlagFlush.txt", "w");
     if (err != 0) {
         // Print an error message using perror or fprintf
         printf("the file didnt open try again ---------------Exceptin");
@@ -796,7 +796,7 @@ void throwExceptiontoFile(Exception exception)
     FILE* file;
     errno_t err;
     // Attempt to open the file using fopen_s
-    err = fopen_s(&file, ".\\diskMoceFolder\\Exceptions.txt", "a");
+    err = fopen_s(&file, ".\\diskMockFolder\\Exceptions.txt", "a");
     if (err != 0) {
         // Print an error message using perror or fprintf
         printf("the file didnt open try again ---------------Exceptin");
