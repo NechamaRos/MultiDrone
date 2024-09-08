@@ -13,41 +13,41 @@ TEST_CASE("Testing of not valid input")
 
 }
 //
-//TEST_CASE("good homography matrix for 4 points in vectors- like OpenCV")
-//{
-//	int a1x = 100, a1y = 202;
-//	int b1x = 350, b1y = 701;
-//	int c1x = 170, c1y = 300;
-//	int d1x = 120, d1y = 400;
-//	
-//	int a2x = 150, a2y = 680;
-//	int b2x = 250, b2y = 150;
-//	int c2x = 500, c2y = 240;
-//	int d2x = 180, d2y = 320;
-//
-//
-//	vector<Point2f> points1 = { { static_cast<float>(a1x), static_cast<float>(a1y)},{static_cast<float>(b1x),static_cast<float>(b1y)},{static_cast<float>(c1x), static_cast<float>(c1y)},{static_cast<float>(d1x),static_cast<float>(d1y)} };
-//	vector<Point2f> points2 = { { static_cast<float>(a2x), static_cast<float>(a2y)},{static_cast<float>(b2x),static_cast<float>(b2y)},{static_cast<float>(c2x), static_cast<float>(c2y)},{static_cast<float>(d2x),static_cast<float>(d2y)} };
-//	vector<MPoint> v1 = { {a1x, a1y},{b1x,b1y},{c1x, c1y},{d1x,d1y} };
-//	vector<MPoint> v2 = { {a2x, a2y},{b2x,b2y},{c2x, c2y},{d2x,d2y} };
-//
-//	cv::Mat H = cv::findHomography(points1, points2);
-//	vector<double> myH = (homography(v1, v2));
-//	
-//	CHECK(H.rows * H.cols == myH.size());
-//
-//	cv::Mat H2 = cv::findHomography(points1, points2, cv::RANSAC, 3);
-//
-//
-//	int a = 0;
-//	for (int i = 0; i <H.rows; ++i)
-//		for (int j = 0; j < H.cols; j++)
-//		{
-//			double s = H.at<double>(i, j)- myH.at(a++) ;
-//			//================
-//			CHECK(s < DBL_EPSILON);
-//		}
-//}
+TEST_CASE("good homography matrix for 4 points in vectors- like OpenCV")
+{
+	int a1x = 100, a1y = 202;
+	int b1x = 350, b1y = 701;
+	int c1x = 170, c1y = 300;
+	int d1x = 120, d1y = 400;
+	
+	int a2x = 150, a2y = 680;
+	int b2x = 250, b2y = 150;
+	int c2x = 500, c2y = 240;
+	int d2x = 180, d2y = 320;
+
+
+	vector<Point2f> points1 = { { static_cast<float>(a1x), static_cast<float>(a1y)},{static_cast<float>(b1x),static_cast<float>(b1y)},{static_cast<float>(c1x), static_cast<float>(c1y)},{static_cast<float>(d1x),static_cast<float>(d1y)} };
+	vector<Point2f> points2 = { { static_cast<float>(a2x), static_cast<float>(a2y)},{static_cast<float>(b2x),static_cast<float>(b2y)},{static_cast<float>(c2x), static_cast<float>(c2y)},{static_cast<float>(d2x),static_cast<float>(d2y)} };
+	vector<MPoint> v1 = { {a1x, a1y},{b1x,b1y},{c1x, c1y},{d1x,d1y} };
+	vector<MPoint> v2 = { {a2x, a2y},{b2x,b2y},{c2x, c2y},{d2x,d2y} };
+
+	cv::Mat H = cv::findHomography(points1, points2);
+	vector<double> myH = (homography(v1, v2));
+	
+	CHECK(H.rows * H.cols == myH.size());
+
+	cv::Mat H2 = cv::findHomography(points1, points2, cv::RANSAC, 3);
+
+
+	int a = 0;
+	for (int i = 0; i <H.rows; ++i)
+		for (int j = 0; j < H.cols; j++)
+		{
+			double s = H.at<double>(i, j)-myH.at(a++);
+			CHECK(s < 0.1);
+			CHECK(s > -0.1);
+		}
+}
 
 TEST_CASE("print an empty matrix if the point is colinary")
 {
@@ -95,7 +95,7 @@ TEST_CASE("check if the number of the good point of the homography same as OpenC
 		}
 }
 
-TEST_CASE("test of the function- 'checkIfOnSameLine' ")
+TEST_CASE("test the function- 'checkIfOnSameLine' ")
 {
 	vector<MPoint> v1 = { {100, 100},{200,200},{300, 300},{400,400},{500,500} };
 	vector<MPoint> v2 = { {105, 98},{250,320},{410, 120},{520,120},{360,266} };
