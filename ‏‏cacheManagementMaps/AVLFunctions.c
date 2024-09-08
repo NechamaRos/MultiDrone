@@ -4,12 +4,15 @@
 #include "cacheManagement.h"
 
 extern controlBlock_t* controlBlock;
+RangeInDataStorage_t r;
+
 
 //compare by mapID
 int compareMapInfo(const void* a, const void* b) {
 	MapInfo_t* mapInfoA = (MapInfo_t*)a;
 	MapInfo_t* mapInfoB = (MapInfo_t*)b;
 	return mapInfoA->mapID - mapInfoB->mapID;
+
 }
 
 //compare by location
@@ -23,7 +26,17 @@ int compareRangeByLocation(const void* a, const void* b) {
 int compareRangeBySize(const void* a, const void* b) {
 	RangeInDataStorage_t* rangeA = (RangeInDataStorage_t*)a;
 	RangeInDataStorage_t* rangeB = (RangeInDataStorage_t*)b;
-	return  rangeA->sizeOfBytes - rangeB->sizeOfBytes;
+	if (rangeA->sizeOfBytes - rangeB->sizeOfBytes != 0)
+	{
+		return rangeA->sizeOfBytes - rangeB->sizeOfBytes;
+	}
+	else if (rangeA->location - rangeB->location == 0)
+	{
+		return 0;
+	}
+	else {
+		return rangeA->location - rangeB->location;
+	}
 }
 #pragma endregion
 
@@ -126,7 +139,7 @@ void addNode(AVLTree_t* tree, void* data)
 
 #pragma region print functions
 
-void printMapInfo(void* data) {
+void printMapInfo(const void* data) {
 	MapInfo_t* mapInfo = (MapInfo_t*)data;
 	printLinkedList(mapInfo->linkedList);
 	printf("MapID: %d, MapSizeInBytes: %d\n", mapInfo->mapID, mapInfo->mapSizeInBytes);
@@ -150,10 +163,12 @@ void printRangeInDataStorage(const void* data) {
 }
 
 void printMapInfoTree(AVLTree_t* tree) {
+	printf("printMapInfoTree occurred\n");
 	inOrderTraversal(tree->root, printMapInfo);
 }
 
 void printRangeInDataStorageTree(AVLTree_t* tree) {
+	printf("printRangeInDataStorageTree occurred\n");
 	inOrderTraversal(tree->root, printRangeInDataStorage);
 }
 #pragma endregion
@@ -261,8 +276,12 @@ void deleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* range)
 	printf("\n- ----------- - - - -\n");
 	printf("\nrange->location %d\n", range->location);
 	printf("\nrange->sizeOfBytes %d\n", range->sizeOfBytes);
-
-	RecursiveDeleteNodeFromEmptyPlacesBySize(controlBlock->emptyPlacesBySize->root, range);
+	if (range == (RangeInDataStorage_t*)(controlBlock->emptyPlacesBySize->root->data))
+		controlBlock->emptyPlacesBySize->root = NULL;
+	else
+	{
+		RecursiveDeleteNodeFromEmptyPlacesBySize(controlBlock->emptyPlacesBySize->root, range);
+	}
 }
 
 //wrap function of delete from MapsSortedByID
@@ -291,15 +310,15 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesByLocation(AVLNode_t* root, int loc
 		// Node to be deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
-			free(root->data); // Free the data if necessary
-			free(root);
+			//free(root->data); // Free the data if necessary
+			//free(root);
 			return temp;
 		}
 
 		else if (root->right == NULL) {
 			AVLNode_t* temp = root->left;
-			free(root->data); // Free the data if necessary
-			free(root);
+			//free(root->data); // Free the data if necessary
+			//free(root);
 			return temp;
 		}
 
@@ -354,14 +373,14 @@ AVLNode_t* RucursiveDeleteMapFromMapsSortedByID(AVLNode_t* root, int mapID) {
 		// Node to be deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
-			free(root->data); // Free the data if necessary
-			free(root);
+			//free(root->data); // Free the data if necessary
+			//free(root);
 			return temp;
 		}
 		else if (root->right == NULL) {
 			AVLNode_t* temp = root->left;
-			free(root->data); // Free the data if necessary
-			free(root);
+			//free(root->data); // Free the data if necessary
+			//free(root);
 			return temp;
 		}
 
@@ -430,11 +449,11 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 		// Node to be deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
-				//if (root->data != NULL)
-			//{
-			//	free(root->data); // Free the data if necessary
-				//free(root);
-			//}
+			//if (root->data != NULL)
+		//{
+		//	free(root->data); // Free the data if necessary
+			//free(root);
+		//}
 
 			return temp;
 		}
@@ -453,8 +472,8 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 		printf("s %d\n", ((RangeInDataStorage_t*)temp->data)->location);
 		printf("l %d\n", ((RangeInDataStorage_t*)temp->data)->sizeOfBytes);
 		root->data = temp->data;//הבן הימני והאבא שווים
-		root->right = RecursiveDeleteNodeFromEmptyPlacesBySize(root->right,(RangeInDataStorage_t*)temp->data);
-		printRangeInDataStorage(root->right->data);
+		root->right = RecursiveDeleteNodeFromEmptyPlacesBySize(root->right, (RangeInDataStorage_t*)(temp->data));
+		//printRangeInDataStorage(root->right->data);
 		printf("\n");
 		//printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 		printf("\n");
@@ -487,20 +506,26 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 	return root;
 }
 
+
 //update range when I filled only part of the range
-void UpdateNodeInRangeByLocation(AVLNode_t* root, AVLNode_t* nodeToUpdate, int updatedSize)
+void UpdateNodeInRangeByLocation(AVLNode_t* nodeToUpdate, int updatedSize)
 {
 	((RangeInDataStorage_t*)&nodeToUpdate->data)->sizeOfBytes = updatedSize;
 }
 
 //update range when I filled only part of the range
-void UpdateNodeInRangeBySize(AVLNode_t* root, RangeInDataStorage_t* nodeToUpdate, int updatedSize)
+void UpdateNodeInRangeBySize(RangeInDataStorage_t* nodeToUpdate, int updatedSize)
 {
-	RangeInDataStorage_t* r = (RangeInDataStorage_t*)malloc(sizeof(RangeInDataStorage_t)); ;
-	r->location = nodeToUpdate->location;
-	r->sizeOfBytes = updatedSize;
+	r.location = nodeToUpdate->location;
+	r.sizeOfBytes = updatedSize;
 	deleteNodeFromEmptyPlacesBySize(nodeToUpdate);
-	addNode(root, (AVLNode_t*)&r);
+	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+	addNode(controlBlock->emptyPlacesBySize, (AVLNode_t*)&r);
+	nodeToUpdate->sizeOfBytes = updatedSize;
+
+	//addNode(controlBlock->emptyPlacesBySize, (AVLNode_t*)nodeToUpdate);
+
+	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 }
 
 

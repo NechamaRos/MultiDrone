@@ -124,9 +124,9 @@ AVLNode_t* FindMapInfoByID(AVLNode_t* root, int mapID);
 
 AVLNode_t* FindRangeByLocation(AVLNode_t* root, int location);
 
-void UpdateNodeInRangeBySize(AVLNode_t* root, AVLNode_t* nodeToUpdate, int updatedSize);
+void UpdateNodeInRangeBySize(RangeInDataStorage_t* nodeToUpdate, int updatedSize);
 
-void UpdateNodeInRangeByLocation(AVLNode_t* root, AVLNode_t* nodeToUpdate, int updatedSize);
+void UpdateNodeInRangeByLocation(AVLNode_t* nodeToUpdate, int updatedSize);
 
 AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInDataStorage_t* item);
 
@@ -160,6 +160,9 @@ int calculateIndexInQueueArray(int size);
 
 void initControlBlock();
 
+MapInfo_t* removeMaxMapFromQueueArray();
+
+
 /////
 
 void MakesRoomForCurrentIncome(int size);
@@ -172,4 +175,5 @@ void fetchFromDisk(int id, int offset, int location, int size);
 
 void insertToQueueArray(MapInfo_t* mapInfo);
 
+void ReadNormalMap(int id, int size);
 

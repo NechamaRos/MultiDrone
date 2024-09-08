@@ -25,9 +25,9 @@ void enqueue(Queue_t* queue, MapInfo_t mapInfo) {
 	}
 	else {
 		// הוספת פריט בסוף התור
-		queue->rear->next = newNode;
+		queue->rear->next = newNode->next;
 		queue->rear = newNode;
-	}
+	}//חיבלתי בפונקציה הזו
 }
 
 // פונקציה להסרת פריט מהתור (dequeue)
@@ -64,7 +64,7 @@ void freeQueue(Queue_t* queue) {
 
 int calculateIndexInQueueArray(int size) {
 	int index = size / SIZE_OF_RANGE_IN_QUEUE_ARRAY;
-	if (index > SIZE_OF_QUEUE_ARRAY)
+	if (index >= SIZE_OF_QUEUE_ARRAY)
 		index = SIZE_OF_QUEUE_ARRAY - 1;
 	printf("index in array - %d \n", index);
 	return index;
@@ -76,9 +76,9 @@ void insertToQueueArray(MapInfo_t* mapInfo) {
 
 MapInfo_t* removeMaxMapFromQueueArray() {
 
-	int indexInQueueArray = SIZE_OF_RANGE_IN_QUEUE_ARRAY - 1;
+	int indexInQueueArray = SIZE_OF_QUEUE_ARRAY - 1;
 	MapInfo_t* temp = (MapInfo_t*)malloc(sizeof(MapInfo_t));
-
+	
 	while (indexInQueueArray >= 0)
 	{
 		if (controlBlock->queueArray[indexInQueueArray]->front == NULL) {

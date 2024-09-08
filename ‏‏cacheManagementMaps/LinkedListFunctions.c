@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "cacheManagement.h"
+#include <stdbool.h>
+
 
 extern controlBlock_t* controlBlock;
 
@@ -38,22 +40,30 @@ void printLinkedList(Node_t* head) {
 
 // for free all the linkedList memory
 void freeLinkedList(Node_t* head) {
+	//את המקום הראשון ברשימה המקושרת לא צריך להוסיף לסטרקטים
 	Node_t* temp;
+	RangeInDataStorage_t* r;
+	bool b = false;
 	while (head != NULL) {
 		temp = head;
-		addNode(controlBlock->emptyPlacesByLocation, &((RangeInDataStorage_t*)temp));
+		r = (RangeInDataStorage_t*)temp;
+		//the function is not success to send the data
+		if (b == true)
+		{
+			addNode(controlBlock->emptyPlacesByLocation, r);
 
-		addNode(controlBlock->emptyPlacesBySize, &((RangeInDataStorage_t*)temp));
-		if (FindRangeByLocation(controlBlock->emptyPlacesByLocation->root,(RangeInDataStorage_t*)temp ) != NULL)
+			addNode(controlBlock->emptyPlacesBySize, r);
+		}
+		b = true;
+		/*if (FindRangeByLocation(controlBlock->emptyPlacesByLocation->root, r->location) != NULL)
 			printf("true\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		else
-			printf("false\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-		printf(" %d \n",((RangeInDataStorage_t*)(controlBlock->emptyPlacesByLocation->root->data))->sizeOfBytes);
-		printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
+			printf("false\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");*/
+		printf(" %d \n", ((RangeInDataStorage_t*)(controlBlock->emptyPlacesByLocation->root->data))->sizeOfBytes);
 		head = (Node_t*)head->next;
-		free(temp);
-		
 	}
+	printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
+	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 }
 #pragma endregion
 

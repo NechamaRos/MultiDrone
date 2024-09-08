@@ -10,30 +10,41 @@ void removeMapFromCache(int id)
 	AVLNode_t* map = FindMapInfoByID(controlBlock->MapsSortedByID->root, id);
 
 	//If the map is found
-	if (map->data != NULL)
+	if (map != NULL)
 	{
 		MapInfo_t* mi = (MapInfo_t*)malloc(sizeof(MapInfo_t));
 		mi->linkedList = ((MapInfo_t*)map->data)->linkedList;
 		mi->mapID = ((MapInfo_t*)map->data)->mapID;
 		mi->mapSizeInBytes = ((MapInfo_t*)map->data)->mapSizeInBytes;
 
-
 		//delete the map from MapsSortedByID, and free the linkedList
-		deleteNodeFromMapsSortedByID(mi->mapID);
+		printMapInfoTree(controlBlock->MapsSortedByID);
+		deleteNodeFromMapsSortedByID(mi->mapID);//this function is not work
+		printMapInfoTree(controlBlock->MapsSortedByID);
 		freeLinkedList(mi->linkedList);
 
 		//increase the counter of empty places in cache
 		controlBlock->EmptyPlaceInCache += mi->mapSizeInBytes;
 		free(mi);
-
 	}
 }
 
 ValuesOfReadingMap_t ReadPieceOfMap(Node_t* linkedListOfLocations, int size, int offset, int id)
 {
-	//The head of binaryTree of empty places - the max empty place
-	RangeInDataStorage_t* placeToInsert = findMax(controlBlock->emptyPlacesBySize);
+	printf("- = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = \n");
+	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+	printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
 
+	//The head of binaryTree of empty places - the max empty place
+	AVLNode_t* maxPlace = findMax(controlBlock->emptyPlacesBySize->root);
+
+	RangeInDataStorage_t* placeToInsert = (RangeInDataStorage_t*)(maxPlace->data);
+
+	printf("find max - \n");
+	printRangeInDataStorage(placeToInsert);
+
+	Node_t* linkedListTail = linkedListOfLocations;
+	//printf("max - location %d, size %d \n",placeToInsert->location, placeToInsert->sizeOfBytes);
 	//item of reading map state
 	ValuesOfReadingMap_t mapReadingInfo;
 
@@ -42,44 +53,21 @@ ValuesOfReadingMap_t ReadPieceOfMap(Node_t* linkedListOfLocations, int size, int
 	//If the size of the map is larger than the empty space to insert
 	if (placeToInsert->sizeOfBytes > size)
 	{
-		//remove the empty place from the empty places sorted by size
-		deleteNodeFromEmptyPlacesBySize(placeToInsert);
+		printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 
-		//find the empty place in emptyPlacesByLocation
-		emptyPlaceInLocations = FindRangeByLocation(controlBlock->emptyPlacesByLocation, placeToInsert->location);
-
-		//remove the empty place from the empty places sorted by location
-		deleteNodeFromEmptyPlacesByLocation(((RangeInDataStorage_t*)&emptyPlaceInLocations->data)->location);
-
-		//add node of location and size to the map locations linkedList
-		insertInTail(linkedListOfLocations, placeToInsert->location, placeToInsert->sizeOfBytes);
-
-		//fetch of insert - id, offset of map, location in cache, and size of bytes  
-		fetchFromDisk(id, offset, placeToInsert->location, placeToInsert->sizeOfBytes);
-
-		//set values of state of reading map
-
-		//linkedList = linked list with new location
-		mapReadingInfo.linkedList = linkedListOfLocations;
-
-		//offset = offset + the bytes read
-		mapReadingInfo.offset = offset + placeToInsert->sizeOfBytes;
-
-		return mapReadingInfo;
-	}
-	else if (size > placeToInsert->sizeOfBytes)
-	{
 		//update the max-size node in emptyPlacesBySize with the new size
-		UpdateNodeInRangeBySize(controlBlock->emptyPlacesBySize, controlBlock->emptyPlacesBySize, placeToInsert->sizeOfBytes - size);
+		UpdateNodeInRangeBySize(maxPlace->data, placeToInsert->sizeOfBytes - size);
 
-		//find the empty place in emptyPlacesByLocation
-		emptyPlaceInLocations = FindRangeByLocation(controlBlock->emptyPlacesByLocation, placeToInsert->location);
-		
+		printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+
 		//update the max-size node in emptyPlacesByLocation with the new size
-		UpdateNodeInRangeByLocation(controlBlock->emptyPlacesByLocation, emptyPlaceInLocations, placeToInsert->sizeOfBytes - size);
+		//UpdateNodeInRangeByLocation(placeToInsert->location, placeToInsert->sizeOfBytes - size);
+
+		printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
+
 
 		//add node of location and size to the map locations linkedList
-		insertInTail(linkedListOfLocations, placeToInsert->location, size);
+		insertInTail(&linkedListTail, placeToInsert->location, size);
 
 		//fetch of insert - id, offset of map, location in cache, and size of bytes  
 		fetchFromDisk(id, offset, placeToInsert->location, size);
@@ -90,7 +78,44 @@ ValuesOfReadingMap_t ReadPieceOfMap(Node_t* linkedListOfLocations, int size, int
 		mapReadingInfo.linkedList = linkedListOfLocations;
 
 		//offset = offset + the bytes read
-		mapReadingInfo.offset = offset + size;
+		mapReadingInfo.offset = offset + placeToInsert->sizeOfBytes;
+
+		mapReadingInfo.BitsLeftToRead = 0;
+
+		return mapReadingInfo;
+	}
+	else if (size >= placeToInsert->sizeOfBytes)
+	{
+		//remove the empty place from the empty places sorted by size
+		deleteNodeFromEmptyPlacesBySize(placeToInsert);
+
+		printf("after delete max from emptyPlacesBySize\n");
+
+		printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+
+
+		//this function not work, but I need to add this line
+
+		//remove the empty place from the empty places sorted by location
+		deleteNodeFromEmptyPlacesByLocation(placeToInsert->location);
+		
+		//add node of location and size to the map locations linkedList
+		insertInTail(&linkedListTail, placeToInsert->location, placeToInsert->sizeOfBytes);
+		/*printf("after insert in tail of the linkedlist\n");
+		printLinkedList(linkedListOfLocations);*/
+
+		//fetch of insert - id, offset of map, location in cache, and size of bytes  
+		fetchFromDisk(id, offset, placeToInsert->location, size);
+
+		//set values of state of reading map
+
+		//linkedList = linked list with new location
+		mapReadingInfo.linkedList = linkedListOfLocations;
+
+		//offset = offset + the bytes read
+		mapReadingInfo.offset = offset + placeToInsert->sizeOfBytes;
+
+		mapReadingInfo.BitsLeftToRead = size - placeToInsert->sizeOfBytes;
 
 		return mapReadingInfo;
 	}
@@ -98,25 +123,34 @@ ValuesOfReadingMap_t ReadPieceOfMap(Node_t* linkedListOfLocations, int size, int
 
 void ReadNormalMap(int id,int size)
 {	
+	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 	MapInfo_t* newMap = (MapInfo_t*)malloc(sizeof(MapInfo_t));
 	Node_t* linkedListOfLocations = createNode(id,size);
+	Node_t* linkedListOfLocationsTail = linkedListOfLocations;
 	int offset = 0;
-
+	int BitsLeftToRead = size;
+	ValuesOfReadingMap_t readingInfo;
 	//Make sure there is enough space in the cache
 	MakesRoomForCurrentIncome(size);
 	
 	//As long as I haven't finished loading the image
 	while (size > offset)
 	{
-		ValuesOfReadingMap_t readingInfo = ReadPieceOfMap(linkedListOfLocations,size,offset,id);
+		readingInfo = ReadPieceOfMap(linkedListOfLocationsTail,BitsLeftToRead,offset,id);
+		linkedListOfLocationsTail = linkedListOfLocationsTail->next;
 		offset = readingInfo.offset;
-		linkedListOfLocations = readingInfo.linkedList;
+		BitsLeftToRead = readingInfo.BitsLeftToRead;
+		printLinkedList(linkedListOfLocations);
+		//linkedListOfLocations = readingInfo.linkedList;
 	}
-
+	printLinkedList(linkedListOfLocations);
 	//set object to contain my map
 	newMap->linkedList = linkedListOfLocations;
 	newMap->mapID = id;
 	newMap->mapSizeInBytes = size;
+
+	printLinkedList(newMap->linkedList);
+
 
 	//insert the map to my structures:
 
@@ -138,25 +172,21 @@ void overrideInternal(int size)
 	int counter = 0;
 	while (size > counter)
 	{
-		freeLinkedList(temp->linkedList);
-
 		temp = removeMaxMapFromQueueArray();
+
 		if (temp != NULL)
 		{
 			counter += temp->mapSizeInBytes;
 			controlBlock->EmptyPlaceInCache += temp->mapSizeInBytes;
+			freeLinkedList(temp->linkedList);
 		}
-	}
-	if (counter > size) {
-		freeLinkedList(temp->linkedList);
-		//the not complete using of empty place will be when I put the values in the array, not now.......
 	}
 }
 
 void MakesRoomForCurrentIncome(int size) {
 	if (size > controlBlock->EmptyPlaceInCache)
 	{
-		overrideInternal(size);
+		overrideInternal(size- controlBlock->EmptyPlaceInCache);
 	}
 }
 
@@ -164,7 +194,7 @@ void MakesRoomForCurrentIncome(int size) {
 //void printLinkedList(Node_t* head) {
 //    Node_t* temp = head;
 //    while (temp != NULL) {
-//        printf("Location: %d, SizeOfBytes: %d -> ", temp->data.location, temp->data.sizeOfBytes); // הדפסת הנתון של הנקודה
+////        printf("Location: %d, SizeOfBytes: %d -> ", temp->data.location, temp->data.sizeOfBytes); // הדפסת הנתון של הנקודה
 //        temp = (Node_t*)temp->next; // מעבר לנקודה הבאה
 //    }
 //    printf("NULL\n"); // סוף הרשימה
