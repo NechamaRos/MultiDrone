@@ -1,11 +1,20 @@
-cmake_minimum_required(VERSION "3.30.2")
+cmake_minimum_required(VERSION "3.0")
 
-project("Disk_MNG_Master")
+project(Disk_Mng_Master)
 
-add_executable("${PROJECT_NAME}" "Doctest.cpp" "Disk_Mng_Master.c" "Disk_Mng_Master.h" "Disk_Mng_Master_API.h" "doctest.h")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_custom_target(cpu-gpu DEPENDS ${TARGET_NAME})
+file(GLOB C "./Disk_Mng_Master.c")
+file(GLOB SYCL "./Disk_Mng_Master_Sycl.cpp")
+file(GLOB DOCTEST "./Doctest.cpp")
+set(SOURCE_FILES "doctest.h")
+list(APPEND  SOURCE_FILES ${C} ${SYCL} ${DOCTEST})
 
-install(TARGETS "${PROJECT_NAME}" DESTINATION bin)     #$ (CMAKE_INSTALL_PREFIX)/bin
 
-install(FILES "Doctest.cpp" DESTINATION src)		#$ (CMAKE_INSTALL_PREFIX)/src
+
+add_executable(Disk_Mng_Master ${SOURCE_FILES})
+
+target_include_directories(Disk_Mng_Master PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Disk_Mng_Master PRIVATE DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN)
+

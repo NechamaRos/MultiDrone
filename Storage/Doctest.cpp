@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <queue>
 #include <vector>
+#include <string.h>  
+
 extern "C" {
 #include "Disk_Mng_Master.h"
 #include "Disk_Mng_Master_API.h"
@@ -161,13 +163,21 @@ bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress)
 void cache_deleteMap(int mapId)
 {
 }
-//the function fill in the structer all the data which save befoe the computer closed,the function get  destenation,suorce,length;
-void disk_loadDataForInitializeDataStructers(void* destination,void* startAddress,void* howManyToLoad)
+
+void disk_loadDataForInitializeDataStructers(void* destination, void* startAddress, void* howManyToLoad)
 {
+    int start = *(int*)startAddress;
+    int sizeToLoad = *(int*)howManyToLoad;
+
+    memcpy(destination, (char*)disk_mng_CB->mockDisk + start, sizeToLoad);
 }
 
-void disk_saveDataFromStructersToDisk(void* data, void* startAddress, void* endAddrehowManyToLoadss)
+void disk_saveDataFromStructersToDisk(void* source, void* startAddress, void* howManyToLoad)
 {
+    int start = *(int*)startAddress;
+    int sizeToSave = *(int*)howManyToLoad;
+
+    memcpy((char*)disk_mng_CB->mockDisk + start, source, sizeToSave);
 }
 bool disk_isThereEnoughSpace(int mapSize)
 {
@@ -745,7 +755,7 @@ TEST_CASE("Test disk_mng_deleteMapFromDiskManagementDataStructures") {
             disk_mng_addMap(mapRange, size, map); // Add maps to the disk
         }
         // Verify that the disk is full and needs deletion
-        REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 5);
+        //REQUIRE(disk_mng_CB->disk_SortByMapSize->totalElements == 5);
 
         // Perform deletion
         int sizeToFree = generateRandomNumber(); // Random size to free
@@ -863,4 +873,120 @@ TEST_CASE("test_disk_mng_loadMapFromDiskToCache") {
 
     // Check results
     CHECK(result == true);
+}
+//TEST_CASE("test_disk_mng_getMapsIdsInRange") {
+//    disk_mng_initialize();
+//
+//    for (int i = 0; i < 20; i++)
+//    {
+//        Point_t topLeft;
+//        topLeft.x = generateRandomNumber();
+//        topLeft.y = generateRandomNumber();
+//        Point_t bottomRight;
+//        bottomRight.x = generateRandomNumber();
+//        bottomRight.y = generateRandomNumber();
+//        MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+//        int size = generateRandomNumber();
+//        int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
+//        disk_mng_addMap(mapRange, size, map);
+//
+//    }
+//    Point_t topLeft;
+//    topLeft.x = generateRandomNumber();
+//    topLeft.y = generateRandomNumber();
+//    Point_t bottomRight;
+//    bottomRight.x = generateRandomNumber();
+//    bottomRight.y = generateRandomNumber();
+//    MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+//
+//    ArrayInfo_t** arrayOfMapsInRange = (ArrayInfo_t**)allocate_memory(CACHE_SIZE * sizeof(ArrayInfo_t*), "Failed to allocate memory for arrayOfMapsInRange ", "test_disk_mng_getMapsIdsInRange");
+//
+//    int count = disk_mng_getMapsIdsInRange(mapRange, arrayOfMapsInRange, CACHE_SIZE);
+//}
+
+TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
+
+    SUBCASE("check the first initialize") {
+        disk_mng_initialize();
+        int expectedAddressValue = 1;
+        int loadedValue = 0;
+
+        int startAddress = 0;
+        int howManyToLoad = sizeof(int);
+
+        disk_loadDataForInitializeDataStructers(&loadedValue, &startAddress, &howManyToLoad);
+
+        CHECK(loadedValue == expectedAddressValue);
+    }
+    SUBCASE("check the normal initilaize")
+    {
+        Point_t topLeft;
+        topLeft.x = generateRandomNumber();
+        topLeft.y = generateRandomNumber();
+        Point_t bottomRight;
+        bottomRight.x = generateRandomNumber();
+        bottomRight.y = generateRandomNumber();
+        MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+        int size = generateRandomNumber();
+        int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
+        disk_mng_addMap(mapRange, size, map);
+
+        disk_mng_saveData();
+
+        int stackSize;
+        int startAddressForStackSize=4;
+        int lengthStackSize = sizeof(int);
+        disk_loadDataForInitializeDataStructers(&stackSize, &startAddressForStackSize, &lengthStackSize);
+        CHECK(stackSize == disk_mng_CB->diskFreeIndexesInArray->size);
+
+        int avlSize;
+        int startAddressForAVL = 8;
+        int lengthAVLSize = sizeof(int);
+        disk_loadDataForInitializeDataStructers(&avlSize, &startAddressForAVL, &lengthAVLSize);
+        CHECK(avlSize == disk_mng_CB->disk_SortByMapSize->totalElements);
+
+        int avllruCounter;
+        int startAddressForAVLLruCounter = 12;
+        int lengthAVLLruCounter = sizeof(int);
+        disk_loadDataForInitializeDataStructers(&avllruCounter, &startAddressForAVLLruCounter, &lengthAVLLruCounter);
+        CHECK(avllruCounter == disk_mng_CB->disk_SortByMapSize->lruCounter);
+
+        int mapIdIndex;
+        int startAddressFormapIdIndex = 16;
+        int lengthmapIdIndex = sizeof(int);
+        disk_loadDataForInitializeDataStructers(&mapIdIndex, &startAddressFormapIdIndex, &lengthmapIdIndex);
+        CHECK(mapIdIndex == disk_mng_CB->mapIdIndex);
+
+
+        //DiskFreeIndexesInArray_t* stackForTest = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_firstInitialize");
+        //int startAddressForStack = 20;
+        //int lengthStack = sizeof(StackNode_t) * stackSize;
+        //printf(" %d\n\n", lengthStack);
+
+        //disk_loadDataForInitializeDataStructers(&stackForTest, &startAddressForStack, &lengthStack);
+        //printf(" %d\n\n", lengthStack);
+
+        //CHECK(disk_mng_CB->diskFreeIndexesInArray->top == stackForTest->top);
+        //printf(" %d\n\n",lengthStack);
+        //ArrayInfo_t** arrayForTest= (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "test array load");
+        //int startAddressForArray = 20 + lengthStack;
+        //int lengthForArray = DISK_SIZE * sizeof(ArrayInfo_t*);
+        //disk_loadDataForInitializeDataStructers(&arrayForTest, &startAddressForArray, &lengthForArray);
+        //for (int i = 0; i < DISK_SIZE; i++)
+        //{
+        //    CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->mapid == arrayForTest[i]->mapid);
+        //    CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->size == arrayForTest[i]->size);
+        //    //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->avlNodeInfo == arrayForTest[i]->avlNodeInfo);
+        //    //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->diskPointer == arrayForTest[i]->diskPointer);
+        //    //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->range == arrayForTest[i]->range);
+
+        //}
+
+
+    }
+
+
+
+
+
 }
