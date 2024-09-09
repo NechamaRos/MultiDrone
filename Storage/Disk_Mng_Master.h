@@ -291,3 +291,5 @@ bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress);
 
 //cache_deleteMap- delete map from the cache
 void cache_deleteMap(int mapId);
+
+//int disk_mng_getMapsIdsInRange(MapRange_t* rangeFromCache, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize)

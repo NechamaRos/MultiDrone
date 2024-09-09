@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Disk_Mng_Master.c" />
+    <ClCompile Include="Disk_Mng_Master_Sycl.cpp" />
     <ClCompile Include="Doctest.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@
 extern "C" {
 #include "Disk_Mng_Master.h"
 #include "Disk_Mng_Master_API.h"
-}
+
 struct GlobalSetup {
     GlobalSetup() {
         srand(time(0));
@@ -863,4 +863,33 @@ TEST_CASE("test_disk_mng_loadMapFromDiskToCache") {
 
     // Check results
     CHECK(result == true);
-}
+}}
+//TEST_CASE("test_disk_mng_getMapsIdsInRange") {
+//    disk_mng_initialize();
+//
+//    for (int i = 0; i < 20; i++)
+//    {
+//        Point_t topLeft;
+//        topLeft.x = generateRandomNumber();
+//        topLeft.y = generateRandomNumber();
+//        Point_t bottomRight;
+//        bottomRight.x = generateRandomNumber();
+//        bottomRight.y = generateRandomNumber();
+//        MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+//        int size = generateRandomNumber();
+//        int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
+//        disk_mng_addMap(mapRange, size, map);
+//
+//    }
+//    Point_t topLeft;
+//    topLeft.x = generateRandomNumber();
+//    topLeft.y = generateRandomNumber();
+//    Point_t bottomRight;
+//    bottomRight.x = generateRandomNumber();
+//    bottomRight.y = generateRandomNumber();
+//    MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
+//
+//    ArrayInfo_t** arrayOfMapsInRange = (ArrayInfo_t**)allocate_memory(CACHE_SIZE * sizeof(ArrayInfo_t*), "Failed to allocate memory for arrayOfMapsInRange ", "test_disk_mng_getMapsIdsInRange");
+//
+//    int count = disk_mng_getMapsIdsInRange(mapRange, arrayOfMapsInRange, CACHE_SIZE);
+//}
