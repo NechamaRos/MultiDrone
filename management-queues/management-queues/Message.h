@@ -2,7 +2,6 @@
 #include "Priority.h"
 #include "MessageType.h"
 #include "MessageParams.h"
-//#include "dataOfMessage.h"
 
 struct Message
 {

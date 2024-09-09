@@ -1,6 +1,5 @@
 #include "Message.h"
-#include "Priority.h"
-#include "dataOfMessage.h"
+
 int Message::counter = 0;
 
 Priority Message::GetPriority() {
