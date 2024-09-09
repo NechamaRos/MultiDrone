@@ -9,6 +9,11 @@
 
 DiskMangmantCb_t* diskMangmantCb;
 
+
+static inline bool didReachTheCorrectPlace(QuadTree_t* quadTree);
+static inline Directions whichDirection(QuadNode_t* quadNode, int midX, int midY);
+static void createAndCnnectTheQuadTreeToTheMainTree(Directions dircetion, QuadTree_t* quadTree, int midX, int midY);
+
 Point_t CreatePoint(int x, int y) 
 {
     Point_t p;
@@ -229,15 +234,69 @@ QuadTree_t* createQuadTree(Point_t TL, Point_t BR)
     return quadTree;
 }
 
+static inline bool didReachTheCorrectPlace(QuadTree_t* quadTree)
+{
+    if (quadTree->quadNode == NULL && quadTree->topLeftTree == NULL &&
+        quadTree->topRightTree == NULL && quadTree->botLeftTree == NULL &&
+        quadTree->botRightTree == NULL)
+        return true;
+    return false;
+}
+static inline Directions whichDirection(QuadNode_t* quadNode,int midX,int midY)
+{
+    //TL
+    if (quadNode->imagePoints.TL.x <= midX && quadNode->imagePoints.TL.y <= midY)
+        return TL;
+    //BL
+    if (quadNode->imagePoints.TL.x <= midX && quadNode->imagePoints.TL.y > midY)
+        return BL;
+    //TR
+    if (quadNode->imagePoints.TL.x > midX && quadNode->imagePoints.TL.y <= midY)
+        return TR;
+    //BR
+    return BR;
+ 
+
+}
+static void createAndCnnectTheQuadTreeToTheMainTree(Directions dircetion,QuadTree_t* quadTree,int midX,int midY)
+{
+    switch (dircetion)
+    {
+    case TL:
+        quadTree->topLeftTree = createQuadTree(quadTree->TL, CreatePoint(midX, midY));
+        quadTree->topLeftTree->parent = quadTree;
+        quadTree->numOfNonNULLQuadTrees += 1;
+        return ;
+    case BL:
+        quadTree->botLeftTree = createQuadTree(CreatePoint(quadTree->TL.x, midY + 1), CreatePoint(midX, quadTree->BR.y));
+        quadTree->botLeftTree->parent = quadTree;
+        quadTree->numOfNonNULLQuadTrees += 1;
+        return;
+    case TR:
+        quadTree->topRightTree = createQuadTree(CreatePoint(midX + 1, quadTree->TL.y), CreatePoint(quadTree->BR.x, midY));
+        quadTree->topRightTree->parent = quadTree;
+        quadTree->numOfNonNULLQuadTrees += 1;
+        return;
+    //BR
+    default:
+        quadTree->botRightTree = createQuadTree(CreatePoint(midX + 1, midY + 1), quadTree->BR);
+        quadTree->botRightTree->parent = quadTree;
+        quadTree->numOfNonNULLQuadTrees += 1;
+        return;
+    }
+
+}
+
 void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
 {
+    QuadNode_t* existingNode;
+    Directions dircetion;
+    QuadNode_t* saveToRemove;
     //Finds the intersection points that divide the space into four
     int midX = (quadTree->TL.x + quadTree->BR.x) / 2;
     int midY = (quadTree->TL.y + quadTree->BR.y) / 2;
     //The recursion breakpoint when the node found his correct place and everything is NULL 
-    if (quadTree->quadNode == NULL && quadTree->topLeftTree == NULL &&
-        quadTree->topRightTree == NULL && quadTree->botLeftTree == NULL &&
-        quadTree->botRightTree == NULL)
+    if(didReachTheCorrectPlace(quadTree))
     {
         quadTree->quadNode = node;
         node->parent = quadTree;
@@ -247,114 +306,71 @@ void insertTotheQuadtree(QuadNode_t* node, QuadTree_t* quadTree)
     if (quadTree->quadNode != NULL)
     {
         //If the point I want to add already exists
-        if (quadTree->quadNode->imagePoints.TL.x == node->imagePoints.TL.x && quadTree->quadNode->imagePoints.TL.y == node->imagePoints.TL.y) {
-            removeIfExist(quadTree->quadNode->LinkedList_ptr);
-            QuadNode_t* saveToRemove = quadTree->quadNode;
+        if (removeIfExist(quadTree, node))
+        {            
+            saveToRemove = quadTree->quadNode;
             quadTree->quadNode = node;
             free(saveToRemove);
             return;
         }
-        else
+        existingNode = quadTree->quadNode;
+        dircetion = whichDirection(existingNode, midX, midY);
+        quadTree->quadNode = NULL;
+        // Checks whether to enter the TL
+        if (TL==dircetion)
         {
-            QuadNode_t* existingNode = quadTree->quadNode;
-            quadTree->quadNode = NULL;
-            // Checks whether to enter the TL
-            if (existingNode->imagePoints.TL.x <= midX && existingNode->imagePoints.TL.y <= midY)
-            {
-                if (quadTree->topLeftTree == NULL)
-                {
-                    quadTree->topLeftTree = createQuadTree(quadTree->TL, CreatePoint(midX, midY));
-                    quadTree->topLeftTree->parent = quadTree;
-                    quadTree->numOfNonNULLQuadTrees += 1;
-                }
-                insertTotheQuadtree(existingNode, quadTree->topLeftTree);
-            }
-            else
-            {
-                // Checks whether to enter the BL
-                if (existingNode->imagePoints.TL.x <= midX && existingNode->imagePoints.TL.y > midY)
-                {
-                    if (quadTree->botLeftTree == NULL)
-                    {
-                        quadTree->botLeftTree = createQuadTree(CreatePoint(quadTree->TL.x, midY + 1), CreatePoint(midX, quadTree->BR.y));
-                        quadTree->botLeftTree->parent = quadTree;
-                        quadTree->numOfNonNULLQuadTrees += 1;
-                    }
-                    insertTotheQuadtree(existingNode, quadTree->botLeftTree);
-                }
-                else
-                {
-                    // Checks whether to enter the TR
-                    if (existingNode->imagePoints.TL.x > midX && existingNode->imagePoints.TL.y <= midY)
-                    {
-                        if (quadTree->topRightTree == NULL)
-                        {
-                            quadTree->topRightTree = createQuadTree(CreatePoint(midX + 1, quadTree->TL.y), CreatePoint(quadTree->BR.x, midY));
-                            quadTree->topRightTree->parent = quadTree;
-                            quadTree->numOfNonNULLQuadTrees += 1;
-                        }
-                        insertTotheQuadtree(existingNode, quadTree->topRightTree);
-                    }
-                    else // Checks whether to enter the BR
-                    {
-                        if (quadTree->botRightTree == NULL)
-                        {
-                            quadTree->botRightTree = createQuadTree(CreatePoint(midX + 1, midY + 1), quadTree->BR);
-                            quadTree->botRightTree->parent = quadTree;
-                            quadTree->numOfNonNULLQuadTrees += 1;
-                        }
-                        insertTotheQuadtree(existingNode, quadTree->botRightTree);
-                    }
-                }
-            }
+            createAndCnnectTheQuadTreeToTheMainTree(TL,quadTree,midX,midY);
+            insertTotheQuadtree(existingNode, quadTree->topLeftTree);
         }
+        // Checks whether to enter the BL
+        else if (BL== dircetion)
+        {
+            createAndCnnectTheQuadTreeToTheMainTree(BL, quadTree, midX, midY);
+            insertTotheQuadtree(existingNode, quadTree->botLeftTree);
+        }
+        // Checks whether to enter the TR
+        else if (TR==dircetion)
+        {
+            createAndCnnectTheQuadTreeToTheMainTree(TR, quadTree, midX, midY);  
+            insertTotheQuadtree(existingNode, quadTree->topRightTree);
+        }
+        // Checks whether to enter the BR
+        else 
+        {
+            createAndCnnectTheQuadTreeToTheMainTree(BR, quadTree, midX, midY);
+            insertTotheQuadtree(existingNode, quadTree->botRightTree);
+        }
+        
     }
     // Check which child quadrant the node should go into
-    if (node->imagePoints.TL.x <= midX) {
-        if (node->imagePoints.TL.y <= midY) {
-            // Top-left quadrant
-            if (quadTree->topLeftTree == NULL)
-            {
-                quadTree->topLeftTree = createQuadTree(quadTree->TL, CreatePoint(midX, midY));
-                quadTree->topLeftTree->parent = quadTree;
-                quadTree->numOfNonNULLQuadTrees += 1;
-            }
-            insertTotheQuadtree(node, quadTree->topLeftTree);
-        }
-        else {
-            // Bottom-left quadrant
-            if (quadTree->botLeftTree == NULL)
-            {
-                quadTree->botLeftTree = createQuadTree(CreatePoint(quadTree->TL.x, midY + 1), CreatePoint(midX, quadTree->BR.y));
-                quadTree->botLeftTree->parent = quadTree;
-                quadTree->numOfNonNULLQuadTrees += 1;
-            }
-            insertTotheQuadtree(node, quadTree->botLeftTree);
-        }
-    }
-    else
+    dircetion = whichDirection(node, midX, midY);
+    // Top-left quadrant
+    if (TL==dircetion) 
     {
-        if (node->imagePoints.TL.y <= midY)
-        {
-            //Top-right quadrant
-            if (quadTree->topRightTree == NULL)
-            {
-                quadTree->topRightTree = createQuadTree(CreatePoint(midX + 1, quadTree->TL.y), CreatePoint(quadTree->BR.x, midY));
-                quadTree->topRightTree->parent = quadTree;
-                quadTree->numOfNonNULLQuadTrees += 1;
-            }
-            insertTotheQuadtree(node, quadTree->topRightTree);
-        }
-        else {
-            //Bottom-right quadrant
-            if (quadTree->botRightTree == NULL)
-            {
-                quadTree->botRightTree = createQuadTree(CreatePoint(midX + 1, midY + 1), CreatePoint(quadTree->BR.x, quadTree->BR.y));
-                quadTree->botRightTree->parent = quadTree;
-                quadTree->numOfNonNULLQuadTrees += 1;
-            }
-            insertTotheQuadtree(node, quadTree->botRightTree);
-        }
+         if (quadTree->topLeftTree == NULL)
+             createAndCnnectTheQuadTreeToTheMainTree(TL, quadTree, midX, midY);
+         insertTotheQuadtree(node, quadTree->topLeftTree);
+    }
+    // Bottom-left quadrant
+    else if(BL == dircetion)
+    {
+        if (quadTree->botLeftTree == NULL)
+            createAndCnnectTheQuadTreeToTheMainTree(BL, quadTree, midX, midY);
+        insertTotheQuadtree(node, quadTree->botLeftTree);
+    }
+    //Top-right quadrant
+    else if (TR==dircetion)
+    {
+        if (quadTree->topRightTree == NULL)
+            createAndCnnectTheQuadTreeToTheMainTree(TR, quadTree, midX, midY);
+        insertTotheQuadtree(node, quadTree->topRightTree);
+    }
+    //Bottom-right quadrant
+    else 
+    {
+        if (quadTree->botRightTree == NULL)
+            createAndCnnectTheQuadTreeToTheMainTree(BR, quadTree, midX, midY);
+        insertTotheQuadtree(node, quadTree->botRightTree);
     }
 }
 
@@ -398,15 +414,26 @@ void searchImgsAtQuadTreeByRange(QuadTree_t* quadTree, Point_t TL, Point_t BR, i
     searchImgsAtQuadTreeByRange(quadTree->botRightTree, TL, BR, count, idArray);
 }
 
-void removeIfExist(UnitNodeLinkedList_t* node)
+bool removeIfExist(QuadTree_t* quadTree,QuadNode_t* QueadNode)
 {
-    UnitNodeLinkedList_t* saveToRemove = node;
-    node->next->prev = node->prev;
-    node->prev->next = node->next;
-    saveToRemove->next = NULL;
-    saveToRemove->prev = NULL;
-    diskMangmantCb->linkedList->AmountOfLinks--;
-    free(saveToRemove);
+    UnitNodeLinkedList_t* node;
+    UnitNodeLinkedList_t* saveToRemove;
+    //Cheking if the piont is the same
+    if (quadTree->quadNode->imagePoints.TL.x == QueadNode->imagePoints.TL.x
+        && quadTree->quadNode->imagePoints.TL.y == QueadNode->imagePoints.TL.y)
+    {
+        //removing from the linedList
+        node = quadTree->quadNode->LinkedList_ptr;
+        saveToRemove = node;
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+        saveToRemove->next = NULL;
+        saveToRemove->prev = NULL;
+        diskMangmantCb->linkedList->AmountOfLinks--;
+        free(saveToRemove);
+        return true;
+    }
+    return false;
 }
 
 void removeData(void)
@@ -455,6 +482,7 @@ UnitNodeLinkedList_t* removeNodeFromLinkedList(void)
         return NULL;
     }
 }
+
 
 void removeFromdArraySearchInfo(int id)
 {

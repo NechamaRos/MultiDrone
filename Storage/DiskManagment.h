@@ -71,12 +71,21 @@ typedef struct DiskMangmantStructCb_s {
 
 } DiskMangmantCb_t;
 
-typedef enum {
+typedef enum 
+{
     POINT_NEGATIVE_ERORR,
     POINT_NOT_IN_RANGE_ERORR,
     ALLOCATE_ERROR,
     IMG_IS_NOT_IN_CORRECT_SIZE
 }Exception;
+
+typedef enum
+{
+    TL,
+    TR,
+    BL,
+    BR
+}Directions;
 
 //init function
 Point_t CreatePoint(int x, int y);
@@ -95,7 +104,7 @@ void insertToLinkList(UnitNodeLinkedList_t* node);
 LinkedList_t* createLinkedList(void);
 void removeData(void);
 UnitNodeLinkedList_t* removeNodeFromLinkedList(void);
-void removeIfExist(UnitNodeLinkedList_t* node);
+bool removeIfExist(QuadNode_t* quadTree, QuadNode_t* node);
 void removeFromdArraySearchInfo(int id);
 void moveToTheBeginning(UnitNodeLinkedList_t* nodePtr);
 

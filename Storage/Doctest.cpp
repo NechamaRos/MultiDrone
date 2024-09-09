@@ -919,8 +919,6 @@ TEST_CASE("save Before Shutdown ")
 	//act
 	saveBeforeShutdown();
 	//assert
-	
-	
 }
 TEST_CASE("boot When The Device Is TurnedOn")
 {
@@ -1095,6 +1093,7 @@ TEST_CASE("search when range is bigger than the quadTree range")
 	ImagePoints_t point = CreateImagePoint(c, d);
 	ImagePoints_t pointB = CreateImagePoint(x, y);
 	ImagePoints_t pointC = CreateImagePoint(s, z);
+	printf("C(%d,%d) ,x(%d,%d), s(%d,%d)",q,w,r,q,e,r);
 	int* data =NULL;
 	//init
 	initImg(c, d, data);
