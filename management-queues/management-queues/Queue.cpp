@@ -24,7 +24,7 @@ void Queue::clear() {
 
 void Queue::push(Message data) {
 	if (numOfMessages == maxOfMessages) {
-		cerr << "àéï î÷åí éåúø";
+		cerr << "ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½";
 	}
 	lock_guard<mutex> lock(mtx);
 	//SlaveEventManager::addEvent("ID::push")
@@ -54,8 +54,8 @@ Message Queue::pop() {
 	else {
 		tail = nullptr;
 	}
-	return temp->data;
 	numOfMessages--;
+	return temp->data;
 }
 
 Node* Queue::pick(int index) {

@@ -1,0 +1,3 @@
+/mnt/c/Users/User/Desktop/Practicum/MultiDrone/management-queues/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/User/Desktop/Practicum/MultiDrone/management-queues/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/User/Desktop/Practicum/MultiDrone/management-queues/build/CMakeFiles/QueuesManagment.dir

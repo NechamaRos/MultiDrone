@@ -2,6 +2,7 @@
 #include "MessageType.h"
 #include "Priority.h"
 #include "Message.h"
+#include <cstddef>
 
 struct dataOfMessage {
     Priority priority;

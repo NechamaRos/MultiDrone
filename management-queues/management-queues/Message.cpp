@@ -1,4 +1,6 @@
 #include "Message.h"
+#include "dataOfMessage.h"
+#include <cstddef>
 
 int Message::counter = 0;
 
