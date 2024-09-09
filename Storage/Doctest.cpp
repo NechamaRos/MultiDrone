@@ -12,6 +12,7 @@
 extern "C" {
 #include "Disk_Mng_Master.h"
 #include "Disk_Mng_Master_API.h"
+
 }
 struct GlobalSetup {
     GlobalSetup() {
@@ -934,7 +935,7 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         disk_mng_saveData();
 
         int stackSize;
-        int startAddressForStackSize=4;
+        int startAddressForStackSize = 4;
         int lengthStackSize = sizeof(int);
         disk_loadDataForInitializeDataStructers(&stackSize, &startAddressForStackSize, &lengthStackSize);
         CHECK(stackSize == disk_mng_CB->diskFreeIndexesInArray->size);
@@ -990,3 +991,4 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
 
 
 }
+
