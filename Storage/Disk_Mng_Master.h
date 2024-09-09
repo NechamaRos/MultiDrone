@@ -7,8 +7,8 @@
 
 #define POINT_BR_RANGE (Point_t){100, 100}
 #define POINT_TL_RANGE (Point_t){0, 0}
-#define DISK_SIZE 1000
-#define CACHE_SIZE 1000
+#define DISK_SIZE 100
+#define CACHE_SIZE 100
 
 // Forward declarations
 typedef struct AVLNode_s AVLNode_t;
@@ -87,6 +87,7 @@ struct DiskMapsInLoadedToCache_s
 };
 
 struct Disk_Management_CB_s {
+    void* mockDisk;
     int mapIdIndex;
     ArrayInfo_t** arrayForAllMApsInformation;
     DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
@@ -267,6 +268,10 @@ void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, 
 
 //disk_mng_addMap- add map to the disk managment
 void disk_mng_addMap(MapRange_t* range, int size, int* map);
+
+// disk_mng_saveData-save all the data from the data structers to disk before clothing the computer
+void disk_mng_saveData();
+
 
 //disk-mock functions
 
