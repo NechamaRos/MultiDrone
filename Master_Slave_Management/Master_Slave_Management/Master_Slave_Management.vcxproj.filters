@@ -62,4 +62,71 @@
       <UniqueIdentifier>{2854cb75-ba29-441b-8dff-4947a76a6041}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\doctest.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\event.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\ImageFromSlave.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\mapRequest.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Message.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\MessageParams.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\MessageType.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\PointForSlave.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Priority.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\RealImage.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Slave.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\SlavesManager.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Structs.h">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\ImageFromSlave.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\mapRequest.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Message.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\PointForSlave.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\RealImage.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Slave.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\SlavesManager.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Test.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
