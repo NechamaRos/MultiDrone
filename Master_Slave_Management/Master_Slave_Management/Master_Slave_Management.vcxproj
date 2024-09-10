@@ -18,6 +18,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="doctest.h" />
+    <ClInclude Include="event.h" />
+    <ClInclude Include="ImageFromSlave.h" />
+    <ClInclude Include="mapRequest.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageParams.h" />
+    <ClInclude Include="MessageType.h" />
+    <ClInclude Include="PointForSlave.h" />
+    <ClInclude Include="RealImage.h" />
+    <ClInclude Include="Slave.h" />
+    <ClInclude Include="SlavesManager.h" />
+    <ClInclude Include="Structs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ImageFromSlave.cpp" />
+    <ClCompile Include="mapRequest.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="PointForSlave.cpp" />
+    <ClCompile Include="Priority.h" />
+    <ClCompile Include="RealImage.cpp" />
+    <ClCompile Include="Slave.cpp" />
+    <ClCompile Include="SlavesManager.cpp" />
+    <ClCompile Include="Test.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -126,31 +151,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\doctest.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\event.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\ImageFromSlave.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\mapRequest.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Message.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\MessageParams.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\MessageType.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\PointForSlave.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Priority.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\RealImage.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Slave.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\SlavesManager.h" />
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Structs.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\ImageFromSlave.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\mapRequest.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Message.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\PointForSlave.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\RealImage.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Slave.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\SlavesManager.cpp" />
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Test.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

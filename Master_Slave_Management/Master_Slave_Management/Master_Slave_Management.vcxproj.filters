@@ -63,69 +63,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\doctest.h">
+    <ClInclude Include="event.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\event.h">
+    <ClInclude Include="ImageFromSlave.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\ImageFromSlave.h">
+    <ClInclude Include="mapRequest.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\mapRequest.h">
+    <ClInclude Include="Message.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Message.h">
+    <ClInclude Include="MessageParams.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\MessageParams.h">
+    <ClInclude Include="MessageType.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\MessageType.h">
+    <ClInclude Include="PointForSlave.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\PointForSlave.h">
+    <ClInclude Include="RealImage.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Priority.h">
+    <ClInclude Include="Slave.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\RealImage.h">
+    <ClInclude Include="SlavesManager.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Slave.h">
+    <ClInclude Include="Structs.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\SlavesManager.h">
-      <Filter>Header Files\MapCreator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Structs.h">
+    <ClInclude Include="doctest.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\ImageFromSlave.cpp">
+    <ClCompile Include="Message.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\mapRequest.cpp">
+    <ClCompile Include="Priority.h">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Message.cpp">
+    <ClCompile Include="ImageFromSlave.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\PointForSlave.cpp">
+    <ClCompile Include="mapRequest.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\RealImage.cpp">
+    <ClCompile Include="PointForSlave.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Slave.cpp">
+    <ClCompile Include="RealImage.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\SlavesManager.cpp">
+    <ClCompile Include="Slave.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\‏‏חדש 28_7_24 - עותק\חדש 28_7_24\Test.cpp">
+    <ClCompile Include="SlavesManager.cpp">
+      <Filter>Header Files\MapCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
       <Filter>Header Files\MapCreator</Filter>
     </ClCompile>
   </ItemGroup>
