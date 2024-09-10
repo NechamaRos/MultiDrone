@@ -1,8 +1,8 @@
-// Logger.cpp
 #include "Logger.h"
 #include <stdexcept>
 #include <ctime>
-
+#include <mutex>
+#include <fstream>
 
 Logger& Logger::getInstance() {
     static Logger instance;
@@ -14,7 +14,7 @@ Logger::Logger() : logFile_("log.txt", std::ios_base::app) {
         throw std::runtime_error("Unable to open log file");
     }
 }
- 
+
 Logger::~Logger() {
     if (logFile_.is_open()) {
         logFile_.close();
@@ -24,11 +24,14 @@ Logger::~Logger() {
 void Logger::log(const std::string& message) {
     std::lock_guard<std::mutex> guard(mutex_);
 
-    std::time_t currentTime;
-    std::time(&currentTime);  // Get current time
-
+    std::time_t currentTime = std::time(nullptr);  // Get current time
     std::tm localTime;
-    localtime_s(&localTime, &currentTime);
+
+    // Use localtime_r to get the local time
+    if (localtime_r(&currentTime, &localTime) == nullptr) {
+        // Handle error
+        return;
+    }
 
     logFile_
         << localTime.tm_mday << '/'

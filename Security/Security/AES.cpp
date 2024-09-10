@@ -286,26 +286,37 @@ namespace MyAES {
 
     unsigned char* AES::RemovePadding(const unsigned char* in, unsigned int& outLen)
     {
-        unsigned char* out = new unsigned char[outLen];
-        memcpy(out, in, outLen);
         // Get the padding length from the last byte of the decrypted text
         unsigned int paddingLen = in[outLen - 1];
-        // the last byte is no padding byte
+
+        // Check if padding length is invalid
         if (paddingLen > blockBytesLen || paddingLen == 0) {
+            // Padding is invalid, return a copy of the input
+            unsigned char* out = new unsigned char[outLen];
+            memcpy(out, in, outLen);
             return out;
         }
-        // Validate that the padding bytes are correct
+
+        // Validate that the padding bytes are all correct
         for (unsigned int i = 0; i < paddingLen; ++i) {
             if (in[outLen - 1 - i] != paddingLen) {
+                // Invalid padding, return a copy of the input
+                unsigned char* out = new unsigned char[outLen];
+                memcpy(out, in, outLen);
                 return out;
             }
         }
-        delete[] out;
+
+        // Padding is valid, update the output length
         outLen -= paddingLen;
-        unsigned char* out = new unsigned char[outLen];
-        memcpy(out, in, outLen);
-        return out;
+
+        // Create a new output buffer without the padding
+        unsigned char* unpaddedOut = new unsigned char[outLen];
+        memcpy(unpaddedOut, in, outLen);
+
+        return unpaddedOut;
     }
+
 
     /// <summary>
     /// Replacement of the bits in the respective state matrix with the bits in the fixed matrix sbox.
