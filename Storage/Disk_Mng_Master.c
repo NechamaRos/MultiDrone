@@ -383,7 +383,7 @@ void avlTree_firstInitialize() {
 
 void avlTree_normalInitialize()
 {
-    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for stack ", "avlTree_normalInitialize");
+    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
     int length = 0;
     int startAdress = 2 * sizeof(int);;
     int howManyToLoad = sizeof(int);
@@ -397,7 +397,7 @@ void avlTree_normalInitialize()
     disk_loadDataForInitializeDataStructers(&length, &startAdress, &howManyToLoad);
 
     startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
-    howManyToLoad = length * sizeof(DiskSortByMapSize_t*);
+    howManyToLoad = length * sizeof(AVLNode_t*);
     //load all the data from avlTree
     disk_loadDataForInitializeDataStructers(&(disk_mng_CB->disk_SortByMapSize), &startSructers, &howManyToLoad);
 }
@@ -416,7 +416,7 @@ void avlTree_saveData()
 
 
     startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
-    howManyToLoad = disk_mng_CB->disk_SortByMapSize->totalElements * sizeof(int);
+    howManyToLoad = disk_mng_CB->disk_SortByMapSize->totalElements * sizeof(AVLNode_t*);
     //save all the data from stack
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize), &startSructers, &howManyToLoad);
 }
