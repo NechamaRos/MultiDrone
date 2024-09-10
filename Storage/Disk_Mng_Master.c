@@ -8,7 +8,7 @@
 #include <stdbool.h>
 
 Disk_Management_CB_t* disk_mng_CB;
-int  startSructers = 20;
+int  startSructers = 5 * sizeof(int);
 void disk_mng_initialize_CB()
 {
     disk_mng_CB = (Disk_Management_CB_t*)allocate_memory(sizeof(Disk_Management_CB_t), "Failed to allocate memory for disk control block", "disk_mng_initialize_CB");
@@ -45,7 +45,7 @@ void disk_mng_saveData()
     stack_saveData();
     array_saveData();
     avlTree_saveData();
-    int startAdress = 16;
+    int startAdress = 4*sizeof(int);
     int howManyToLoad = sizeof(int);
     //load the fifth address in disk with mapIdIndex
     disk_saveDataFromStructersToDisk(&disk_mng_CB->mapIdIndex, &startAdress, &howManyToLoad);
@@ -69,7 +69,7 @@ void disk_mng_normalInitialize()
     array_normalInitialize();
     avlTree_normalInitialize();
     int mapIdIndex = 0;//stack size
-    int startAdress = 16;
+    int startAdress = 4 * sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the fifth address in disk with mapIdIndex
     disk_loadDataForInitializeDataStructers(&mapIdIndex, &startAdress, &howManyToLoad);
@@ -95,7 +95,7 @@ DiskMapsInLoadedToCache_t* arrayInLoaded_create(int mapId, int index)
 
 //initialize on the first time we turn o the computer the stack will initialize with all the indexes.
 void stack_firstInitialize() {
-    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_firstInitialize");
+    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t)*DISK_SIZE, "Failed to allocate memory for stack ", "stack_firstInitialize");
     disk_mng_CB->diskFreeIndexesInArray->top = NULL;
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     for (size_t i = 0; i < DISK_SIZE; i++)
@@ -105,13 +105,13 @@ void stack_firstInitialize() {
 }
 
 void stack_normalInitialize() {
-    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
+    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t)*DISK_SIZE, "Failed to allocate memory for stack ", "stack_normalInitialize");
     int size = 0;//stack size
-    int startAdress = 4;
+    int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the second address in disk with stack size
     disk_loadDataForInitializeDataStructers(&size, &startAdress, &howManyToLoad);
-    howManyToLoad = size * sizeof(int);
+    howManyToLoad = size * sizeof(StackNode_t*);
     //load all the data from stack
     disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startSructers, &howManyToLoad);
 
@@ -119,12 +119,12 @@ void stack_normalInitialize() {
 
 void stack_saveData()
 {
-    int startAdress = 4;
+    int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     ////save size of stack in the second address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray->size), &startAdress, &howManyToLoad);
 
-    howManyToLoad = disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t);
+    howManyToLoad = disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
     //save all the data from stack
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray), &startSructers, &howManyToLoad);
 }
@@ -180,7 +180,7 @@ void array_firstInitialize() {
 }
 void array_normalInitialize() {
     disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for array ", "array_normalInitialize");
-    startSructers += disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int);
+    startSructers =5* sizeof(int)+ disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
     int howManyToLoad = DISK_SIZE * sizeof(ArrayInfo_t*);
     //load all the data from array
     disk_loadDataForInitializeDataStructers(&(disk_mng_CB->arrayForAllMApsInformation), &startSructers, &howManyToLoad);
@@ -188,7 +188,7 @@ void array_normalInitialize() {
 
 void array_saveData()
 {
-    startSructers += disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int);
+    startSructers =  5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
     int howManyToLoad = DISK_SIZE * (sizeof(ArrayInfo_t*));
     //save all the data from array
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->arrayForAllMApsInformation), &startSructers, &howManyToLoad);
@@ -383,20 +383,20 @@ void avlTree_firstInitialize() {
 
 void avlTree_normalInitialize()
 {
-    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t**)allocate_memory(sizeof(DiskSortByMapSize_t*), "Failed to allocate memory for stack ", "avlTree_normalInitialize");
+    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for stack ", "avlTree_normalInitialize");
     int length = 0;
-    int startAdress = 8;
+    int startAdress = 2 * sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the third address in disk with avlTree size
     disk_loadDataForInitializeDataStructers(&length, &startAdress, &howManyToLoad);
 
     int lru = 0;
-    startAdress = 12;
+    startAdress = 3*sizeof(int);
     howManyToLoad = sizeof(int);
     //load the forth address in disk with avlTree lru
     disk_loadDataForInitializeDataStructers(&length, &startAdress, &howManyToLoad);
 
-    startSructers += disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int) + DISK_SIZE * sizeof(ArrayInfo_t*);
+    startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
     howManyToLoad = length * sizeof(DiskSortByMapSize_t*);
     //load all the data from avlTree
     disk_loadDataForInitializeDataStructers(&(disk_mng_CB->disk_SortByMapSize), &startSructers, &howManyToLoad);
@@ -404,18 +404,18 @@ void avlTree_normalInitialize()
 
 void avlTree_saveData()
 {
-    int startAdress = 8;
+    int startAdress = 2* sizeof(int);;
     int howManyToLoad = sizeof(int);
     ////save size of avlTree in the third address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize->totalElements), &startAdress, &howManyToLoad);
 
-    startAdress = 12;
+    startAdress = 3* sizeof(int);;
     howManyToLoad = sizeof(int);
     ////save lruCounter of avlTree in the forth address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize->lruCounter), &startAdress, &howManyToLoad);
 
 
-    startSructers += disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int) + DISK_SIZE * sizeof(ArrayInfo_t*);
+    startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
     howManyToLoad = disk_mng_CB->disk_SortByMapSize->totalElements * sizeof(int);
     //save all the data from stack
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize), &startSructers, &howManyToLoad);

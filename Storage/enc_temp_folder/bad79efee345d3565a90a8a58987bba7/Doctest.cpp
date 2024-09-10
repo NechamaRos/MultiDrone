@@ -990,8 +990,6 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
                 //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->range == arrayForTest[i]->range);
             }
         }
-
-
     }
 }
 
