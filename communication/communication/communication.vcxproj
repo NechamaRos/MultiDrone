@@ -157,6 +157,7 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="VecMessage.cpp" />
     <ClCompile Include="VecMessage_test.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Data_transferring\TransferData.h" />

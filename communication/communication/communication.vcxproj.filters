@@ -78,6 +78,9 @@
     <ClCompile Include="Data_test.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Socket_communication</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="doctest.h">

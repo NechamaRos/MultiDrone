@@ -1,7 +1,22 @@
 #pragma once
 #include <vector>
-#include <ws2tcpip.h>
 #include "../Communication/Meta_Data.h"
+
+#ifdef _WIN32
+/* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
+	#include <Ws2tcpip.h>
+	#define POLLFD WSAPOLLFD
+#else
+	#include <unistd.h>
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
+	#include <poll.h>
+	#define POLLFD struct pollfd
+#endif
+
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 #define BACKLOG 10
@@ -22,10 +37,12 @@ public:
 	}
 
 	int getSockfd();
-	WSAPOLLFD* getFds();
+	POLLFD* getFds();
 #pragma region regular connection
-	int establishing_a_communication_infrastructure();
+	int establishing_a_communication_infrastructure();	
+#ifdef _WIN32
 	int initialize_winsock();
+#endif
 	int setupAddressInfo(struct addrinfo** servinfo);
 	int bind_to_first_available_socket(struct addrinfo* servinfo);
 	int start_listening();
@@ -45,7 +62,7 @@ public:
 
 private:
 	int sockfd;
-	WSAPOLLFD fds[FD_SETSIZE];
+	POLLFD fds[FD_SETSIZE];
 	vector<int> clientSockets;
 };
 

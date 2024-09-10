@@ -120,8 +120,8 @@ public:
 	void addChunk(const string& chunk, size_t chunkIndex);
 	string getCollectedData();
 
+    DroneCommunicationManager* droneCommunicationManager=new DroneCommunicationManager();
 private:
 	map<size_t, string> collectedDataMap;
 	mutex dataMutex;
-    DroneCommunicationManager* droneCommunicationManager=new DroneCommunicationManager();
 };
