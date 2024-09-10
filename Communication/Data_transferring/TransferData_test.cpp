@@ -1,4 +1,3 @@
-
 #include "../Communication/doctest.h"
 #include <vector>
 #include <future>
@@ -82,7 +81,6 @@ TEST_CASE("TransferData::sendMetaData function") {
 
 
 TEST_CASE("TransferData::sendData function") {
-    //TransferData td;
     string data = "Test data";
     Meta_Data<1> metaData(&vv4);
 
@@ -111,7 +109,6 @@ TEST_CASE("TransferData::sendsAsynchronously function") {
 	}
 }
 TEST_CASE("TransferData::sendsSynchronously function") {
-    //TransferData td;
     string data = "Test data for sync send";
     Meta_Data<1> metaData(&vv4);
 
@@ -125,7 +122,6 @@ TEST_CASE("TransferData::sendsSynchronously function") {
 }
 
 TEST_CASE("TransferData::preparingTheDataForTransferring function") {
-	//TransferData td;
 	string data = "Test data for transfer";
 	Meta_Data<1> metaData(&vv4);
 
@@ -152,7 +148,6 @@ TEST_CASE("TransferData::preparingTheDataForTransferring function") {
 	}
 }
 TEST_CASE("TransferData::addChunk and getCollectedData functions") {
-	TransferData td;
 
 	SUBCASE("Add and collect chunks") {
 		td.addChunk("Chunk1", 0);
@@ -171,4 +166,6 @@ TEST_CASE("TransferData::addChunk and getCollectedData functions") {
 		string collectedData = td.getCollectedData();
 		CHECK(collectedData == "Chunk1Chunk2Chunk3");
 	}
+	td.droneCommunicationManager->infinite_checking_for_incoming_messages();
 }
+
