@@ -726,11 +726,11 @@ TEST_CASE("test_disk_mng_addMap")
     for (int i = 0; i < 20; i++)
     {
         Point_t topLeft;
-        topLeft.x = generateRandomNumber();
-        topLeft.y = generateRandomNumber();
+        topLeft.x = 148;
+        topLeft.y = 160;
         Point_t bottomRight;
-        bottomRight.x = generateRandomNumber();
-        bottomRight.y = generateRandomNumber();
+        bottomRight.x = 224;
+        bottomRight.y = 140;
         MapRange_t* mapRange = mapRange_create(bottomRight, topLeft);
         int size = generateRandomNumber();
         int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
@@ -993,7 +993,7 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         DiskSortByMapSize_t* avlTreeForTest = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for avlTree ", "avlTree_test");
         int startAddressForAVLTree = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * sizeof(ArrayInfo_t*);
         int lengthforAVLTree = avlSize * sizeof(AVLNode_t*);
-        disk_loadDataForInitializeDataStructers(&avlTreeForTest, &startAddressForAVL, &lengthforAVLTree);
+        disk_loadDataForInitializeDataStructers(&avlTreeForTest, &startAddressForAVLTree, &lengthforAVLTree);
         CHECK(avlTreeForTest->root->avlNodeInfo->arrayIndex == disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->arrayIndex);
 
     }
