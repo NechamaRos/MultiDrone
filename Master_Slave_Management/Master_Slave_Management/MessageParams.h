@@ -5,11 +5,14 @@
 #include "MessageType.h"
 //#include "RealImage.h"
 #include "PointForSlave.h"
-#include "ImageFromSlave.h" 
+#include "ImagefromSlave.h" 
 #include "mapRequest.h"
 using namespace std;
 struct M_GOT_REQ_PARAMS {
 	mapRequest mp;
+	M_GOT_REQ_PARAMS() {
+		mp = mapRequest();
+	}
 	//MESSAGE_TYPE:M_GOT_REQ
 	//handling function: SlavesManager::getARequestForAMap
 };
@@ -17,6 +20,9 @@ struct MTS_ASK_FOR_IMAGES_PROP_PARAMS {
 	PointForSlave pfs;
 	int slaveId;
 	int reqId;
+	MTS_ASK_FOR_IMAGES_PROP_PARAMS() {
+		pfs = PointForSlave();
+	}
 	//MESSAGE_TYPE:MTS_ASK_FOR_IMAGES
 	//handling function: SlavesManager::sendRequestForImageInSpecificPoint
 };
@@ -24,54 +30,90 @@ struct STM_SEND_IMAGES_PROP_PARAMS
 {
 	bool HaveOrNot_Image;
 	vector<ImageFromSlave> imgRes = {};
+	STM_SEND_IMAGES_PROP_PARAMS() {
+		imgRes = vector<ImageFromSlave>();
+	}
 	//MESSAGE_TYPE:STM_SEND_IMAGE_PROP
 	//handling function: Slave::GetAStructForImageInPoint
 };
 struct MTS_GIVE_THE_CHOSEN_IMAGE_PARAMS {
 	ImageFromSlave img;
+	MTS_GIVE_THE_CHOSEN_IMAGE_PARAMS() {
+		img = ImageFromSlave();
+	}
 	//MESSAGE_TYPE:MTS_GIVE_THE_CHOSEN_IMAGE
 	//handling function:sendRequestToSlaveToGetRealImage
 };
 struct STM_RESPONSE_TO_THE_CHOSEN_IMAGE_PARAMS {
 	//RealImage realImg;
+	STM_RESPONSE_TO_THE_CHOSEN_IMAGE_PARAMS() {
+		//realImg=RealImage();
+	}
 	//MESSAGE_TYPE:STM_RESPONSE_TO_THE_CHOSEN_IMAGE
 	//handling function:return_of_an_image_by_its_properties
 };
 struct MTS_REQ_FOR_PHOTO_PARAMS {
 	PointForSlave pfs;
+	MTS_REQ_FOR_PHOTO_PARAMS() {
+		pfs = PointForSlave();
+	}
 };
 struct MTIP_REQ_FOR_REAL_MAP_PARAMS {
 	//vector<RealImage> realImages;
+	MTIP_REQ_FOR_REAL_MAP_PARAMS() {
+		//realImages=vector<RealImage>();
+	}
 };
 struct MTM_NO_COMMUNICATION_AT_ALL_PARAMS
 {
-	string msg22;
+	MTM_NO_COMMUNICATION_AT_ALL_PARAMS(){}
 	//MESSAGE_TYPE:MTM_NO_COMMUNICATION_AT_ALL,-MessageOfNoCommuincationBetwwenAllSlaves
 	//handling function:__________________
 };
 struct MTM_SLAVES_NOT_COMMUNICATE_PARAMS
 {
 	vector<int> SlavesWithNoCommunication;
+	MTM_SLAVES_NOT_COMMUNICATE_PARAMS() {
+		SlavesWithNoCommunication = vector<int>();
+	}
 	//MESSAGE_TYPE:MTM_SLAVES_NOT_COMMUNICATE,-GetTheSlavesThatDidntCommunicate
 	//handling function:SlavesManager::getTheSlavesThatDidntCommunicate
 };
 struct MTS_SEND_LOCATION_PARAMS {
 	int second;
+	MTS_SEND_LOCATION_PARAMS() {}
 };
-struct MTS_MOVE_OUT_OF_THIS_EREA_PARAMS {};
-struct MTS_STOP_SEND_LOCATION_PARAMS {};
-struct MTS_STOP_AT_PLACE_PARAMS {};
-struct MTS_BACK_TO_STARTING_POINT_PARAMS {};
+struct MTS_MOVE_OUT_OF_THIS_EREA_PARAMS {
+	MTS_MOVE_OUT_OF_THIS_EREA_PARAMS() {}
+};
+struct MTS_STOP_SEND_LOCATION_PARAMS {
+	MTS_STOP_SEND_LOCATION_PARAMS() {}
+};
+struct MTS_STOP_AT_PLACE_PARAMS {
+	MTS_STOP_AT_PLACE_PARAMS() {}
+};
+struct MTS_BACK_TO_STARTING_POINT_PARAMS {
+	MTS_BACK_TO_STARTING_POINT_PARAMS() {}
+};
 struct STM_LOCATION_PARAMS {
 	float x; float y;
+	STM_LOCATION_PARAMS() {}
 };
 struct MTS_SEND_EVENTS_PARAMS {
 	tm startTime;
 	tm endTime;
 	size_t maxSize;
+	MTS_SEND_EVENTS_PARAMS() {
+		startTime = tm();
+		endTime = tm();
+		maxSize = size_t();
+	}
 };
 struct STM_GET_EVENTS_PARAMS {
 	vector<Event> events;
+	STM_GET_EVENTS_PARAMS() {
+		events = vector<Event>();
+	}
 };
 
 
