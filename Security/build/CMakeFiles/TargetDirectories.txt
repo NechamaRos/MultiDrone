@@ -1,0 +1,3 @@
+/mnt/c/Users/The user/Desktop/מסמכים לימודיים/פרקטיקום/MultiDrone/Security/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/The user/Desktop/מסמכים לימודיים/פרקטיקום/MultiDrone/Security/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/The user/Desktop/מסמכים לימודיים/פרקטיקום/MultiDrone/Security/build/CMakeFiles/team_Security.dir
