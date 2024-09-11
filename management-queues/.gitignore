@@ -1,0 +1,15 @@
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+
+# Build folders
+x64/Debug/
+x64/Release/
+
+# Other files and folders you want to ignore
+*.log
+*.obj
+*.exe
+*.dll
