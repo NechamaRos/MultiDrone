@@ -10,11 +10,19 @@ class KeyPair {
 
 private:
     cpp_int privateKey;
+    cpp_int publicKey_RSA;
     Point publicKey;
+
 public:
     KeyPair(const EllipticCurve& curve);
+
     cpp_int getPrivateKey() const;
+    cpp_int getPublicKey_RSA() const;
     Point getPublicKey() const;
-}; 
+
+    void setPrivateKey(cpp_int privateKey);
+    void setPublicKey_RSA(cpp_int publicKey_RSA);
+    void setPublicKey(Point publicKey);
+};
 
 #endif // KEY_PAIR_H
