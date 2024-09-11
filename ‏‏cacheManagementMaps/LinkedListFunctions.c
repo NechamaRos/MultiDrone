@@ -3,12 +3,10 @@
 #include "cacheManagement.h"
 #include <stdbool.h>
 
-
 extern controlBlock_t* controlBlock;
 
-#pragma region Node & LnkdLst function
-// to create a new node of mapInfo
-Node_t* createNode(int location, int sizeOfBytes) {
+// to create a new node of range
+Node_t* CreateRangeInDataStorageNode(int location, int sizeOfBytes) {
 	Node_t* newNode = (Node_t*)malloc(sizeof(Node_t)); // allocate memory for the node
 	if (newNode == NULL) {
 		printf("Error allocating memory\n");
@@ -20,16 +18,16 @@ Node_t* createNode(int location, int sizeOfBytes) {
 	return newNode;
 }
 
-// for add new mapInfo to the linkedList in the end of it
-void insertInTail(Node_t** tail, int location, int sizeOfBytes) {
+// for add new range to the linkedList in the end of it
+void InsertInTailOfLinkedList(Node_t** tail, int location, int sizeOfBytes) {
 	if (tail == NULL || *tail == NULL)//if the lst is empty
 		return;
-	Node_t* newNode = createNode(location, sizeOfBytes);
+	Node_t* newNode = CreateRangeInDataStorageNode(location, sizeOfBytes);
 	(*tail)->next = newNode;
 	*tail = newNode;
 }
 
-void printLinkedList(Node_t* head) {
+void PrintLinkedList(Node_t* head) {
 	Node_t* temp = head;
 	while (temp != NULL) {
 		printf("Location: %d, SizeOfBytes: %d -> ", temp->data.location, temp->data.sizeOfBytes); // הדפסת הנתון של הנקודה
@@ -39,31 +37,22 @@ void printLinkedList(Node_t* head) {
 }
 
 // for free all the linkedList memory
-void freeLinkedList(Node_t* head) {
-	//את המקום הראשון ברשימה המקושרת לא צריך להוסיף לסטרקטים
+void FreeLinkedList(Node_t* head) {
 	Node_t* temp;
 	RangeInDataStorage_t* r;
 	bool b = false;
+	//the first node contain id and size so we dont need to add it to the trees
+	head = head->next;
 	while (head != NULL) {
 		temp = head;
 		r = (RangeInDataStorage_t*)temp;
-		//the function is not success to send the data
-		if (b == true)
-		{
-			addNode(controlBlock->emptyPlacesByLocation, r);
-
-			addNode(controlBlock->emptyPlacesBySize, r);
-		}
-		b = true;
-		/*if (FindRangeByLocation(controlBlock->emptyPlacesByLocation->root, r->location) != NULL)
-			printf("true\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-		else
-			printf("false\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");*/
+		AddNodeToAvlTree(controlBlock->emptyPlacesByLocation, r);
+		AddNodeToAvlTree(controlBlock->emptyPlacesBySize, r);
 		printf(" %d \n", ((RangeInDataStorage_t*)(controlBlock->emptyPlacesByLocation->root->data))->sizeOfBytes);
 		head = (Node_t*)head->next;
 	}
-	printRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
-	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+	PrintRangeInDataStorageTree(controlBlock->emptyPlacesByLocation);
+	PrintRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 }
-#pragma endregion
+
 

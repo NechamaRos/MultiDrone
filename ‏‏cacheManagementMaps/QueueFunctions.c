@@ -4,34 +4,34 @@
 
 extern controlBlock_t* controlBlock;
 
-// פונקציה ליצירת תור חדש
-Queue_t* createQueue() {
+//Function to create a new queue
+Queue_t* CreateQueue() {
 	Queue_t* queue = (Queue_t*)malloc(sizeof(Queue_t));
 	queue->front = NULL;
 	queue->rear = NULL;
 	return queue;
 }
 
-// פונקציה להוספת פריט לתור (enqueue)
-void enqueue(Queue_t* queue, MapInfo_t mapInfo) {
+//Add to queue function
+void Enqueue(Queue_t* queue, MapInfo_t mapInfo) {
 	QueueNode_t* newNode = (QueueNode_t*)malloc(sizeof(QueueNode_t));
 	newNode->data = mapInfo;
 	newNode->next = NULL;
 
 	if (queue->rear == NULL) {
-		// אם התור ריק
+		//If the queue is empty
 		queue->front = newNode;
 		queue->rear = newNode;
 	}
 	else {
-		// הוספת פריט בסוף התור
-		queue->rear->next = newNode->next;
+		// Add an item at the end of the queue
+		queue->rear->next = newNode;
 		queue->rear = newNode;
-	}//חיבלתי בפונקציה הזו
+	}
 }
 
-// פונקציה להסרת פריט מהתור (dequeue)
-MapInfo_t* dequeue(Queue_t* queue) {
+// Dequeue function
+MapInfo_t* Dequeue(Queue_t* queue) {
 	if (queue->front == NULL) {
 		fprintf(stderr, "Queue is empty\n");
 		exit(EXIT_FAILURE);
@@ -49,20 +49,25 @@ MapInfo_t* dequeue(Queue_t* queue) {
 	return &data;
 }
 
-// פונקציה לבדוק אם התור ריק
-int isQueueEmpty(Queue_t* queue) {
+// Function to check if the queue is empty
+int IsQueueEmpty(Queue_t* queue) {
 	return (queue->front == NULL);
 }
 
-// פונקציה לשחרור זיכרון התור
-void freeQueue(Queue_t* queue) {
-	while (!isQueueEmpty(queue)) {
-		dequeue(queue);
+//A function to release all queue memory
+void FreeQueue(Queue_t* queue) {
+	if (queue)
+	{
+		while (!IsQueueEmpty(queue)) {
+			Dequeue(queue);
+		}
+		free(queue);
 	}
-	free(queue);
 }
 
-int calculateIndexInQueueArray(int size) {
+//A function that calculates according to the size of the map at which index of the array of queues 
+//it should be inserted
+int CalculateIndexInQueuesArray(int size) {
 	int index = size / SIZE_OF_RANGE_IN_QUEUE_ARRAY;
 	if (index >= SIZE_OF_QUEUE_ARRAY)
 		index = SIZE_OF_QUEUE_ARRAY - 1;
@@ -70,23 +75,31 @@ int calculateIndexInQueueArray(int size) {
 	return index;
 }
 
-void insertToQueueArray(MapInfo_t* mapInfo) {
-	enqueue(controlBlock->queueArray[calculateIndexInQueueArray(mapInfo->mapSizeInBytes)], *mapInfo);
+//An insert function to the array of queues
+void InsertToQueuesArray(MapInfo_t* mapInfo) {
+	//insert the map to the match queue by the calculation
+	Enqueue(controlBlock->QueuesArray[CalculateIndexInQueuesArray(mapInfo->mapSizeInBytes)], *mapInfo);
 }
 
-MapInfo_t* removeMaxMapFromQueueArray() {
-
+//A function to output the largest map entered recently
+MapInfo_t* RemoveMaxMapFromQueuesArray() 
+{
+	
 	int indexInQueueArray = SIZE_OF_QUEUE_ARRAY - 1;
 	MapInfo_t* temp = (MapInfo_t*)malloc(sizeof(MapInfo_t));
-	
+
+	//As long as I'm within range of deviate from the array of queues
 	while (indexInQueueArray >= 0)
 	{
-		if (controlBlock->queueArray[indexInQueueArray]->front == NULL) {
+		//If the head of the queue is empty, go to the queue indexed below
+		if (controlBlock->QueuesArray[indexInQueueArray]->front == NULL) {
 			indexInQueueArray--;
 		}
 		else
 		{
-			temp = dequeue(controlBlock->queueArray[indexInQueueArray]);
+			//Give me back the head of the queue
+			temp = Dequeue(controlBlock->QueuesArray[indexInQueueArray]);
+			//If the member's linked list has not already been freed by the sorted tree, return the member
 			if (temp->linkedList->data.location == temp->mapID)//location in first linkedList is mpaID
 			{
 				return temp;

@@ -4,24 +4,26 @@
 #define SIZE_OF_RANGE_IN_QUEUE_ARRAY (SIZE_OF_CACHE/SIZE_OF_QUEUE_ARRAY)
 
 
+//object of Range In Data Storage
 typedef struct RangeInDataStorage_s {
 	int location;
 	int sizeOfBytes;
 } RangeInDataStorage_t;
 
-
+//A node object, contains a data of type RangeInDataStorage_t
 typedef struct Node_s {
 	RangeInDataStorage_t data;
 	struct Node_s* next;
 } Node_t;
 
-
+//A map object, contains a linkedList of the data-locations
 typedef struct MapInfo_s {
 	int mapID;
 	int mapSizeInBytes;
 	Node_t* linkedList;
 } MapInfo_t;
 
+//A generic type of a tree node
 typedef struct AVLNode_s {
 	void* data;
 	struct AVLNode_s* left;
@@ -29,151 +31,213 @@ typedef struct AVLNode_s {
 	int height;
 } AVLNode_t;
 
+//a generic type of compare function
 typedef int (*CompareFunc)(const void*, const void*);
 
+//a generic type of print item function
+typedef void (*PrintFunc)(const void*);
+
+//a generic type of AVLTree
 typedef struct AVLTree_s {
 	AVLNode_t* root;
 	CompareFunc compare;
 } AVLTree_t;
 
-
-// מבנה של תור
+//A node object, contains a data of type MapInfo_t
 typedef struct QueueNode_s {
 	MapInfo_t data;
 	struct QueueNode_s* next;
 } QueueNode_t;
 
+//A Queue object
 typedef struct {
-	QueueNode_t* front; // החזית של התור
-	QueueNode_t* rear;  // הסוף של התור
+	QueueNode_t* front; 
+	QueueNode_t* rear;  
 } Queue_t;
 
+//An object containing information about the state of reading the map
 typedef struct ValuesOfReadingMap_s {
 	Node_t* linkedList;
 	int BitsLeftToRead;
 	int offset;
 }ValuesOfReadingMap_t;
 
+//controlBlock
 typedef struct controlBlock_s {
 	int* cache[SIZE_OF_CACHE];
-	Queue_t* queueArray[SIZE_OF_QUEUE_ARRAY];
+	Queue_t* QueuesArray[SIZE_OF_QUEUE_ARRAY];
 	AVLTree_t* MapsSortedByID;
 	AVLTree_t* emptyPlacesByLocation;
 	AVLTree_t* emptyPlacesBySize;
 	int EmptyPlaceInCache;
 }controlBlock_t;
 
+//struct that representing a point in a plane
+typedef struct Point_s
+{
+	int x;
+	int y;
+}Point_t;
 
-//linkedList
-
-void printLinkedList(Node_t* head);
-
-Node_t* createNode(int location, int sizeOfBytes);
-
-void insertInTail(Node_t** head, int location, int sizeOfBytes);
-
-void freeLinkedList(Node_t* head);
-
-///-- - - - - - - - - - - - - avlTree - - - - - - - - - - - - 
-
-int compareMapInfo(const void* a, const void* b);
-
-int compareRangeByLocation(const void* a, const void* b);
-
-int compareRangeBySize(const void* a, const void* b);
-
-int height(AVLNode_t* node);
-
-void updateHeight(AVLNode_t* node);
-
-AVLNode_t* rightRotate(AVLNode_t* y);
-
-AVLNode_t* leftRotate(AVLNode_t* x);
-
-void addNode(AVLTree_t* tree, void* data);
+//object of map, when I ask it from disk
+typedef struct map_s
+{
+	int id;
+	int size;
+}map_t;
 
 
-//void inOrderTraversal(AVLNode_t* node, PrintFunc printFunc);
+////////////////////////////////////////////////////////////////LinkedList functions
 
-typedef void (*PrintFunc)(const void*);
+void PrintLinkedList(Node_t* head);
 
-void printAVLTree(AVLTree_t* tree, PrintFunc printFunc);
+//create new node in linkedList
+Node_t* CreateRangeInDataStorageNode(int location, int sizeOfBytes);
 
-void printRangeInDataStorage(const void* data);
+//insert in tail of linkedList
+void InsertInTailOfLinkedList(Node_t** head, int location, int sizeOfBytes);
 
-void printRangeInDataStorageTree(AVLTree_t* tree);
+//free linkedList and remove it to an EmptyPlaces AVLTrees
+void FreeLinkedList(Node_t* head);
 
-void printMapInfo(void* data);
+///////////////////////////////////AVLTrees functions
 
-void printMapInfoTree(AVLTree_t* tree);
+//Compare by mapID
+int CompareMapInfo(const void* a, const void* b);
 
+//Compare by range location
+int CompareRangeByLocation(const void* a, const void* b);
+
+//Compare by range sizeOfBytes
+int CompareRangeBySize(const void* a, const void* b);
+
+//Get Height
+int Height(AVLNode_t* node);
+
+//Update Height
+void UpdateHeight(AVLNode_t* node);
+
+AVLNode_t* RightRotate(AVLNode_t* y);
+
+AVLNode_t* LeftRotate(AVLNode_t* x);
+
+//Function of insertion new node to avlTree, calls insertNode
+void AddNodeToAvlTree(AVLTree_t* tree, void* data);
+
+//Recursive function of insertion new node to AVLTree
+AVLNode_t* InsertNode(AVLNode_t* node, void* data, CompareFunc compare);
+
+//print functions
+void PrintAVLTree(AVLTree_t* tree, PrintFunc printFunc);
+
+void PrintRangeInDataStorage(const void* data);
+
+void PrintRangeInDataStorageTree(AVLTree_t* tree);
+
+void PrintMapInfo(void* data);
+
+void PrintMapInfoTree(AVLTree_t* tree);
+
+//return absolute value
 int Abs(int x);
 
-AVLNode_t* findMax(AVLNode_t* node);
+//Find the maximal value in tree
+AVLNode_t* FindMax(AVLNode_t* node);
 
-AVLNode_t* findPrevNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc);
+//Find the minimal value in tree
+AVLNode_t* FindMin(AVLNode_t* node);
 
-AVLNode_t* findNextNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc);
-//we create function that wrap the function of find prev, and function of find next, get it and compare it if is complete long hole, and merge it to one node in tree....
+//AVLNode_t* FindPrevNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc);
 
-void mergeNodes(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc);
+//AVLNode_t* FindNextNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc);
 
-//AVLNode_t* deleteRangeNode(AVLNode_t* root, int locationToDelete, CompareFunc compare);
+//Run on maps tree and free each node memory
+void FreeMapInfoTree(AVLNode_t* root);
 
+//Find map in the tree by id
 AVLNode_t* FindMapInfoByID(AVLNode_t* root, int mapID);
 
+//Find range node in the tree sorted by location
 AVLNode_t* FindRangeByLocation(AVLNode_t* root, int location);
 
+//Update range when I filled only part of the range
 void UpdateNodeInRangeBySize(RangeInDataStorage_t* nodeToUpdate, int updatedSize);
 
+//Update range when I filled only part of the range
 void UpdateNodeInRangeByLocation(AVLNode_t* nodeToUpdate, int updatedSize);
 
+//Recursive function of Delete EmptyPlacesBySize tree
 AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInDataStorage_t* item);
 
+//Recursive function of Delete EmptyPlacesByLocation tree
 AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesByLocation(AVLNode_t* root, int objectToSearchBy);
 
-AVLNode_t* RucursiveDeleteMapFromMapsSortedByID(AVLNode_t* root, int mapID);
+//Recursive function of Delete map from MapsSortedByID tree 
+AVLNode_t* RecursiveDeleteMapFromMapsSortedByID(AVLNode_t* root, int mapID);
 
-void deleteNodeFromEmptyPlacesByLocation(int location);
+//Wrap function of Delete from emptyPlacesByLocation tree
+void DeleteNodeFromEmptyPlacesByLocation(int location);
 
-void deleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* item);
+//Wrap function of Delete from emptyPlacesBySize tree
+void DeleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* item);
 
-void deleteNodeFromMapsSortedByID(int id);
+//Wrap function of Delete from MapsSortedByID tree
+void DeleteNodeFromMapsSortedByID(int id);
 
+///////////////////////////////////////////////Queue functions
 
-void printTree(AVLNode_t* root);
+//Create new queue
+Queue_t* CreateQueue();
 
-/////////////////////////////////- - - - queue - - - -/////////////////////////////////////////
+//Insert to queue
+void Enqueue(Queue_t* queue, MapInfo_t mapInfo);
 
-Queue_t* createQueue();
+//Remove from queue
+MapInfo_t* Dequeue(Queue_t* queue);
 
-// פונקציה להוספת פריט לתור (enqueue)
-void enqueue(Queue_t* queue, MapInfo_t mapInfo);
+//Check if queue is empty
+int IsQueueEmpty(Queue_t* queue);
 
-MapInfo_t* dequeue(Queue_t* queue);
+//Free queue's nodes
+void FreeQueue(Queue_t* queue);
 
-int isQueueEmpty(Queue_t* queue);
+//Calculate the index of queue to insert new map by its size
+int CalculateIndexInQueuesArray(int size);
 
-void freeQueue(Queue_t* queue);
+//Remove the bigger map inserted recently
+MapInfo_t* RemoveMaxMapFromQueuesArray();
 
-int calculateIndexInQueueArray(int size);
+//Insert to QueuesArray function
+void InsertToQueuesArray(MapInfo_t* mapInfo);
 
-void initControlBlock();
+//////////////////////////////////////////////////Central functions
 
-MapInfo_t* removeMaxMapFromQueueArray();
+//Function of removing map from cache by id
+void RemoveMapFromCache(int id);
 
-
-/////
-
-void MakesRoomForCurrentIncome(int size);
-
-void removeMapFromCache(int id);
-
+//Function of reading a part from map
 ValuesOfReadingMap_t ReadPieceOfMap(Node_t* linkedListOfLocations, int size, int offset, int id);
 
-void fetchFromDisk(int id, int offset, int location, int size);
+//Dummy function of request to read from disk
+void FetchFromDisk(int id, int offset, int location, int size);
 
-void insertToQueueArray(MapInfo_t* mapInfo);
-
+//Function of reading map smaller than cache size
 void ReadNormalMap(int id, int size);
 
+//Function of reading map bigger than cache size
+void ReadMapBiggerThanCache(int id, int mapSize);
+
+//Function of initial
+void InitControlBlock();
+
+//Function of reset the data structures
+void ResetCache();
+
+//Wrap function that makes sure there is enough space
+void MakesRoomForCurrentIncome(int size);
+
+//Function of clearance is sufficient for the income
+void OverrideInternal(int size);
+
+//A function that accepts a request for a map according to 2 points longitude and latitude
+void LoadMapsByBR_TL(Point_t br, Point_t tl);

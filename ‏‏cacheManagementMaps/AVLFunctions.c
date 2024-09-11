@@ -6,24 +6,24 @@
 extern controlBlock_t* controlBlock;
 RangeInDataStorage_t r;
 
+#pragma region compare functions
 
 //compare by mapID
-int compareMapInfo(const void* a, const void* b) {
+int CompareMapInfo(const void* a, const void* b) {
 	MapInfo_t* mapInfoA = (MapInfo_t*)a;
 	MapInfo_t* mapInfoB = (MapInfo_t*)b;
 	return mapInfoA->mapID - mapInfoB->mapID;
-
 }
 
 //compare by location
-int compareRangeByLocation(const void* a, const void* b) {
+int CompareRangeByLocation(const void* a, const void* b) {
 	RangeInDataStorage_t* rangeA = (RangeInDataStorage_t*)a;
 	RangeInDataStorage_t* rangeB = (RangeInDataStorage_t*)b;
 	return rangeA->location - rangeB->location;
 }
 
 //compare by sizeOfBytes
-int compareRangeBySize(const void* a, const void* b) {
+int CompareRangeBySize(const void* a, const void* b) {
 	RangeInDataStorage_t* rangeA = (RangeInDataStorage_t*)a;
 	RangeInDataStorage_t* rangeB = (RangeInDataStorage_t*)b;
 	if (rangeA->sizeOfBytes - rangeB->sizeOfBytes != 0)
@@ -40,56 +40,64 @@ int compareRangeBySize(const void* a, const void* b) {
 }
 #pragma endregion
 
-//get height
-int height(AVLNode_t* node) {
-	return node ? node->height : 0;
-}
-
-
-//update height
-void updateHeight(AVLNode_t* node) {
-	int leftHeight = height(node->left);
-	int rightHeight = height(node->right);
-	node->height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
-}
-
-int getBalance(AVLNode_t* node) {
-	return node ? height(node->left) - height(node->right) : 0;
-}
-
 int Abs(int x) {
 	return x < 0 ? x * -1 : x;
 }
 
-AVLNode_t* rightRotate(AVLNode_t* y) {
+#pragma region function for keep the tree balanced 
+
+//get Height
+int Height(AVLNode_t* node) {
+	return node ? node->height : 0;
+}
+
+//update Height
+void UpdateHeight(AVLNode_t* node) {
+	int leftHeight = Height(node->left);
+	int rightHeight = Height(node->right);
+	node->height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+}
+
+int GetBalance(AVLNode_t* node) {
+	return node ? Height(node->left) - Height(node->right) : 0;
+}
+
+AVLNode_t* RightRotate(AVLNode_t* y) {
 	AVLNode_t* x = y->left;
 	AVLNode_t* T2 = x->right;
 
 	x->right = y;
 	y->left = T2;
 
-	updateHeight(y);
-	updateHeight(x);
+	UpdateHeight(y);
+	UpdateHeight(x);
 
 	return x;
 }
 
-AVLNode_t* leftRotate(AVLNode_t* x) {
+AVLNode_t* LeftRotate(AVLNode_t* x) {
 	AVLNode_t* y = x->right;
 	AVLNode_t* T2 = y->left;
 
 	y->left = x;
 	x->right = T2;
 
-	updateHeight(x);
-	updateHeight(y);
+	UpdateHeight(x);
+	UpdateHeight(y);
 
 	return y;
 }
+#pragma endregion
+
+//function of insertion new node to avlTree, calls insertNode
+void AddNodeToAvlTree(AVLTree_t* tree, void* data)
+{
+	tree->root = InsertNode(tree->root, data, tree->compare);
+}
 
 //recursive function of insertion new node to avlTree
-AVLNode_t* insertNode(AVLNode_t* node, void* data, CompareFunc compare) {
-
+AVLNode_t* InsertNode(AVLNode_t* node, void* data, CompareFunc compare) 
+{
 	if (node == NULL) {
 		AVLNode_t* newNode = (AVLNode_t*)malloc(sizeof(AVLNode_t));
 		newNode->data = data;
@@ -97,206 +105,53 @@ AVLNode_t* insertNode(AVLNode_t* node, void* data, CompareFunc compare) {
 		newNode->height = 1;
 		return newNode;
 	}
-
 	int cmp = compare(data, node->data);
-	if (cmp < 0) {
-		node->left = insertNode(node->left, data, compare);
-	}
-	else {
-		node->right = insertNode(node->right, data, compare);
-	}
-
-	updateHeight(node);
-
-	int balance = height(node->left) - height(node->right);
-
-	if (balance > 1 && compare(data, node->left->data) < 0) {
-		return rightRotate(node);
-	}
-
-	if (balance < -1 && compare(data, node->right->data) > 0) {
-		return leftRotate(node);
-	}
-
+	if (cmp < 0)
+		node->left = InsertNode(node->left, data, compare);
+	else
+		node->right = InsertNode(node->right, data, compare);
+	UpdateHeight(node);
+	int balance = Height(node->left) - Height(node->right);
+	if (balance > 1 && compare(data, node->left->data) < 0)
+		return RightRotate(node);
+	if (balance < -1 && compare(data, node->right->data) > 0)
+		return LeftRotate(node);
 	if (balance > 1 && compare(data, node->left->data) > 0) {
-		node->left = leftRotate(node->left);
-		return rightRotate(node);
+		node->left = LeftRotate(node->left);
+		return RightRotate(node);
 	}
-
 	if (balance < -1 && compare(data, node->right->data) < 0) {
-		node->right = rightRotate(node->right);
-		return leftRotate(node);
-	}
-
-	return node;
-}
-
-//function of insertion new node to avlTree
-void addNode(AVLTree_t* tree, void* data)
-{
-	tree->root = insertNode(tree->root, data, tree->compare);
-}
-
-#pragma region print functions
-
-void printMapInfo(const void* data) {
-	MapInfo_t* mapInfo = (MapInfo_t*)data;
-	printLinkedList(mapInfo->linkedList);
-	printf("MapID: %d, MapSizeInBytes: %d\n", mapInfo->mapID, mapInfo->mapSizeInBytes);
-}
-
-void inOrderTraversal(AVLNode_t* node, PrintFunc printFunc) {
-	if (node != NULL) {
-		inOrderTraversal(node->left, printFunc);
-		printFunc(node->data);
-		inOrderTraversal(node->right, printFunc);
-	}
-}
-
-void printAVLTree(AVLTree_t* tree, PrintFunc printFunc) {
-	inOrderTraversal(tree->root, printFunc);
-}
-
-void printRangeInDataStorage(const void* data) {
-	RangeInDataStorage_t* rangeData = (RangeInDataStorage_t*)data;
-	printf("Location: %d, SizeOfBytes: %d\n", rangeData->location, rangeData->sizeOfBytes);
-}
-
-void printMapInfoTree(AVLTree_t* tree) {
-	printf("printMapInfoTree occurred\n");
-	inOrderTraversal(tree->root, printMapInfo);
-}
-
-void printRangeInDataStorageTree(AVLTree_t* tree) {
-	printf("printRangeInDataStorageTree occurred\n");
-	inOrderTraversal(tree->root, printRangeInDataStorage);
-}
-#pragma endregion
-
-#pragma region functions to find the next or prev node in tree
-
-
-AVLNode_t* findMin(AVLNode_t* node) {
-	while (node && node->left != NULL) {
-		node = node->left;
-	}
-	return node;
-}
-// חיפוש האיבר העוקב בעץ
-AVLNode_t* findNextNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc) {
-	if (currentNode == NULL) return NULL;
-
-	// מקרה 1: אם יש לצומת הנוכחי צומת ימין
-	if (currentNode->right != NULL) {
-		return findMin(currentNode->right);
-	}
-
-	// מקרה 2: אם אין לצומת הנוכחי צומת ימין
-	AVLNode_t* successor = NULL;
-	AVLNode_t* ancestor = root;
-
-	while (ancestor != NULL) {
-		int cmp = compareFunc(currentNode->data, ancestor->data);
-
-		if (cmp < 0) {
-			successor = ancestor;
-			ancestor = ancestor->left;
-		}
-		else if (cmp > 0) {
-			ancestor = ancestor->right;
-		}
-		else {
-			break;
-		}
-	}
-
-	return successor;
-}
-
-
-
-
-// חיפוש הצומת הגדול ביותר בתת-העץ השמאלי
-AVLNode_t* findMax(AVLNode_t* node) {
-	while (node && node->right != NULL) {
-		node = node->right;
+		node->right = RightRotate(node->right);
+		return LeftRotate(node);
 	}
 	return node;
 }
 
-// חיפוש האיבר הקודם בעץ
-AVLNode_t* findPrevNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc) {
-	if (currentNode == NULL) return NULL;
-
-	// מקרה 1: אם לצומת הנוכחי יש צומת שמאלי
-	if (currentNode->left != NULL) {
-		return findMax(currentNode->left);
-	}
-
-	// מקרה 2: אם אין לצומת הנוכחי צומת שמאלי
-	AVLNode_t* predecessor = NULL;
-	AVLNode_t* ancestor = root;
-
-	while (ancestor != NULL) {
-		int cmp = compareFunc(currentNode->data, ancestor->data);
-
-		if (cmp < 0) {
-			ancestor = ancestor->left;
-		}
-		else if (cmp > 0) {
-			predecessor = ancestor;
-			ancestor = ancestor->right;
-		}
-		else {
-			break;
-		}
-	}
-
-	return predecessor;
-}
-
-#pragma endregion
-
-//if we find next or prev node (or both), we want to merge them to one updated node
-//void mergeNodes(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc)
-//{
-//	AVLNode_t* prev = findPrevNode(root, currentNode, compareFunc);
-//	AVLNode_t* next = findNextNode(root, currentNode, compareFunc);
-//}
-
-//wrap function of delete from emptyPlacesByLocation
-void deleteNodeFromEmptyPlacesByLocation(int location)
+#pragma region Delete functions
+//wrap function of Delete from emptyPlacesByLocation
+void DeleteNodeFromEmptyPlacesByLocation(int location)
 {
 	RecursiveDeleteNodeFromEmptyPlacesByLocation(controlBlock->emptyPlacesByLocation->root, location);
 }
 
-//wrap function of delete from emptyPlacesBySize
-void deleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* range)
+//wrap function of Delete from emptyPlacesBySize
+void DeleteNodeFromEmptyPlacesBySize(RangeInDataStorage_t* range)
 {
-	printf("\n- ----------- - - - -\n");
-	printf("\nrange->location %d\n", range->location);
-	printf("\nrange->sizeOfBytes %d\n", range->sizeOfBytes);
-	if (range == (RangeInDataStorage_t*)(controlBlock->emptyPlacesBySize->root->data))
-		controlBlock->emptyPlacesBySize->root = NULL;
-	else
-	{
-		RecursiveDeleteNodeFromEmptyPlacesBySize(controlBlock->emptyPlacesBySize->root, range);
-	}
+	RecursiveDeleteNodeFromEmptyPlacesBySize(controlBlock->emptyPlacesBySize->root, range);
 }
 
-//wrap function of delete from MapsSortedByID
-void deleteNodeFromMapsSortedByID(int id)
+//wrap function of Delete from MapsSortedByID
+void DeleteNodeFromMapsSortedByID(int id)
 {
-	RucursiveDeleteMapFromMapsSortedByID(controlBlock->MapsSortedByID->root, id);
+	RecursiveDeleteMapFromMapsSortedByID(controlBlock->MapsSortedByID->root, id);
 }
 
-//recursive function of delete EmptyPlacesByLocation
+//recursive function of Delete EmptyPlacesByLocation
 AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesByLocation(AVLNode_t* root, int locationToSearch) {
 
 	if (root == NULL) {
 		return NULL;
 	}
-
 	RangeInDataStorage_t* range = (RangeInDataStorage_t*)root->data;
 	printf("\nrange->location %d\n", range->location);
 	int cmp = locationToSearch - range->location;
@@ -307,70 +162,54 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesByLocation(AVLNode_t* root, int loc
 		root->right = RecursiveDeleteNodeFromEmptyPlacesByLocation(root->right, locationToSearch);
 	}
 	else {
-		// Node to be deleted
+		// Node to be Deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
 			//free(root->data); // Free the data if necessary
 			//free(root);
 			return temp;
 		}
-
 		else if (root->right == NULL) {
 			AVLNode_t* temp = root->left;
 			//free(root->data); // Free the data if necessary
 			//free(root);
 			return temp;
 		}
-
-		AVLNode_t* temp = findMin(root->right);
+		AVLNode_t* temp = FindMin(root->right);
 		root->data = temp->data;
-		root->right = RecursiveDeleteNodeFromEmptyPlacesByLocation(root->right, ((RangeInDataStorage_t*)temp)->location);
+		root->right = RecursiveDeleteNodeFromEmptyPlacesByLocation(root->right, ((RangeInDataStorage_t*)temp->data)->location);
 	}
-
-	updateHeight(root);
-
-	int balance = getBalance(root);
-
-	if (balance > 1 && getBalance(root->left) >= 0) {
-		return rightRotate(root);
+	UpdateHeight(root);
+	int balance = GetBalance(root);
+	if (balance > 1 && GetBalance(root->left) >= 0)
+		return RightRotate(root);
+	if (balance > 1 && GetBalance(root->left) < 0) {
+		root->left = LeftRotate(root->left);
+		return RightRotate(root);
 	}
-
-
-	if (balance > 1 && getBalance(root->left) < 0) {
-		root->left = leftRotate(root->left);
-		return rightRotate(root);
+	if (balance < -1 && GetBalance(root->right) <= 0)
+		return LeftRotate(root);
+	if (balance < -1 && GetBalance(root->right) > 0) {
+		root->right = RightRotate(root->right);
+		return LeftRotate(root);
 	}
-
-	if (balance < -1 && getBalance(root->right) <= 0) {
-		return leftRotate(root);
-	}
-
-	if (balance < -1 && getBalance(root->right) > 0) {
-		root->right = rightRotate(root->right);
-		return leftRotate(root);
-	}
-
 	return root;
 }
 
-//recursive function of delete MapsSortedByID
-AVLNode_t* RucursiveDeleteMapFromMapsSortedByID(AVLNode_t* root, int mapID) {
+//recursive function of Delete map from MapsSortedByID tree 
+AVLNode_t* RecursiveDeleteMapFromMapsSortedByID(AVLNode_t* root, int mapID) {
 
 	if (root == NULL) {
 		return NULL;
 	}
-
 	MapInfo_t* mapInfo = (MapInfo_t*)root->data;
-
 	int cmp = mapID - mapInfo->mapID;
-	if (cmp < 0) {
-		root->left = RucursiveDeleteMapFromMapsSortedByID(root->left, mapID);
-	}
-	else if (cmp > 0) {
-		root->right = RucursiveDeleteMapFromMapsSortedByID(root->right, mapID);
-	}
+	if (cmp < 0)
+		root->left = RecursiveDeleteMapFromMapsSortedByID(root->left, mapID);
+	else if (cmp > 0)
+		root->right = RecursiveDeleteMapFromMapsSortedByID(root->right, mapID);
 	else {
-		// Node to be deleted
+		// Node to be Deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
 			//free(root->data); // Free the data if necessary
@@ -383,70 +222,44 @@ AVLNode_t* RucursiveDeleteMapFromMapsSortedByID(AVLNode_t* root, int mapID) {
 			//free(root);
 			return temp;
 		}
-
-		AVLNode_t* temp = findMin(root->right);
+		AVLNode_t* temp = FindMin(root->right);
 		root->data = temp->data;
-		root->right = RucursiveDeleteMapFromMapsSortedByID(root->right, ((MapInfo_t*)temp->data)->mapID);
+		root->right = RecursiveDeleteMapFromMapsSortedByID(root->right, ((MapInfo_t*)temp->data)->mapID);
 	}
-
-	updateHeight(root);
-
-	int balance = getBalance(root);
-
-	if (balance > 1 && getBalance(root->left) >= 0) {
-		return rightRotate(root);
+	UpdateHeight(root);
+	int balance = GetBalance(root);
+	if (balance > 1 && GetBalance(root->left) >= 0)
+		return RightRotate(root);
+	if (balance > 1 && GetBalance(root->left) < 0) {
+		root->left = LeftRotate(root->left);
+		return RightRotate(root);
 	}
-
-
-	if (balance > 1 && getBalance(root->left) < 0) {
-		root->left = leftRotate(root->left);
-		return rightRotate(root);
+	if (balance < -1 && GetBalance(root->right) <= 0)
+		return LeftRotate(root);
+	if (balance < -1 && GetBalance(root->right) > 0) {
+		root->right = RightRotate(root->right);
+		return LeftRotate(root);
 	}
-
-	if (balance < -1 && getBalance(root->right) <= 0) {
-		return leftRotate(root);
-	}
-
-	if (balance < -1 && getBalance(root->right) > 0) {
-		root->right = rightRotate(root->right);
-		return leftRotate(root);
-	}
-
 	return root;
 }
 
-//recursive function of delete EmptyPlacesBySize
+//recursive function of Delete EmptyPlacesBySize
 AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInDataStorage_t* item) {
-
 	if (root == NULL) {
 		return NULL;
 	}
-
 	RangeInDataStorage_t* range = (RangeInDataStorage_t*)root->data;
-	printf("\n- - - - - is enter  \n");
-
-	printf("\nitem->sizeOfBytes %d\n", item->sizeOfBytes);
-	printf("\nrange->sizeOfBytes %d\n", range->sizeOfBytes);
-
-	printf("\nitem->location %d\n", item->location);
-	printf("\nrange->location %d\n", range->location);
-
 	int cmp = item->sizeOfBytes - range->sizeOfBytes;
-
-
 	if (cmp < 0) {
-		printf("\ncmp < 0\n");
 		root->left = RecursiveDeleteNodeFromEmptyPlacesBySize(root->left, item);
 	}
 	//if found another object with same size, continue search
 	else if (cmp >= 0 && item->location != range->location) {
-		printf("\ncmp >= 0 && item->location != range->location\n");
 		root->right = RecursiveDeleteNodeFromEmptyPlacesBySize(root->right, item);
 	}
 	else
 	{
-		printf("heidad\n");
-		// Node to be deleted
+		// Node to be Deleted
 		if (root->left == NULL) {
 			AVLNode_t* temp = root->right;
 			//if (root->data != NULL)
@@ -468,44 +281,58 @@ AVLNode_t* RecursiveDeleteNodeFromEmptyPlacesBySize(AVLNode_t* root, RangeInData
 			return temp;
 		}
 
-		AVLNode_t* temp = findMin(root->right);
-		printf("s %d\n", ((RangeInDataStorage_t*)temp->data)->location);
-		printf("l %d\n", ((RangeInDataStorage_t*)temp->data)->sizeOfBytes);
+		AVLNode_t* temp = FindMin(root->right);
 		root->data = temp->data;//הבן הימני והאבא שווים
 		root->right = RecursiveDeleteNodeFromEmptyPlacesBySize(root->right, (RangeInDataStorage_t*)(temp->data));
 		//printRangeInDataStorage(root->right->data);
-		printf("\n");
-		//printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
-		printf("\n");
-		//הוא לא מצליח למחוק את האיבר המינימלי, הוא מכפיל אותו
+		//PrintRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
 	}
 
-	updateHeight(root);
-
-	int balance = getBalance(root);
-
-	if (balance > 1 && getBalance(root->left) >= 0) {
-		return rightRotate(root);
+	UpdateHeight(root);
+	int balance = GetBalance(root);
+	if (balance > 1 && GetBalance(root->left) >= 0)
+		return RightRotate(root);
+	if (balance > 1 && GetBalance(root->left) < 0) {
+		root->left = LeftRotate(root->left);
+		return RightRotate(root);
 	}
-
-
-	if (balance > 1 && getBalance(root->left) < 0) {
-		root->left = leftRotate(root->left);
-		return rightRotate(root);
+	if (balance < -1 && GetBalance(root->right) <= 0)
+		return LeftRotate(root);
+	if (balance < -1 && GetBalance(root->right) > 0) {
+		root->right = RightRotate(root->right);
+		return LeftRotate(root);
 	}
-
-	if (balance < -1 && getBalance(root->right) <= 0) {
-		return leftRotate(root);
-	}
-
-	if (balance < -1 && getBalance(root->right) > 0) {
-		root->right = rightRotate(root->right);
-		return leftRotate(root);
-	}
-
 	return root;
 }
 
+#pragma endregion
+
+#pragma region Find & update functions
+//Find range node in the tree sorted
+AVLNode_t* FindRangeByLocation(AVLNode_t* root, int location) {
+	if (root == NULL) {
+		return NULL;
+	}
+	RangeInDataStorage_t* range = (RangeInDataStorage_t*)root->data;
+	if (location < range->location)
+		return FindRangeByLocation(root->left, location);
+	else if (location > range->location)
+		return FindRangeByLocation(root->right, location);
+	else		// the location of current node same to location i got
+		return root;
+}
+
+AVLNode_t* FindMapInfoByID(AVLNode_t* root, int id) {
+	if (root == NULL)
+		return NULL;
+	MapInfo_t* mapinfo = (MapInfo_t*)root->data;
+	if (id < mapinfo->mapID)
+		return FindMapInfoByID(root->left, id);
+	else if (id > mapinfo->mapID)
+		return FindMapInfoByID(root->right, id);
+	else // the current node id same to id i got
+		return root;
+}
 
 //update range when I filled only part of the range
 void UpdateNodeInRangeByLocation(AVLNode_t* nodeToUpdate, int updatedSize)
@@ -518,52 +345,153 @@ void UpdateNodeInRangeBySize(RangeInDataStorage_t* nodeToUpdate, int updatedSize
 {
 	r.location = nodeToUpdate->location;
 	r.sizeOfBytes = updatedSize;
-	deleteNodeFromEmptyPlacesBySize(nodeToUpdate);
-	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
-	addNode(controlBlock->emptyPlacesBySize, (AVLNode_t*)&r);
+	DeleteNodeFromEmptyPlacesBySize(nodeToUpdate);
+	PrintRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+	AddNodeToAvlTree(controlBlock->emptyPlacesBySize, (AVLNode_t*)&r);
 	nodeToUpdate->sizeOfBytes = updatedSize;
+	//AddNodeToAvlTree(controlBlock->emptyPlacesBySize, (AVLNode_t*)nodeToUpdate);
+	PrintRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+}
+#pragma endregion
 
-	//addNode(controlBlock->emptyPlacesBySize, (AVLNode_t*)nodeToUpdate);
-
-	printRangeInDataStorageTree(controlBlock->emptyPlacesBySize);
+// run on maps tree and free each node memory
+void FreeMapInfoTree(AVLNode_t* root)
+{
+	if (root == NULL)
+		return;
+	if (root->left != NULL)
+		FreeMapInfoTree(root->left);
+	if (root->right != NULL)
+		FreeMapInfoTree(root->right);
+	DeleteNodeFromMapsSortedByID(((MapInfo_t*)((AVLNode_t*)(root->data)))->mapID);
 }
 
+#pragma region functions to Find the next or prev node in tree
 
-AVLNode_t* FindRangeByLocation(AVLNode_t* root, int location) {
-	if (root == NULL) {
-		return NULL;
+//Find the minimal value in tree
+AVLNode_t* FindMin(AVLNode_t* node) {
+	while (node && node->left != NULL) {
+		node = node->left;
 	}
+	return node;
+}
 
-	RangeInDataStorage_t* range = (RangeInDataStorage_t*)root->data;
-	if (location < range->location) {
-		return FindRangeByLocation(root->left, location);
+// חיפוש האיבר העוקב בעץ
+//AVLNode_t* FindNextNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc) 
+//{
+//if (currentNode == NULL) return NULL;
+//
+//	// מקרה 1: אם יש לצומת הנוכחי צומת ימין
+//	if (currentNode->right != NULL) {
+//		return FindMin(currentNode->right);
+//	}
+//
+//	// מקרה 2: אם אין לצומת הנוכחי צומת ימין
+//	AVLNode_t* successor = NULL;
+//	AVLNode_t* ancestor = root;
+//
+//	while (ancestor != NULL) {
+//		int cmp = compareFunc(currentNode->data, ancestor->data);
+//
+//		if (cmp < 0) {
+//			successor = ancestor;
+//			ancestor = ancestor->left;
+//		}
+//		else if (cmp > 0) {
+//			ancestor = ancestor->right;
+//		}
+//		else {
+//			break;
+//		}
+//	}
+//
+//	return successor;
+//}
+
+
+
+
+//Find the maximal value in tree
+AVLNode_t* FindMax(AVLNode_t* node) {
+	while (node && node->right != NULL) {
+		node = node->right;
 	}
-	else if (location > range->location) {
-		return FindRangeByLocation(root->right, location);
-	}
-	else {
-		// location תואם ל-location של הצומת הנוכחי
-		return root;
+	return node;
+}
+
+// חיפוש האיבר הקודם בעץ
+//AVLNode_t* FindPrevNode(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc) {
+//	if (currentNode == NULL) return NULL;
+//
+//	// מקרה 1: אם לצומת הנוכחי יש צומת שמאלי
+//	if (currentNode->left != NULL) {
+//		return FindMax(currentNode->left);
+//	}
+//
+//	// מקרה 2: אם אין לצומת הנוכחי צומת שמאלי
+//	AVLNode_t* predecessor = NULL;
+//	AVLNode_t* ancestor = root;
+//
+//	while (ancestor != NULL) {
+//		int cmp = compareFunc(currentNode->data, ancestor->data);
+//
+//		if (cmp < 0) {
+//			ancestor = ancestor->left;
+//		}
+//		else if (cmp > 0) {
+//			predecessor = ancestor;
+//			ancestor = ancestor->right;
+//		}
+//		else {
+//			break;
+//		}
+//	}
+//
+//	return predecessor;
+//}
+
+#pragma endregion
+
+//if we Find next or prev node (or both), we want to merge them to one updated node
+//void mergeNodes(AVLNode_t* root, AVLNode_t* currentNode, CompareFunc compareFunc)
+//{
+//	AVLNode_t* prev = FindPrevNode(root, currentNode, compareFunc);
+//	AVLNode_t* next = FindNextNode(root, currentNode, compareFunc);
+//}
+
+#pragma region print functions
+
+void PrintMapInfo(const void* data) {
+	MapInfo_t* mapInfo = (MapInfo_t*)data;
+	PrintLinkedList(mapInfo->linkedList);
+	printf("MapID: %d, MapSizeInBytes: %d\n", mapInfo->mapID, mapInfo->mapSizeInBytes);
+}
+
+void InOrderTraversal(AVLNode_t* node, PrintFunc printFunc) {
+	if (node != NULL) {
+		InOrderTraversal(node->left, printFunc);
+		printFunc(node->data);
+		InOrderTraversal(node->right, printFunc);
 	}
 }
 
-AVLNode_t* FindMapInfoByID(AVLNode_t* root, int id) {
-	if (root == NULL) {
-		return NULL;
-	}
-
-	MapInfo_t* mapinfo = (MapInfo_t*)root->data;
-	if (id < mapinfo->mapID) {
-		return FindMapInfoByID(root->left, id);
-	}
-	else if (id > mapinfo->mapID) {
-		return FindMapInfoByID(root->right, id);
-	}
-	else {
-		// location תואם ל-location של הצומת הנוכחי
-		return root;
-	}
+void PrintAVLTree(AVLTree_t* tree, PrintFunc printFunc) {
+	InOrderTraversal(tree->root, printFunc);
 }
 
+void PrintRangeInDataStorage(const void* data) {
+	RangeInDataStorage_t* rangeData = (RangeInDataStorage_t*)data;
+	printf("Location: %d, SizeOfBytes: %d\n", rangeData->location, rangeData->sizeOfBytes);
+}
 
+void PrintMapInfoTree(AVLTree_t* tree) {
+	printf("printMapInfoTree occurred\n");
+	InOrderTraversal(tree->root, PrintMapInfo);
+}
+
+void PrintRangeInDataStorageTree(AVLTree_t* tree) {
+	printf("PrintRangeInDataStorageTree occurred\n");
+	InOrderTraversal(tree->root, PrintRangeInDataStorage);
+}
+#pragma endregion
 
