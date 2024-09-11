@@ -17,11 +17,11 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
+
     <ProjectGuid>{f9edcb29-48b8-43a3-a1e9-803a0a1c9b61}</ProjectGuid>
     <RootNamespace>MasterSlaveManagement</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
