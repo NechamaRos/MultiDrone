@@ -61,6 +61,9 @@
     <Filter Include="Source Files\DroneTrack">
       <UniqueIdentifier>{2854cb75-ba29-441b-8dff-4947a76a6041}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Events\tests">
+      <UniqueIdentifier>{a2ad7442-9f50-4578-9d51-86428d0c1240}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DynamicBuffer.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="SlaveEventManager.cpp">
       <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>Source Files\Events\tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

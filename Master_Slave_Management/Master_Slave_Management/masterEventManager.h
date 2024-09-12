@@ -19,7 +19,7 @@ struct CurrentEventsFromSlaves
 class MasterEventManager: virtual public SlaveEventManager
 {
     static int reqCounter;
-	CurrentEventsFromSlaves currenteventsFromSlaves;
+	CurrentEventsFromSlaves currentEventsFromSlaves;
 	void mergeAndSortEvents(vector<vector<Event>>& allEvents);
 	void areAllSlavesResponded();
 public:
