@@ -16,12 +16,12 @@
 #include <iomanip>
 #include <string>
 #include <cstdlib> // For rand() and srand() functions
-#include <cstdio> // לצורך שימוש בפונקציה remove
+#include <cstdio> // for remove() function
 
 using namespace std;
 using namespace std::chrono;
 
-tm addSecondsToTime(const tm& time, int secondsToAdd)// פונקציה שמוסיפה שניות לשעה בתאריך
+tm addSecondsToTime(const tm& time, int secondsToAdd)// Adds seconds to the hour on the date
 {
     time_t time_t_form = mktime(const_cast<tm*>(&time));
     time_t_form += secondsToAdd;
@@ -29,17 +29,16 @@ tm addSecondsToTime(const tm& time, int secondsToAdd)// פונקציה שמוסיפה שניות לש
     return *updated_time;
 }
 
-TEST_CASE("Event: getMessage")//אם קיבל את המחרות טוב
+TEST_CASE("Event: getMessage")//check the string
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
-    // יצירת משתנה tm חדש שיכיל את התאריך הנוכחי
-    tm current_date = *tm_now; // שעתיים שעתיים, בלי הקשיחות של שעה
-    Event event(current_date, "get event1");//יצירת אירוע
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
+    tm current_date = *tm_now;
+    Event event(current_date, "get event1");//create event
     DOCTEST_CHECK(event.getMessage() == "get event1");
 }
 
-// פונקציה להשוואת תאריכים מסוג tm
+//a function for comparing dates of type tm
 bool operator==(const std::tm& lhs, const std::tm& rhs) {
     return lhs.tm_year == rhs.tm_year &&
         lhs.tm_mon == rhs.tm_mon &&
@@ -49,19 +48,19 @@ bool operator==(const std::tm& lhs, const std::tm& rhs) {
         lhs.tm_sec == rhs.tm_sec;
 }
 
-TEST_CASE("Event: getDate")//אם קיבל את התאריך טוב
+TEST_CASE("Event: getDate")//check date
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm time = *tm_now;
     Event event(time, "event!");
     CHECK(event.getTime() == time);
 }
 
-TEST_CASE("Event: getDateToString")//אם קיבל את התאריך טוב והמיר למחרוזת טוב
+TEST_CASE("Event: getDateToString") // Convert date to string
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);  // current time
+    tm* tm_now = localtime(&now);  // Conversion to tm
     tm time = *tm_now;
     tm tmi;
     Event event(time, "event!");
@@ -70,31 +69,30 @@ TEST_CASE("Event: getDateToString")//אם קיבל את התאריך טוב והמיר למחרוזת טוב
     CHECK(time == tmi);
 }
 
-TEST_CASE("Event: other: getMessage")//other אם קיבל את המחרות טוב שמקבל 
+TEST_CASE("Event: other: getMessage")//check string I got from other
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
-    // יצירת משתנה tm חדש שיכיל את התאריך הנוכחי
-    tm current_date = *tm_now; // שעתיים שעתיים, בלי הקשיחות של שעה
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
+    tm current_date = *tm_now;
     Event event1(current_date, "event!");
     Event event2(event1);
     DOCTEST_CHECK(event2.getMessage() == "event!");
 }
 
-TEST_CASE("Event: other: getDate")//other אם קיבל את התאריך טוב שמקבל
+TEST_CASE("Event: other: getDate")//check date I got from other
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm time = *tm_now;
     Event event1(time, "event!");
     Event event2(event1);
     CHECK(event2.getTime() == time);
 }
 
-TEST_CASE("Event::operator= same")// בדיקה אם זהים
+TEST_CASE("Event::operator= when same")// check operator = when they same
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
     Event event2(timing, "event1");
@@ -103,14 +101,14 @@ TEST_CASE("Event::operator= same")// בדיקה אם זהים
     CHECK(event1.getTime() == b.getTime());
 }
 
-TEST_CASE("Event::operator= not same")// בדיקה אם לא זהים
+TEST_CASE("Event::operator= not same")// check operator = when they not same
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
-    now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    now = time(nullptr);    // current time
+    tm_now = localtime(&now);    // Conversion to tm
     timing = *tm_now;
     Event event2(timing, "event2");
     Event b = event1 = event2;
@@ -118,10 +116,10 @@ TEST_CASE("Event::operator= not same")// בדיקה אם לא זהים
     CHECK(event1.getTime() == b.getTime());
 }
 
-TEST_CASE("Event::operator= sand 1 twice")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator= sand 1 twice")// check operator = when he sent one twice
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
     Event b = event1 = event1;
@@ -129,55 +127,55 @@ TEST_CASE("Event::operator= sand 1 twice")// בדיקה אם שלח את אותו אחד
     CHECK(event1.getTime() == b.getTime());
 }
 
-TEST_CASE("Event::operator== not same")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator== not same")// check operator == when they not same
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
-    timing = addSecondsToTime(timing, 2);// הסספת 2 שניות לשעה בתאריך
+    timing = addSecondsToTime(timing, 2);// adds 2 seconds to the hour on the date
     Event event2(*tm_now, "event2");
     bool b = event1 == event2;
     CHECK(b == false);
 }
 
-TEST_CASE("Event::operator== realy same")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator== same")// check operator == when they same
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
     Event event2(timing, "event2");
     CHECK(event1 == event2);
 }
 
-TEST_CASE("Event::operator< if small")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator< when small")// check operator < when small
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
-    timing = addSecondsToTime(timing, 2);
+    timing = addSecondsToTime(timing, 2);// adds 2 seconds to the hour on the date
     Event event2(timing, "event2");
     CHECK(event1 < event2);
 }
 
-TEST_CASE("Event::operator< if big")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator< when big")//check operator < when big
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
-    timing = addSecondsToTime(timing, 2);
+    timing = addSecondsToTime(timing, 2);// adds 2 seconds to the hour on the date
     Event event2(timing, "event2");
     bool b = event2 < event1;
     CHECK(b == false);
 }
 
-TEST_CASE("Event::operator< if same")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator< when same")// check operator < when same
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
     Event event2(timing, "event2");
@@ -185,33 +183,33 @@ TEST_CASE("Event::operator< if same")// בדיקה אם שלח את אותו אחד
     CHECK(b == false);
 }
 
-TEST_CASE("Event::operator> if small")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator> when small")// check operator > when small
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
-    timing = addSecondsToTime(timing, 2);
+    timing = addSecondsToTime(timing, 2);// adds 2 seconds to the hour on the date
     Event event2(timing, "event2");
     bool b = event1 > event2;
     CHECK(b == false);
 }
 
-TEST_CASE("Event::operator> if big")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator> when big")// check operator > when big
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
-    timing = addSecondsToTime(timing, 2);
+    timing = addSecondsToTime(timing, 2);// adds 2 seconds to the hour on the date
     Event event2(timing, "event2");
     CHECK(event2 > event1);
 }
 
-TEST_CASE("Event::operator> if same")// בדיקה אם שלח את אותו אחד
+TEST_CASE("Event::operator> when same")// check operator > when same
 {
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     Event event1(timing, "event1");
     Event event2(timing, "event2");
@@ -219,18 +217,18 @@ TEST_CASE("Event::operator> if same")// בדיקה אם שלח את אותו אחד
     CHECK(b == false);
 }
 
-TEST_CASE("DynamicBuffer: addEvent- if add to buffer, getBufferIndex, getBuffer")//בדיקה אם הכניס למערך הנכון את הנתונם הנכונים
+TEST_CASE("DynamicBuffer: addEvent- if add to buffer, getBufferIndex, getBuffer")//Checking if he entered the correct data in the correct array
 {
-    int random = rand() % 10 + 1; // Generate a random number between 1 and 100
+    int random = rand() % 10 + 1; // Generate a random number between 1 and 10
     DynamicBuffer dB(random);
     int buf1, buf2;
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     tm date;
     for (int i = 1; i <= random + 2; i++)
     {
-        timing = addSecondsToTime(timing, 2);// הוספת 2 שניות לשעה בתאריך
+        timing = addSecondsToTime(timing, 2);// adds 2 seconds to the hour on the date
         Event event(timing, "The event " + to_string(i));
         date = event.getTime();
         dB.addEvent(event);
@@ -253,13 +251,13 @@ TEST_CASE("DynamicBuffer: addEvent- if add to buffer, getBufferIndex, getBuffer"
     DOCTEST_CHECK(date == timing);
 }
 
-TEST_CASE("DynamicBuffer: addEvent- enter more the len buffer if add to other buffer")//בדיקה אם כשנגמר המקום במערך עובר למערך השני
+TEST_CASE("DynamicBuffer: addEvent- enter more the len buffer if add to other buffer")//Checking if when the place in the first array is finished, it moves to the second array
 {
     int random = rand() % 10 + 1; // Generate a random number between 1 and 100
     DynamicBuffer dB(random);
     int buf1, buf2;
-    time_t now = time(nullptr);   // קבלת הזמן הנוכחי
-    tm* tm_now = localtime(&now);    // המרת הזמן למבנה tm
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
     tm timing = *tm_now;
     tm date;
     for (int i = 1; i <= random + 1; i++)
@@ -284,29 +282,29 @@ TEST_CASE("DynamicBuffer: addEvent- enter more the len buffer if add to other bu
     CHECK(buf2 == 1);
 }
 
-TEST_CASE("DynamicBuffer: clearAltBuffer, getAltBuffer")//בדיקה אם מרוקן את המערך
+TEST_CASE("DynamicBuffer: clearAltBuffer, getAltBuffer")//Checking if the array is emptied
 {
     DynamicBuffer dB(1);
-    time_t now = time(nullptr);    // קבלת הזמן הנוכחי
-    tm* now_tm = localtime(&now);    // המרת הזמן למבנה tm
-    tm timing = *now_tm;
+    time_t now = time(nullptr);    // current time
+    tm* tm_now = localtime(&now);    // Conversion to tm
+    tm timing = *tm_now;
     Event e1(timing, "event1");
     dB.addEvent(e1);
     timing = addSecondsToTime(timing, 2);// Adding to the hour on the date 2 seconds
-    Event e2(*now_tm, "event2");
+    Event e2(*tm_now, "event2");
     dB.addEvent(e2);
     dB.clearAltBuffer();
     CHECK(dB.getAltBuffer().size() == 0);
 }
 
-// פונקציה למחיקת קובץ
+// function to delete a file
 void RemoveTestFile(const std::string& filename) {
     if (std::remove(filename.c_str()) != 0) {
         std::perror("לא ניתן למחוק את הקובץ");
     }
 }
 
-TEST_CASE("SlaveEventManager: WriteToFile: when have palce")//בדיקה אם כותב לקובץ שעדיין לא עבר את מ"ס הקבצים המקסימלי
+TEST_CASE("SlaveEventManager: WriteToFile: when there are more files")//Checking if writing to a file that has not yet exceeded the maximum number of files
 {
     string startDate;
     string endDate;
@@ -353,17 +351,17 @@ TEST_CASE("SlaveEventManager: WriteToFile: when have palce")//בדיקה אם כותב לקוב
     {
         b = false;
     }
-    // סגירת הקובץ
+    // Close the file
     file.close();
 
-    // מחיקת הקובץ
+    // Deleting the file
     RemoveTestFile(filename);
     RemoveTestFile("SEM1_file_metadata.txt");
 
     CHECK(b);
 }
 
-TEST_CASE("SlaveEventManager: WriteToFile: when need go to next file")//בדיקה אם כותב לקובץ הבא
+TEST_CASE("SlaveEventManager: WriteToFile: when need go to next file")//Checking if writing to the next file
 {
     string startDate1;
     string endDate1;
@@ -428,10 +426,10 @@ TEST_CASE("SlaveEventManager: WriteToFile: when need go to next file")//בדיקה אם
         b = false;
     }
 
-    // סגירת הקובץ
+    // Close the file
     file.close();
 
-    // מחיקת הקובץ
+    // Deleting the file
     RemoveTestFile(filename1);
     RemoveTestFile(filename);
     RemoveTestFile("SEM1_file_metadata.txt");
@@ -439,7 +437,7 @@ TEST_CASE("SlaveEventManager: WriteToFile: when need go to next file")//בדיקה אם
     CHECK(b);
 }
 
-TEST_CASE("SlaveEventManager: WriteToFile: when need override file")//בדיקה אם כותב לקובץ כשעבר את מ"ס הקבצים המקסימלי
+TEST_CASE("SlaveEventManager: WriteToFile: when need override file")//Checking if a file is written that exceeds the maximum number of files
 {
     string startDate1;
     string endDate1;
@@ -503,10 +501,10 @@ TEST_CASE("SlaveEventManager: WriteToFile: when need override file")//בדיקה אם כ
         flag = false;
     }
 
-    // סגירת הקובץ
+    // Close the file
     file.close();
 
-    // מחיקת הקובץ
+    // Deleting the file
     RemoveTestFile(filename1);
     RemoveTestFile(filename);
     RemoveTestFile("SEM1_file_metadata.txt");
@@ -514,6 +512,7 @@ TEST_CASE("SlaveEventManager: WriteToFile: when need override file")//בדיקה אם כ
     CHECK(flag);
 }
 
+//function that get string and remove all the sapces in the string
 string removeSpaces(const string& str) {
     string result;
     for (char c : str) {
@@ -547,12 +546,14 @@ bool checkFileContent(const string& filename, const vector<string>& expectedLine
     return true;
 }
 
-TEST_CASE("MasterEventManager:sort: from 1 slave")//בדיקה אם מיין את מה בקיבל מרחפן אחד
+TEST_CASE("MasterEventManager:sort: from 1 slave and 2 file")//Checking the contents of the sorted file created when one drone requested and 2 files were created
 {
 #undef TEST_MODE
 #define TEST_MODE 1
-    string startDate;
-    string endDate;
+    string startDate1;
+    string endDate1;
+    string startDate2;
+    string endDate2;
     tm startDateTM;
     tm endDateTM;
     string end;
@@ -563,20 +564,28 @@ TEST_CASE("MasterEventManager:sort: from 1 slave")//בדיקה אם מיין את מה בקיבל מר
     tm timing = *now_tm;
     vector<Event> events;
     int random = rand() % 10 + 1; // Generate a random number between 1 and 100
-    for (int i = 1; i <= random + 1; i++)// הוספת ארועים
+    for (int i = 1; i <= random * 2 + 1; i++)// adding events
     {
-        timing = addSecondsToTime(timing, 2);// שינוי השעה בתאריך לעוד 2 שניות
-        Event e(timing, "The_Event_" + to_string(i));// יצירת אירוע חדש
-        if (i == 1)// אם זה האירוע הראשון
+        timing = addSecondsToTime(timing, 2);// Adding to the hour on the date 2 seconds
+        Event e(timing, "The_Event_" + to_string(i));// create new event
+        if (i == 1)// if this is first event
         {
-            startDate = e.getFormatTime();
+            startDate1 = e.getFormatTime();
             startDateTM = e.getTime();
         }
-        else if (i == random)// אם זה האירוע האחרון בקובץ של הרחפן
+        else if (i == random)// If this is the last event in the event's file
         {
-            endDate = e.getFormatTime();
+            endDate1 = e.getFormatTime();
         }
-        else if (i == random + 1)// אם זה האירוע בקובץ המיון
+        else if (i == random + 1)// If this is the last event in the sort file
+        {
+            startDate2 = e.getFormatTime();
+        }
+        else if (i == random * 2)
+        {
+            endDate2 = e.getFormatTime();
+        }
+        else if (i == random * 2 + 1)
         {
             endDateTM = e.getTime();
             end = e.getFormatTime();
@@ -584,11 +593,12 @@ TEST_CASE("MasterEventManager:sort: from 1 slave")//בדיקה אם מיין את מה בקיבל מר
         sumSize += e.getSize();
         events.push_back(e);
     }
-    SlaveEventManager SEM1(random, "SEM1_file", 2);//יצירת רחפן
-    for (const auto& e : events) {// הכנסת אירועים
+    SlaveEventManager SEM1(random, "SEM1_file", 2);//create slave
+    for (const auto& e : events) {// adding events to slave
         SEM1.addEvent(e);
     }
-    string filename = "0_SEM1_file_from_" + startDate + "_to_" + endDate + ".log";// שמירת שם הקובץ
+    string filename1 = "0_SEM1_file_from_" + startDate1 + "_to_" + endDate1 + ".log";// save name file1
+    string filename2 = "1_SEM1_file_from_" + startDate2 + "_to_" + endDate2 + ".log";// save name file2
 
     MasterEventManager master;
 
@@ -601,10 +611,10 @@ TEST_CASE("MasterEventManager:sort: from 1 slave")//בדיקה אם מיין את מה בקיבל מר
     tm endTime = endDateTM;
     size_t sizeInBytes = sumSize;
 
-    mockDataManager.masterManager.sendReqToEventListFromSlaves(slaveIds, startTime, endTime, sizeInBytes);// שליחת בקשה מהמאסטר
+    mockDataManager.masterManager.sendReqToEventListFromSlaves(slaveIds, startTime, endTime, sizeInBytes);// Sending a request from the master
     for (const auto& entry : mockDataManager.receivedMessages) {
-        const auto& slaveId = entry.first; // המפתח של המיפוי
-        const auto& messages = entry.second; // הערך המקושר למפתח
+        const auto& slaveId = entry.first;
+        const auto& messages = entry.second;
 
         for (Message* message : messages) {
             mockSendMessage(message);
@@ -620,13 +630,14 @@ TEST_CASE("MasterEventManager:sort: from 1 slave")//בדיקה אם מיין את מה בקיבל מר
 
     CHECK(isContentFileTrue == true);
 
-    //מחיקת כל הקבצים שנוצרו בטסט
-    RemoveTestFile(filename);
+    //Deleting all the files created in the test
+    RemoveTestFile(filename1);
+    RemoveTestFile(filename2);
     RemoveTestFile("SEM1_file_metadata.txt");
-    RemoveTestFile("sorted_event_list_by_time_range_from_" + startDate + "_to_" + end + ".log");
+    RemoveTestFile("sorted_event_list_by_time_range_from_" + startDate1 + "_to_" + end + ".log");
 }
 
-TEST_CASE("MasterEventManager:sort: from 2 slave")//בדיקה אם מיין את מה בקיבל משתי רחפנים
+TEST_CASE("MasterEventManager:sort: from 2 slave")//Checking if you sorted what you got from two slaves
 {
 #undef TEST_MODE
 #define TEST_MODE 1
@@ -683,19 +694,19 @@ TEST_CASE("MasterEventManager:sort: from 2 slave")//בדיקה אם מיין את מה בקיבל מש
         sumSize += e.getSize();
     }
 
-    //הגדרת הרחפן הראשון והוספת אירועים 
+    //Setting up the first slave and adding events 
     SlaveEventManager slave1(random / 2, "SEM1_file", 2);
     for (const auto& e : events1) {
         slave1.addEvent(e);
     }
-    fileName1 = "0_SEM1_file_from_" + startDate1 + "_to_" + endDate1 + ".log";
+    fileName1 = "0_SEM1_file_from_" + startDate1 + "_to_" + endDate1 + ".log";//save file name
 
-    //הגדרת הרחפן השני והוספת אירועים
+    //Setting up the second slave and adding events
     SlaveEventManager slave2(random / 2, "SEM2_file", 2);
     for (const auto& e : events2) {
         slave2.addEvent(e);
     }
-    fileName2 = "0_SEM2_file_from_" + startDate2 + "_to_" + endDate2 + ".log";
+    fileName2 = "0_SEM2_file_from_" + startDate2 + "_to_" + endDate2 + ".log";//save file name
 
     MasterEventManager master;
 
@@ -712,8 +723,8 @@ TEST_CASE("MasterEventManager:sort: from 2 slave")//בדיקה אם מיין את מה בקיבל מש
 
     mockDataManager.masterManager.sendReqToEventListFromSlaves(slaveIds, startTime, endTime, sizeInBytes);//sand equest from manager
     for (const auto& entry : mockDataManager.receivedMessages) {
-        const auto& slaveId = entry.first; // המפתח של המיפוי
-        const auto& messages = entry.second; // הערך המקושר למפתח
+        const auto& slaveId = entry.first;
+        const auto& messages = entry.second;
 
         for (Message* message : messages) {
             mockSendMessage(message);
@@ -729,7 +740,7 @@ TEST_CASE("MasterEventManager:sort: from 2 slave")//בדיקה אם מיין את מה בקיבל מש
 
     CHECK(isContentFileTrue == true);
 
-    // מחיקת הקובץ
+    //Deleting all the files created in the test
     RemoveTestFile(fileName1);
     RemoveTestFile(fileName2);
     RemoveTestFile("SEM1_file_metadata.txt");
@@ -737,108 +748,232 @@ TEST_CASE("MasterEventManager:sort: from 2 slave")//בדיקה אם מיין את מה בקיבל מש
     RemoveTestFile("sorted_event_list_by_time_range_from_" + startDate1 + "_to_" + end + ".log");
 }
 
-TEST_CASE("MasterEventManager:sort: from random number of slaves") // בדיקה עם מספר רנדומלי של רחפנים
+TEST_CASE("MasterEventManager:sort: from 2 slave When the number of events requested is less than the number of events created")//Checking if the sorting file contains only some of the events generated according to the request
 {
 #undef TEST_MODE
 #define TEST_MODE 1
 
-    string fileNamePrefix = "SEM_file_"; // קידומת לשמות הקבצים עבור הרחפנים
-    vector<SlaveEventManager> slaveManagers; // רשימה לשמירת הרחפנים
-    vector<string> fileNames; // רשימה לשמות הקבצים עבור הרחפנים
-    vector<Event> allEvents; // רשימה לכל האירועים מהרחפנים
-    size_t sumSize = 0; // משתנה לשמירת סך הגודל של כל האירועים
+    string fileName1;
+    string fileName2;
+    string startDate1;
+    string startDate2;
+    string endDate1;
+    string endDate2;
+    tm startDateTM;
+    tm endDateTM;
+    string start;
+    string end;
+    size_t sumSize = 0;
+    time_point<system_clock> now = system_clock::now();
+    time_t now_time_t = system_clock::to_time_t(now);
+    tm* now_tm = localtime(&now_time_t);
+    tm timing = *now_tm;
+    vector<Event> events1;
+    vector<Event> events2;
+    vector<Event> events;
+    int random = (rand() % 10 + 1) * 2; // Generate a random number between 1 and 100
+    for (int i = 1; i <= random + 2; i++)//adding events
+    {
+        timing = addSecondsToTime(timing, 2);// Adding to the hour on the date 2 seconds
+        Event e(timing, "the_event_" + to_string(i));
+        if (i == 1)//if it is first event
+        {
+            startDate1 = e.getFormatTime();
+            startDateTM = e.getTime();
+        }
+        else if (i == 3)//if it is last event in sort file
+        {
+            start = e.getFormatTime();
+        }
+        else if (i == random)//if it is last event
+        {
+            endDate2 = e.getFormatTime();
+        }
+        else if (i == random + 2)//if it is last event in sort file
+        {
+            endDateTM = e.getTime();
+            end = e.getFormatTime();
+        }
+        if (i % 2 == 0)// if i is double
+        {
+            if (i == 2)// if it is the first event in slave2
+                startDate2 = e.getFormatTime();
+            events2.push_back(e);
+        }
+        else
+        {
+            if (i == random - 1)//if it is last event in slave1
+                endDate1 = e.getFormatTime();
+            events1.push_back(e);
+        }
+        events.push_back(e);
+        sumSize += e.getSize();
+    }
 
-    int numSlaves = (rand() % 5) + 1; // מספר רנדומלי של רחפנים בין 1 ל-5
+    //Setting up the first slave and adding events 
+    SlaveEventManager slave1(random / 2, "SEM1_file", 2);
+    for (const auto& e : events1) {
+        slave1.addEvent(e);
+    }
+    fileName1 = "0_SEM1_file_from_" + startDate1 + "_to_" + endDate1 + ".log";//save file name
 
-    // הגדרת זמן התחלתי
-    time_point<system_clock> now = system_clock::now(); // זמן נוכחי
-    time_t now_time_t = system_clock::to_time_t(now); // המרת הזמן לנקודת זמן מסוג time_t
-    tm* now_tm = localtime(&now_time_t); // המרת הזמן למבנה tm
-    tm timing = *now_tm; // העתקת הזמן למשתנה timing
+    //Setting up the second slave and adding events
+    SlaveEventManager slave2(random / 2, "SEM2_file", 2);
+    for (const auto& e : events2) {
+        slave2.addEvent(e);
+    }
+    fileName2 = "0_SEM2_file_from_" + startDate2 + "_to_" + endDate2 + ".log";//save file name
 
-    // יצירת רחפנים ואירועים עבור כל רחפן
+    MasterEventManager master;
+
+    mockDataManager.slaveManagers[1] = &slave1;
+    mockDataManager.slaveManagers[2] = &slave2;
+
+    mockDataManager.masterManager = master;
+
+
+    vector<int> slaveIds = { 1,2 };
+    tm startTime = startDateTM;
+    tm endTime = endDateTM;
+    size_t sizeInBytes = sumSize - 64 * 2;
+
+    mockDataManager.masterManager.sendReqToEventListFromSlaves(slaveIds, startTime, endTime, sizeInBytes);//sand equest from manager
+    for (const auto& entry : mockDataManager.receivedMessages) {
+        const auto& slaveId = entry.first;
+        const auto& messages = entry.second;
+
+        for (Message* message : messages) {
+            mockSendMessage(message);
+        }
+    }
+
+    vector<string> eventsInString;
+    size_t numEvents = events.size();
+    for (size_t i = 2; i < numEvents; ++i) {
+        Event event = events[i];
+        eventsInString.push_back(removeSpaces(event.getFormatTime() + "  " + event.getMessage()));
+    }
+    bool isContentFileTrue = checkFileContent(mockDataManager.sortedListFileName, eventsInString);
+
+    CHECK(isContentFileTrue == true);
+
+    //Deleting all the files created in the test
+    RemoveTestFile(fileName1);
+    RemoveTestFile(fileName2);
+    RemoveTestFile("SEM1_file_metadata.txt");
+    RemoveTestFile("SEM2_file_metadata.txt");
+    RemoveTestFile("sorted_event_list_by_time_range_from_" + start + "_to_" + end + ".log");
+}
+
+TEST_CASE("MasterEventManager:sort: from random number of slaves") // Test with a random number of slaves
+{
+#undef TEST_MODE
+#define TEST_MODE 1
+
+    string fileNamePrefix = "SEM_file_"; // Prefix for filenames for slaves
+    vector<SlaveEventManager> slaveManagers; // List to store slaves
+    vector<string> fileNames; // List for filenames for slaves
+    vector<string> fileMetadata; // List for filenames for slaves
+    vector<Event> allEvents; // List of all events from slaves
+    size_t sumSize = 0; // Variable to store the total size of all events
+
+    int numSlaves = (rand() % 5) + 1; // Random number of slaves between 1 and 5
+
+    // Define start time
+    time_point<system_clock> now = system_clock::now(); // Current time
+    time_t now_time_t = system_clock::to_time_t(now); // Convert time to time_t
+    tm* now_tm = localtime(&now_time_t); // Convert time to tm structure
+    tm timing = *now_tm; // Copy time to timing variable
+
+    // Create slaves and events for each slave
     for (int i = 1; i <= numSlaves; ++i) {
-        vector<Event> events; // רשימה לאירועים עבור הרחפן הנוכחי
-        int numEvents = (rand() % 10) + 1; // מספר רנדומלי של אירועים בין 1 ל-10
-        string startDate; // תאריך התחלה
-        string endDate; // תאריך סיום
-        tm startDateTM; // תאריך התחלה במבנה tm
-        tm endDateTM; // תאריך סיום במבנה tm
-        size_t slaveSize = 0; // גודל סך האירועים של הרחפן הנוכחי
+        vector<Event> events; // List of events for the current slave
+        int numEvents = (rand() % 10) + 1; // Random number of events between 1 and 10
+        string startDate; // Start date
+        string endDate; // End date
+        tm startDateTM; // Start date in tm structure
+        tm endDateTM; // End date in tm structure
+        size_t slaveSize = 0; // Size of all events for the current slave
 
-        // הוספת אירועים לרשימה עבור הרחפן הנוכחי
+        // Add events to the list for the current slave
         for (int j = 1; j <= numEvents + 1; ++j) {
-            timing = addSecondsToTime(timing, 2); // הוספת 2 שניות לזמן הנוכחי
-            Event e(timing, "event_" + to_string(j)); // יצירת אירוע חדש
+            timing = addSecondsToTime(timing, 2);// Add 2 seconds to the current time
+            Event e(timing, "event_" + to_string(j)); // Create a new event
             if (j == 1) {
-                startDate = e.getFormatTime(); // הגדרת תאריך התחלה אם זה האירוע הראשון
-                startDateTM = e.getTime(); // הגדרת תאריך התחלה במבנה tm
+                startDate = e.getFormatTime(); // Set start date if this is the first event
+                startDateTM = e.getTime(); // Set start date in tm structure
             }
             if (j == numEvents) {
-                endDate = e.getFormatTime(); // הגדרת תאריך סיום אם זה האירוע האחרון
+                endDate = e.getFormatTime(); // Set end date if this is the last event
             }
-            else if (j = numEvents + 1)
+            else if (j == numEvents + 1)
             {
-                endDateTM = e.getTime(); // הגדרת תאריך סיום במבנה tm
+                endDateTM = e.getTime(); // Set end date in tm structure
             }
-            events.push_back(e); // הוספת האירוע לרשימה
-            allEvents.push_back(e); // הוספת האירוע לרשימה הכללית
-            slaveSize += e.getSize(); // הוספת גודל האירוע לסך הכולל
+            events.push_back(e); // Add event to the list
+            allEvents.push_back(e); // Add event to the overall list
+            slaveSize += e.getSize(); // Add event size to the total size
         }
+        int maxFiles = (std::rand() % 5) + 1; // Random number of max files between 1 and 5
 
-        // יצירת רחפן חדש והוספת האירועים אליו
-        SlaveEventManager slave(numEvents, fileNamePrefix + to_string(i), 2);
+        // Create a new slave and add events to it
+        SlaveEventManager slave(numEvents, fileNamePrefix + to_string(i), maxFiles);
         for (const auto& e : events) {
             slave.addEvent(e);
         }
-        slaveManagers.push_back(slave); // הוספת הרחפן לרשימה של הרחפנים
-        fileNames.push_back(fileNamePrefix + to_string(i) + "_from_" + startDate + "_to_" + endDate + ".log"); // יצירת שם קובץ עבור הרחפן
-        sumSize += slaveSize; // הוספת גודל האירועים של הרחפן לסך הכולל
+        slaveManagers.push_back(slave); // Add the slave to the list of slaves
+        fileNames.push_back("0_" + fileNamePrefix + to_string(i) + "_from_" + startDate + "_to_" + endDate + ".log"); // Create filename for the slave
+        fileMetadata.push_back(fileNamePrefix + to_string(i) + "_metadata.txt");
+        if (slaveSize > sumSize)
+            sumSize = slaveSize; // Add the slave's events size to the total size
     }
 
-    // יצירת מאסטר ניהולי
+    // Create a master manager
     MasterEventManager master;
 
-    // הגדרת הרחפנים במאגר המידע המזויף
+    // Set slaves in the mock data manager
     for (int i = 0; i < numSlaves; ++i) {
         mockDataManager.slaveManagers[i + 1] = &slaveManagers[i];
     }
-    mockDataManager.masterManager = master; // הגדרת מאסטר ניהולי במאגר המידע המזויף
+    mockDataManager.masterManager = master; // Set master manager in the mock data manager
 
-    vector<int> slaveIds; // רשימה להכנסת מזהי הרחפנים
+    vector<int> slaveIds; // List to hold slave IDs
     for (int i = 1; i <= numSlaves; ++i) {
-        slaveIds.push_back(i); // הוספת מזהי הרחפנים לרשימה
+        slaveIds.push_back(i); // Add slave IDs to the list
     }
 
-    tm startTime = allEvents.front().getTime(); // קביעת זמן התחלה מהאירוע הראשון
-    tm endTime = allEvents.back().getTime(); // קביעת זמן סיום מהאירוע האחרון
-    size_t sizeInBytes = sumSize; // קביעת סך הגודל של כל האירועים
+    tm startTime = allEvents.front().getTime(); // Set start time from the first event
+    tm endTime = allEvents.back().getTime(); // Set end time from the last event
+    size_t sizeInBytes = sumSize * numSlaves; // Set total size of all events
 
-    // שליחת בקשה למאסטר לקבלת רשימת האירועים מהרחפנים
+    // Request the master to get the event list from the slaves
     mockDataManager.masterManager.sendReqToEventListFromSlaves(slaveIds, startTime, endTime, sizeInBytes);
 
-    // טיפול בהודעות המתקבלות
+    // Process incoming messages
     for (const auto& entry : mockDataManager.receivedMessages) {
-        const auto& slaveId = entry.first; // מזהה הרחפן
-        const auto& messages = entry.second; // רשימת ההודעות
+        const auto& slaveId = entry.first; // Slave ID
+        const auto& messages = entry.second; // List of messages
 
         for (Message* message : messages) {
-            mockSendMessage(message); // שליחת הודעה
+            mockSendMessage(message); // Send message
         }
     }
 
-    // יצירת רשימה של האירועים בפורמט מחרוזת
+    // Create a list of events in string format
     vector<string> eventsInString;
     for (Event event : allEvents) {
-        eventsInString.push_back(removeSpaces(event.getFormatTime() + "  " + event.getMessage())); // יצירת מחרוזת עם הזמן וההודעה של כל אירוע
+        eventsInString.push_back(removeSpaces(event.getFormatTime() + "  " + event.getMessage())); // Create a string with the event time and message
     }
 
-    // בדיקת אם התוכן של הקובץ המסודר תואם לאירועים שציפינו להם
+    // Check if the content of the sorted file matches the expected events
     bool isContentFileTrue = checkFileContent(mockDataManager.sortedListFileName, eventsInString);
-    CHECK(isContentFileTrue == true); // בדיקת תוצאה
+    CHECK(isContentFileTrue == true); // Verify the result
 
-    // מחיקת הקבצים שנוצרו במהלך הבדיקה
+    // Delete files created during the test
     for (const auto& fileName : fileNames) {
+        RemoveTestFile(fileName);
+    }
+    for (const auto& fileName : fileMetadata) {
         RemoveTestFile(fileName);
     }
     RemoveTestFile("sorted_event_list_by_time_range_from_" + allEvents.front().getFormatTime() + "_to_" + allEvents.back().getFormatTime() + ".log");
