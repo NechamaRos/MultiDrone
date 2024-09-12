@@ -48,6 +48,8 @@ void MasterEventManager::mergeAndSortEvents(vector<vector<Event>>& allEvents)
 	mockDataManager.sortedListFileName = fileName;
 	#endif
 
+	//Emptying the event lists of the current request
+	currentEventsFromSlaves.allEvents.clear();
 }
 
 MasterEventManager::MasterEventManager()
@@ -71,7 +73,7 @@ MasterEventManager& MasterEventManager::operator=(const MasterEventManager& othe
 
 int MasterEventManager::getNumberOfResFromSlaves()
 {
-	return currenteventsFromSlaves.numberOfResFromSlaves;
+	return currentEventsFromSlaves.numberOfResFromSlaves;
 }
 
 /// <summary>
@@ -80,8 +82,8 @@ int MasterEventManager::getNumberOfResFromSlaves()
 /// </summary>
 void MasterEventManager::areAllSlavesResponded()
 {
-	if (currenteventsFromSlaves.numberOfReqFromSlaves == currenteventsFromSlaves.numberOfResFromSlaves)
-		mergeAndSortEvents(currenteventsFromSlaves.allEvents);
+	if (currentEventsFromSlaves.numberOfReqFromSlaves == currentEventsFromSlaves.numberOfResFromSlaves)
+		mergeAndSortEvents(currentEventsFromSlaves.allEvents);
 }
 
 
@@ -95,10 +97,10 @@ void MasterEventManager::receiveEventsFromSlave(Message* message)
 {
 	vector<Event> eventList = message->messageParams->STM_GET_EVENTS_PARAMS.events;
 	int messageReqId = message->reqId;
-	if (messageReqId == currenteventsFromSlaves.reqId)
+	if (messageReqId == currentEventsFromSlaves.reqId)
 	{
-		currenteventsFromSlaves.numberOfResFromSlaves++;
-		currenteventsFromSlaves.allEvents.push_back(eventList);
+		currentEventsFromSlaves.numberOfResFromSlaves++;
+		currentEventsFromSlaves.allEvents.push_back(eventList);
 		areAllSlavesResponded();
 	}
 }
@@ -117,14 +119,14 @@ void MasterEventManager::receiveEventsFromSlave(Message* message)
 void MasterEventManager::sendReqToEventListFromSlaves(vector<int> slaves, tm& startTime, tm& endTime, size_t maxSize)
 {
 	int reqId = reqCounter++;
-	currenteventsFromSlaves.reqId = reqId;
+	currentEventsFromSlaves.reqId = reqId;
 	vector<vector<Event>> allEvents;
 	size_t maxEventPerSlave = maxSize / slaves.size();
 
 
 	for (int slaveId : slaves)
 	{
-		currenteventsFromSlaves.numberOfReqFromSlaves++;
+		currentEventsFromSlaves.numberOfReqFromSlaves++;
 		Message* message = new Message();
 		message->reqId = reqId;
 		message->droneId = slaveId;
