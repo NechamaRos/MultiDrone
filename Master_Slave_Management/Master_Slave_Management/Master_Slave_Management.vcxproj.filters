@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -13,53 +13,114 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Scheduler">
-      <UniqueIdentifier>{78043801-badf-463a-b0df-4a974e8666d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\QueueManagement">
-      <UniqueIdentifier>{98d2ea06-79f0-4ce3-9019-2e4b2fff5f58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MotionControl">
-      <UniqueIdentifier>{b48ba11c-7727-4ccd-819c-501fb8b4f038}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MessageTemplate">
-      <UniqueIdentifier>{75020150-ba30-415c-ba9e-c19d462e8efb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MapCreator">
-      <UniqueIdentifier>{4fb06026-9376-484f-9200-c84b4e3e8798}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Events">
-      <UniqueIdentifier>{5d1f5a64-edac-4a27-b530-f4ce043d97e0}</UniqueIdentifier>
+    <Filter Include="Header Files\DroneTrack">
+      <UniqueIdentifier>{0f069b12-04ed-4fda-9180-12e9c5d92963}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\ErrorHandling">
-      <UniqueIdentifier>{c708ece6-5463-437f-a6b6-f4e59035b159}</UniqueIdentifier>
+      <UniqueIdentifier>{e64bbce5-d410-4ae4-83f3-1e09d0e12667}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\DroneTrack">
-      <UniqueIdentifier>{b168b3a4-c031-4b2f-9d03-d534c6435208}</UniqueIdentifier>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{4e84754e-1d3f-4ac6-abda-eea7869ca299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MapCreator">
+      <UniqueIdentifier>{c109b872-7eff-4593-a59f-9798dd93d3f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MessageTemplate">
+      <UniqueIdentifier>{c3b09243-06fc-440c-b466-29368c97dd74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MotionControl">
+      <UniqueIdentifier>{3dee35dd-7fae-49ff-9334-e6c744a244ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\QueueManagement">
+      <UniqueIdentifier>{d17b479f-98b5-4202-82b1-c5777111305c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scheduler">
+      <UniqueIdentifier>{df662f50-dab6-46c6-971a-2d82042b7f8c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Scheduler">
-      <UniqueIdentifier>{e8ae3445-d90a-42b0-9a81-5f966ddfa684}</UniqueIdentifier>
+      <UniqueIdentifier>{7a384252-d52c-4d37-bd07-c67bdb0ba65c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\QueueManagement">
-      <UniqueIdentifier>{909a77b1-3950-422c-8141-e5c94db47db4}</UniqueIdentifier>
+      <UniqueIdentifier>{e9cc0b0a-9442-46a4-b673-7a0d2e9b75b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\MotionControl">
-      <UniqueIdentifier>{7d801908-7e8b-4e5b-8055-6f9b0b582456}</UniqueIdentifier>
+      <UniqueIdentifier>{70108ba4-9051-4453-a4eb-b8320f602998}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\MessageTemplate">
-      <UniqueIdentifier>{f9640ab2-2f10-4d48-93ea-4a76d94c0e75}</UniqueIdentifier>
+      <UniqueIdentifier>{80ce57cc-afd4-4776-9737-7473a000bbb3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\MapCreator">
-      <UniqueIdentifier>{6cda3e81-0e11-4593-bc70-3aecf002737f}</UniqueIdentifier>
+      <UniqueIdentifier>{dae342f1-4fc8-47dd-96f6-25d514359bc0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Events">
-      <UniqueIdentifier>{7e58d928-439e-4dd0-85c0-d16e8f4df96f}</UniqueIdentifier>
+      <UniqueIdentifier>{ca5b45a1-4694-4487-95f8-5aea5767da1b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\ErrorHandling">
-      <UniqueIdentifier>{65db8d92-5692-4397-a1f7-f008e44902ee}</UniqueIdentifier>
+      <UniqueIdentifier>{6dbbf2c8-0236-481f-9dcc-1a5b21127e57}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\DroneTrack">
-      <UniqueIdentifier>{2854cb75-ba29-441b-8dff-4947a76a6041}</UniqueIdentifier>
+      <UniqueIdentifier>{b7275b32-0b39-4740-8f66-5b62c0a90b23}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dataOfMessage.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageFromSlave.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="mapRequest.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageParams.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageType.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="PointForSlave.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="Priority.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="RealImage.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="Slave.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="SlavesManager.h">
+      <Filter>Header Files\MessageTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduling.h">
+      <Filter>Header Files\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue.h">
+      <Filter>Header Files\Scheduler</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MessageType.cpp">
+      <Filter>Source Files\MessageTemplate</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Source Files\MessageTemplate</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageParams.cpp">
+      <Filter>Source Files\MessageTemplate</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduling.cpp">
+      <Filter>Source Files\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue.cpp">
+      <Filter>Source Files\Scheduler</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
