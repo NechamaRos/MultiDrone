@@ -568,24 +568,24 @@ TEST_CASE("MasterEventManager:sort: from 1 slave and 2 file")//Checking the cont
     {
         timing = addSecondsToTime(timing, 2);// Adding to the hour on the date 2 seconds
         Event e(timing, "The_Event_" + to_string(i));// create new event
-        if (i == 1)// if this is first event
+        if (i == 1)// if this is first event in the first event's file
         {
             startDate1 = e.getFormatTime();
             startDateTM = e.getTime();
         }
-        else if (i == random)// If this is the last event in the event's file
+        else if (i == random)// If this is the last event in the first event's file
         {
             endDate1 = e.getFormatTime();
         }
-        else if (i == random + 1)// If this is the last event in the sort file
+        else if (i == random + 1)// if this is first event in the second event's file
         {
             startDate2 = e.getFormatTime();
         }
-        else if (i == random * 2)
+        else if (i == random * 2)// if this is last event in the second event's file
         {
             endDate2 = e.getFormatTime();
         }
-        else if (i == random * 2 + 1)
+        else if (i == random * 2 + 1)// if this is last event in the sort file
         {
             endDateTM = e.getTime();
             end = e.getFormatTime();

@@ -1,3 +1,10 @@
-﻿  test.cpp
+﻿  MasterEventManager.cpp
 D:\VS2022\VC\Tools\MSVC\14.40.33807\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  MockDataManager.cpp
+D:\VS2022\VC\Tools\MSVC\14.40.33807\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  SlaveEventManager.cpp
+D:\VS2022\VC\Tools\MSVC\14.40.33807\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  test.cpp
+D:\VS2022\VC\Tools\MSVC\14.40.33807\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  Generating Code...
   Master_Slave_Management.vcxproj -> C:\Users\User\MultiDrone\Master_Slave_Management\x64\Debug\Master_Slave_Management.exe
