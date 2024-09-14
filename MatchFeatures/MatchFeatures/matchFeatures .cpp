@@ -1,5 +1,6 @@
 #include "matchFeatures .h"
 using namespace std;
+////
 //@params 2 vectors of key point
 //@return vector of matches
 //this function initialized data for the search
@@ -139,7 +140,6 @@ int computeDistance(const int* vec1, const int* vec2, size_t size)
 //@params vec- one key point,result - for result ,desc2 -for finding the neighbors 
 void MatchFeaturers::findNeighbors(const std::vector<int>& vec, ResultSet& result, const std::vector<std::vector<int>>& descriptors2)
 {
-
     auto table_s = hash_table.begin();
     auto table_e = hash_table.end();
     int ind = 0;
