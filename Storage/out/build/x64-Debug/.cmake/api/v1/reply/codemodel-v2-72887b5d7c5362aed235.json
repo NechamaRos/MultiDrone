@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Disk_Mng_Master",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Disk_Mng_Master::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Disk_Mng_Master-Debug-3d41b6a5a5149b767ab9.json",
+					"name" : "Disk_Mng_Master",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/\u05e9\u05d9\u05e4\u05d9 \u05d5\u05d9\u05e0\u05d2\u05e8\u05d8\u05df/Pictures/Saved Pictures/\u05e1\u05de\u05d9\u05e0\u05e8/\u05db\u05d9\u05ea\u05d4 \u05d9\u05d3/\u05ea\u05db\u05e0\u05d5\u05ea/\u05e4\u05e8\u05e7\u05d8\u05d9\u05e7\u05d5\u05dd/MultiDrone/Storage/out/build/x64-Debug",
+		"source" : "C:/Users/\u05e9\u05d9\u05e4\u05d9 \u05d5\u05d9\u05e0\u05d2\u05e8\u05d8\u05df/Pictures/Saved Pictures/\u05e1\u05de\u05d9\u05e0\u05e8/\u05db\u05d9\u05ea\u05d4 \u05d9\u05d3/\u05ea\u05db\u05e0\u05d5\u05ea/\u05e4\u05e8\u05e7\u05d8\u05d9\u05e7\u05d5\u05dd/MultiDrone/Storage"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

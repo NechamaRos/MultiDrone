@@ -1,0 +1,3 @@
+C:/Users/שיפי וינגרטן/Pictures/Saved Pictures/סמינר/כיתה יד/תכנות/פרקטיקום/MultiDrone/Storage/out/build/x64-Debug/CMakeFiles/Disk_Mng_Master.dir
+C:/Users/שיפי וינגרטן/Pictures/Saved Pictures/סמינר/כיתה יד/תכנות/פרקטיקום/MultiDrone/Storage/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/שיפי וינגרטן/Pictures/Saved Pictures/סמינר/כיתה יד/תכנות/פרקטיקום/MultiDrone/Storage/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

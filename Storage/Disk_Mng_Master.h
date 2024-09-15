@@ -1,3 +1,4 @@
+//#include "C:\Users\שיפי וינגרטן\Pictures\Saved Pictures\סמינר\כיתה יד\תכנות\פרקטיקום\Sycl_DLL\Sycl_DLL/Disk_Mng_Master.h"
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,8 +8,8 @@
 
 #define POINT_BR_RANGE (Point_t){100, 100}
 #define POINT_TL_RANGE (Point_t){0, 0}
-#define DISK_SIZE 1000
-#define CACHE_SIZE 1000
+#define DISK_SIZE 10
+#define CACHE_SIZE 100
 
 
 
@@ -89,6 +90,7 @@ struct DiskMapsInLoadedToCache_s
 };
 
 struct Disk_Management_CB_s {
+    void* mockDisk;
     int mapIdIndex;
     ArrayInfo_t** arrayForAllMApsInformation;
     DiskFreeIndexesInArray_t* diskFreeIndexesInArray;
@@ -272,6 +274,10 @@ void disk_mng_addMapToDiskManagementDataStructures(MapRange_t* range, int size, 
 //disk_mng_addMap- add map to the disk managment
 void disk_mng_addMap(MapRange_t* range, int size, int* map);
 
+// disk_mng_saveData-save all the data from the data structers to disk before clothing the computer
+void disk_mng_saveData();
+
+
 //disk-mock functions
 
 //disk_addMap-add map to the disk
@@ -296,7 +302,4 @@ bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress);
 //cache_deleteMap- delete map from the cache
 void cache_deleteMap(int mapId);
 
-
-
-int disk_mng_getMapsIdsInRange(MapRange_t* range, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize);
-
+//int disk_mng_getMapsIdsInRange(MapRange_t* rangeFromCache, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize);
