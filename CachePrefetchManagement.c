@@ -11,7 +11,7 @@ SequenceCollectionCtrlBlk_t* prefetchSeqCollection_CB;
 
 FILE* ErrorFile;
 
-void INIT()
+void Prefetch_INIT(void)
 {
 	char filename[] = "ErrorLog.txt";
 
@@ -31,11 +31,11 @@ void INIT()
 		exit(1);
 	}
 
-	prefetchSeqCollection_CB->singleRangeCurrentIndex = 0;
+	prefetchSeqCollection_CB->singleRangesArray.index = 0;
 
 
 	//initial the SeqRangeInfoArray with garbage values
-	for (int i = 0; i < COLLECTION_SIZE; i++)
+	for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 	{
 		prefetchSeqCollection_CB->seqRangeInfoArray[i] = (SeqRangeInfo_t*)malloc(sizeof(SeqRangeInfo_t));
 
@@ -47,7 +47,7 @@ void INIT()
 			exit(1);
 		}
 
-		prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterLength = -1;
+		prefetchSeqCollection_CB->seqRangeInfoArray[i]->counter = -1;
 
 		prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterUse = -1;
 
@@ -57,7 +57,7 @@ void INIT()
 
 		prefetchSeqCollection_CB->seqRangeInfoArray[i]->nextExpectedRange = GetDefaultRange();
 
-		prefetchSeqCollection_CB->singleRangesArray[i] = GetDefaultRange();
+		prefetchSeqCollection_CB->singleRangesArray.array[i] = GetDefaultRange();
 
 		prefetchSeqCollection_CB->RangesInLoadingArray[i] = GetDefaultRange();
 
@@ -71,13 +71,13 @@ void INIT()
 bool CheckValidationOfRange(Range_t range)
 {
 	if (!(IsEqualRanges(GetDefaultRange(), range)))
-		if (range.topLeft.x + RANGE_WIDTH == range.bottomRight.x && range.topLeft.y - RANGE_LENGTH == range.bottomRight.y)
+		if (range.topLeft.x + SUPPORTED_RANGE_WIDTH == range.bottomRight.x && range.topLeft.y - SUPPORTED_RANGE_LENGTH == range.bottomRight.y)
 			return true;
 	return false;
 }
 //get default range for delete range
-Range_t GetDefaultRange() {
-	Range_t defRange = INIT_RANGE;
+Range_t GetDefaultRange(void) {
+	Range_t defRange = INIT_RANGE_VALUE;
 	return defRange;
 }
 
@@ -91,7 +91,7 @@ bool IsEqualRanges(Range_t me, Range_t other)
 }
 
 //function to get the next expected range of sequence by the sequence's direction
-Range_t GetNextRangeByDirection(Range_t range, Range_Direction_t dir, int cntRangesToRead)
+Range_t GetNextRangeByDirection(Range_t range, Range_Direction_t dir)
 {
 	int bottomRightX = range.bottomRight.x;
 	int bottomRightY = range.bottomRight.y;
@@ -100,20 +100,20 @@ Range_t GetNextRangeByDirection(Range_t range, Range_Direction_t dir, int cntRan
 
 	switch (dir) {
 	case UP:
-		bottomRightY = range.bottomRight.y + cntRangesToRead * RANGE_LENGTH;//up the bottomRightY in RANGE_LENGTH
-		topLeftY = range.topLeft.y + cntRangesToRead * RANGE_LENGTH;//up the topLeftY in RANGE_LENGTH
+		bottomRightY = range.bottomRight.y + SUPPORTED_RANGE_LENGTH;//up the bottomRightY in SUPPORTED_RANGE_LENGTH
+		topLeftY = range.topLeft.y + SUPPORTED_RANGE_LENGTH;//up the topLeftY in SUPPORTED_RANGE_LENGTH
 		break;
 	case DOWN:
-		bottomRightY = range.bottomRight.y - cntRangesToRead * RANGE_LENGTH;//down bottomRightY in RANGE_LENGTH
-		topLeftY = range.topLeft.y - cntRangesToRead * RANGE_LENGTH;//down topLeftY in RANGE_LENGTH
+		bottomRightY = range.bottomRight.y - SUPPORTED_RANGE_LENGTH;//down bottomRightY in SUPPORTED_RANGE_LENGTH
+		topLeftY = range.topLeft.y - SUPPORTED_RANGE_LENGTH;//down topLeftY in SUPPORTED_RANGE_LENGTH
 		break;
 	case LEFT:
-		bottomRightX = range.bottomRight.x - cntRangesToRead * RANGE_WIDTH;//down the bottomRightX in RANGE_WIDTH
-		topLeftX = range.topLeft.x - cntRangesToRead * RANGE_WIDTH;//down the topLeftX in RANGE_WIDTH
+		bottomRightX = range.bottomRight.x - SUPPORTED_RANGE_WIDTH;//down the bottomRightX in SUPPORTED_RANGE_WIDTH
+		topLeftX = range.topLeft.x - SUPPORTED_RANGE_WIDTH;//down the topLeftX in SUPPORTED_RANGE_WIDTH
 		break;
 	case RIGHT:
-		bottomRightX = range.bottomRight.x + cntRangesToRead * RANGE_WIDTH;//up the bottomRightX in RANGE_WIDTH
-		topLeftX = range.topLeft.x + cntRangesToRead * RANGE_WIDTH;//up the topLeftX in RANGE_WIDTH
+		bottomRightX = range.bottomRight.x + SUPPORTED_RANGE_WIDTH;//up the bottomRightX in SUPPORTED_RANGE_WIDTH
+		topLeftX = range.topLeft.x + SUPPORTED_RANGE_WIDTH;//up the topLeftX in SUPPORTED_RANGE_WIDTH
 		break;
 	}
 	//set the bottomRight Point_t
@@ -126,9 +126,6 @@ Range_t GetNextRangeByDirection(Range_t range, Range_Direction_t dir, int cntRan
 	//declare the variables to the start...
 	return nextRange;
 }
-
-
-
 
 //return the direction that the range continue the single range and IN_VALID_DIR if it not continue
 Range_Direction_t IsRangeCompleteSingleRangeToSequence(Range_t range, Range_t singleRange)
@@ -160,7 +157,8 @@ Range_Direction_t IsRangeCompleteSingleRangeToSequence(Range_t range, Range_t si
 }
 
 //for check if range in loading
-bool IsRangeContainedInOtherRange(Range_t currentSmallRange, Range_t containRange) {
+bool IsRangeContainedInOtherRange(Range_t currentSmallRange, Range_t containRange)
+{
 	if ((containRange.topLeft.x <= currentSmallRange.topLeft.x) &&
 		(containRange.topLeft.y >= currentSmallRange.topLeft.y) &&
 		(containRange.bottomRight.x >= currentSmallRange.bottomRight.x) &&
@@ -168,7 +166,6 @@ bool IsRangeContainedInOtherRange(Range_t currentSmallRange, Range_t containRang
 
 		return true; // True,  Range_t is contained
 	}
-
 	return false; // False,  Range_t is not contained
 }
 
@@ -176,14 +173,13 @@ bool IsRangeContainedInOtherRange(Range_t currentSmallRange, Range_t containRang
 
 #pragma region sequence Collection Functions
 
-
 // Function to check if a given range continues an existing sequence in seqRangeInfoArray.
 int IsRangeContinueSequence(Range_t range)
 {
 	int index = -1;
 
 	// Iterate through prefetchSeqCollection_CB to find a match for range's NextExpectedRange.
-	for (int i = 0; i < COLLECTION_SIZE; i++)
+	for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 	{
 
 		if (IsEqualRanges(prefetchSeqCollection_CB->seqRangeInfoArray[i]->nextExpectedRange, range)) {
@@ -191,8 +187,8 @@ int IsRangeContinueSequence(Range_t range)
 			// Update sequence details if range continues the sequence.
 			prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterUse = 0;
 			prefetchSeqCollection_CB->seqRangeInfoArray[i]->lastInsertedRange = range;
-			prefetchSeqCollection_CB->seqRangeInfoArray[i]->nextExpectedRange = GetNextRangeByDirection(range, prefetchSeqCollection_CB->seqRangeInfoArray[i]->dir, 1);
-			prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterLength++;
+			prefetchSeqCollection_CB->seqRangeInfoArray[i]->nextExpectedRange = GetNextRangeByDirection(range, prefetchSeqCollection_CB->seqRangeInfoArray[i]->dir);
+			prefetchSeqCollection_CB->seqRangeInfoArray[i]->counter++;
 			index = i;
 			break;
 		}
@@ -209,29 +205,27 @@ int IsRangeCreateNewSequence(Range_t range)
 	newSeq = (SeqRangeInfo_t*)malloc(sizeof(SeqRangeInfo_t));
 	Range_Direction_t direction = IN_VALID_DIR;
 	// Function to check if a given range creates a new sequence by comparing it with ranges in singleRangesArray.
-	for (int i = 0; i < COLLECTION_SIZE; i++)
+	for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 	{
 		// Check if range creates a new sequence with singleRangesArray[i].
-		if (!IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray[i], GetDefaultRange()))
+		if (!IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray.array[i], GetDefaultRange()))
 		{
-			direction = IsRangeCompleteSingleRangeToSequence(range, prefetchSeqCollection_CB->singleRangesArray[i]);
-
+			direction = IsRangeCompleteSingleRangeToSequence(range, prefetchSeqCollection_CB->singleRangesArray.array[i]);
 		}
-
 		if (direction != IN_VALID_DIR)
 		{
 			// Create new sequence and update prefetchSeqCollection_CB; remove corresponding range from singleRangesArray.
 
-			newSeq->counterLength = INIT_COUNTER_LEN;
+			newSeq->counter = INIT_COUNTER;
 			newSeq->counterUse = 0;
 			newSeq->dir = direction;
 			newSeq->lastInsertedRange = range;
-			newSeq->nextExpectedRange = GetNextRangeByDirection(range, direction, 1);
+			newSeq->nextExpectedRange = GetNextRangeByDirection(range, direction);
 
 			index = GetLastUsedSequence();
 			prefetchSeqCollection_CB->seqRangeInfoArray[index] = newSeq;
 
-			prefetchSeqCollection_CB->singleRangesArray[i] = GetDefaultRange();
+			prefetchSeqCollection_CB->singleRangesArray.array[i] = GetDefaultRange();
 
 			direction = IN_VALID_DIR;
 			return index;
@@ -241,16 +235,15 @@ int IsRangeCreateNewSequence(Range_t range)
 }
 
 //for LRU
-int GetLastUsedSequence()
+int GetLastUsedSequence(void)
 {
 	int max = -1;
 	int index = -1;
 	// Iterates through prefetchSeqCollection_CB_t to find the sequence with the highest CounterUse.
-	for (int i = 0; i < COLLECTION_SIZE; i++) {
+	for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++) {
 		if (prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterUse == -1) {
 			return i;
 		}
-
 		if (prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterUse > max) {
 			index = i;
 			max = prefetchSeqCollection_CB->seqRangeInfoArray[i]->counterUse;
@@ -259,7 +252,7 @@ int GetLastUsedSequence()
 	return index;
 }
 
-void InsertNewRangeAPI(Range_t range)
+void Prefetch_InsertNewRange(Range_t range)
 {
 	if (!CheckValidationOfRange(range))
 	{
@@ -272,7 +265,7 @@ void InsertNewRangeAPI(Range_t range)
 }
 
 //insert new range to the prefetchSeqCollection_CB and return if the range is single/create new sequence / continue an existing sequence
-TYPE_OF_ACTION_THAT_ACCURED_IN_INSERT_t InsertNewRange(Range_t range)//return enum of state insert
+INSERT_ACTION_TYPE_t InsertNewRange(Range_t range)//return enum of state insert
 {
 
 	//if the range continue sequence, insert it to sequence collection
@@ -280,7 +273,7 @@ TYPE_OF_ACTION_THAT_ACCURED_IN_INSERT_t InsertNewRange(Range_t range)//return en
 
 	// If range continues an existing sequence, call ReadingAhead for asking the next range.
 	if (index != -1) {
-		UpCounterUseOfSeqsOthers(index);
+		IncreaseAllLRUCountersExceptSpecificCounter(index);
 		ReadingAhead(prefetchSeqCollection_CB->seqRangeInfoArray[index]);
 		return CONTINUE_SEQ;
 	}
@@ -290,18 +283,18 @@ TYPE_OF_ACTION_THAT_ACCURED_IN_INSERT_t InsertNewRange(Range_t range)//return en
 
 	index = IsRangeCreateNewSequence(range);
 	if (index != -1) {
-		UpCounterUseOfSeqsOthers(index);
+		IncreaseAllLRUCountersExceptSpecificCounter(index);
 		return CREATE_SEQ;
 	}
 	// if not, insert it into singleRangesArray
-	prefetchSeqCollection_CB->singleRangesArray[prefetchSeqCollection_CB->singleRangeCurrentIndex] = range;
-	prefetchSeqCollection_CB->singleRangeCurrentIndex = (prefetchSeqCollection_CB->singleRangeCurrentIndex + 1) % COLLECTION_SIZE;
+	prefetchSeqCollection_CB->singleRangesArray.array[prefetchSeqCollection_CB->singleRangesArray.index] = range;
+	prefetchSeqCollection_CB->singleRangesArray.index = (prefetchSeqCollection_CB->singleRangesArray.index + 1) % MAX_SUPPORTED_PARALLEL_RANGE;
 	return INSERT_TO_SINGLE_RANGES_ARRAY;
 }
 
-void UpCounterUseOfSeqsOthers(int index) {
+void IncreaseAllLRUCountersExceptSpecificCounter(int index) {
 	//run over on seqRangeInfoArray
-	for (int i = 0; i < COLLECTION_SIZE; i++) {
+	for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++) {
 		//if seqRangeInfoArray[i] is not the seq in index of seqRangeInfoArray that continue now
 		//and if it is not a null seqRangeInfoArray, update the counterUse up
 		if (i != index && !IsEqualRanges(prefetchSeqCollection_CB->seqRangeInfoArray[i]->lastInsertedRange, GetDefaultRange())) {
@@ -319,49 +312,63 @@ void ReadingAhead(SeqRangeInfo_t* seq)
 	Range_t r;
 	Range_Direction_t dir = seq->dir;
 	//if it is a new enough sequence, read double range
-	if (dir == DOWN) {
-
-	}
-	else if (dir == LEFT) {
-
-	}
-	if (seq->counterLength == SIZE_OF_ENOUGH_SEQ)
+	if (seq->counter == SIZE_OF_ENOUGH_SEQ)
 	{
 		r = seq->lastInsertedRange;
-		// Read two ranges forward and handle caching operations from disk.
 
-		r = GetNextRangeByDirection(r, seq->dir, COUNT_OF_RANGE_TO_READING_AHEAD);
+		for (size_t i = 0; i < COUNT_OF_RANGE_TO_READING_AHEAD; i++)
+		{
+			// Read two ranges forward and handle caching operations from disk.
+			r = GetNextRangeByDirection(r, seq->dir);
+			if (dir == DOWN)
+			{
+				if (r.bottomRight.y < 0)
+					r.bottomRight.y = 0;
+			}
+			else if (dir == LEFT)
+			{
+				if (r.topLeft.x < 0)
+					r.topLeft.x = 0;
+			}
+			AddRangeToLoadingRangeArray(r);
+			FetchFromDisk(r);
+		}
+
+		r = GetNextRangeByDirection(r, seq->dir);
 		//send req to cache to load this range
+		return;
 	}
 
-	else {
+	else
+	{
 		r = seq->lastInsertedRange;
 		// Read two ranges forward and handle caching operations from disk.
 		for (int i = 0; i < COUNT_OF_RANGE_TO_READING_AHEAD; i++)
 		{
-			r = GetNextRangeByDirection(r, seq->dir, 1);
+			r = GetNextRangeByDirection(r, seq->dir);
 		}
 		//send req to cache to load this range
-	}
-	//if the range need to reading ahead is not valid, read until the valid
-	if (dir == DOWN) {
-		if (r.bottomRight.y < 0)
-			r.bottomRight.y = 0;
-	}
-	else if (dir == LEFT) {
-		if (r.topLeft.x < 0)
-			r.topLeft.x = 0;
-	}
 
-	AddRangeToLoadingRangeArray(r);
-	SendLoadingRangeToAPI(r);
+		//if the range need to reading ahead is not valid, read until the valid
+		if (dir == DOWN) {
+			if (r.bottomRight.y < 0)
+				r.bottomRight.y = 0;
+		}
 
+		else if (dir == LEFT) {
+			if (r.topLeft.x < 0)
+				r.topLeft.x = 0;
+		}
+		AddRangeToLoadingRangeArray(r);
+		FetchFromDisk(r);
+	}
 }
 
 #pragma region RangesInLoadingArray Functions
 
 //check if range in loading
-bool IsRangeInLoadingAPI(Range_t rangeForSearch) {
+bool Prefetch_IsRangeInLoading(Range_t rangeForSearch)
+{
 	if ((IsEqualRanges(GetDefaultRange(), rangeForSearch)))
 	{
 		fprintf(ErrorFile, "The range to found is not valid - - - ");
@@ -370,7 +377,7 @@ bool IsRangeInLoadingAPI(Range_t rangeForSearch) {
 	}
 	else
 	{
-		for (int i = 0; i < COLLECTION_SIZE; i++)
+		for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 		{
 			if (IsRangeContainedInOtherRange(rangeForSearch, prefetchSeqCollection_CB->RangesInLoadingArray[i]))
 				return true;
@@ -380,16 +387,18 @@ bool IsRangeInLoadingAPI(Range_t rangeForSearch) {
 }
 
 //remove loaded range from loadingArray
-void RemoveRangeFromLoadingRangesAPI(Range_t rangeForRemove) {
+void Prefetch_RemoveRangeFromLoadingRanges(Range_t rangeForRemove)
+{
 	int index = FindRangeInLoadingRangesArray(rangeForRemove);
 	if (index != -1)
 		prefetchSeqCollection_CB->RangesInLoadingArray[index] = GetDefaultRange();
 }
 
 //get the next empty index in loadingArray
-int GetNextEmptyIndexOfRangesInLoadingArray() {
+int GetNextEmptyIndexOfRangesInLoadingArray(void)
+{
 	int index = -1, i = 0;
-	while (index == -1 && i <= COLLECTION_SIZE)
+	while (index == -1 && i <= MAX_SUPPORTED_PARALLEL_RANGE)
 	{
 		if (IsEqualRanges(prefetchSeqCollection_CB->RangesInLoadingArray[i], GetDefaultRange()))
 			index = i;
@@ -400,9 +409,10 @@ int GetNextEmptyIndexOfRangesInLoadingArray() {
 }
 
 //find the index of range
-int FindRangeInLoadingRangesArray(Range_t rangeForRemove) {
+int FindRangeInLoadingRangesArray(Range_t rangeForRemove)
+{
 	int index = -1, i = 0;
-	while (index == -1 && i <= COLLECTION_SIZE)
+	while (index == -1 && i <= MAX_SUPPORTED_PARALLEL_RANGE)
 	{
 		if (IsEqualRanges(prefetchSeqCollection_CB->RangesInLoadingArray[i], rangeForRemove))
 			index = i;
@@ -413,16 +423,14 @@ int FindRangeInLoadingRangesArray(Range_t rangeForRemove) {
 }
 
 //add range to loadingArray
-void AddRangeToLoadingRangeArray(Range_t rangeForAdd) {
+void AddRangeToLoadingRangeArray(Range_t rangeForAdd)
+{
 	prefetchSeqCollection_CB->RangesInLoadingArray[GetNextEmptyIndexOfRangesInLoadingArray()] = rangeForAdd;
 }
 #pragma endregion
 
-void SendLoadingRangeToAPI(Range_t range) {
-	//empty function
-}
-
-void PrintCurrentTimeToErrorFile() {
+void PrintCurrentTimeToErrorFile(void)
+{
 	time_t now;            // Variable to hold the current time in seconds since Epoch
 	struct tm local_time;  // Structure to store local time details
 
@@ -446,3 +454,7 @@ void PrintCurrentTimeToErrorFile() {
 		local_time.tm_sec);          // Seconds [0, 59]
 }
 
+void FetchFromDisk(Range_t range)
+{
+	//fetch from disk
+}

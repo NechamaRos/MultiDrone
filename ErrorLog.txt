@@ -1,0 +1,60 @@
+
+Failed to allocate memory for Sequence Pointer - - - The current time is: 13:15:55
+The range to found is not valid - - - The current time is: 17:33:06
+The range to found is not valid - - - The current time is: 17:35:12
+The range to found is not valid - - - The current time is: 17:36:14
+The range to found is not valid - - - The current time is: 17:39:46
+The range to found is not valid - - - The current time is: 17:43:04
+The range to found is not valid - - - The current time is: 17:43:04
+The range to found is not valid - - - The current time is: 17:43:04
+The range to found is not valid - - - The current time is: 17:44:25
+The range to found is not valid - - - The current time is: 17:44:25
+The range to found is not valid - - - The current time is: 17:44:25
+The range to found is not valid - - - The current time is: 17:45:02
+The range to found is not valid - - - The current time is: 17:45:02
+The range to found is not valid - - - The current time is: 17:45:02
+The inserted range is not valid - - - The current time is: 12:08:27
+The inserted range is not valid - - - The current time is: 12:13:29
+The inserted range is not valid - - - The current time is: 12:13:29
+The inserted range is not valid - - - The current date and time is: 2024-07-29 12:16:48
+The inserted range is not valid - - - The current date and time is: 2024-07-29 12:16:48
+The inserted range is not valid - - - The current date and time is: 2024-07-29 13:10:23
+The inserted range is not valid - - - The current date and time is: 2024-07-29 13:10:23
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:19:08
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:19:08
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:38:50
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:38:50
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:47:07
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:47:07
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:49:09
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:49:09
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:51:02
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:51:02
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:54:08
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:54:08
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:58:40
+The inserted range is not valid - - - The current date and time is: 2024-09-15 10:58:40
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:04:57
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:04:57
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:08:45
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:08:45
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:55:25
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:55:25
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:57:33
+The inserted range is not valid - - - The current date and time is: 2024-09-15 11:57:33
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:00:03
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:00:03
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:03:46
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:03:46
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:07:12
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:07:12
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:08:47
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:08:47
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:13:56
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:13:56
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:24:42
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:24:42
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:24:42
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:24:42
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:32:17
+The inserted range is not valid - - - The current date and time is: 2024-09-15 12:32:17

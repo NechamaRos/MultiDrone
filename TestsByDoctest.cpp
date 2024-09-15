@@ -8,7 +8,6 @@ extern "C" {
 	Range_t TestControlBlock[25];//control block to Test.c
 	extern SequenceCollectionCtrlBlk_t* prefetchSeqCollection_CB;//extern the control block of CachePrefetchManagement.h
 
-
 #pragma region PrintFunctions
 
 	void PrintPoint(Point_t p) {
@@ -31,8 +30,8 @@ extern "C" {
 		PrintRange(seq.nextExpectedRange);
 		printf("counterUse: ");
 		printf("%d", seq.counterUse);
-		printf("\ncounterLength: ");
-		printf("%d", seq.counterLength);
+		printf("\ncounter: ");
+		printf("%d", seq.counter);
 		printf("\nDirection: ");
 		switch (seq.dir)
 		{
@@ -62,23 +61,23 @@ extern "C" {
 
 		printf("information of seqRangeInfoArray:\n");
 
-		for (int i = 0; i < COLLECTION_SIZE; i++)
+		for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 		{
 			printf("seqRangeInfoArray[%d]:\n", i);
 			PrintSeq(*(prefetchSeqCollection_CB->seqRangeInfoArray[i]));
 		}
 
-		printf("information of singleRangesArray:\n");
+		printf("information of singleRangesArray.array:\n");
 
-		for (int i = 0; i < COLLECTION_SIZE; i++)
+		for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 		{
-			printf("singleRangesArray[%d]:\n", i);
-			PrintRange(prefetchSeqCollection_CB->singleRangesArray[i]);
+			printf("singleRangesArray.array[%d]:\n", i);
+			PrintRange(prefetchSeqCollection_CB->singleRangesArray.array[i]);
 		}
 
 		printf("\ninformation of RangesInLoadingArray:\n");
 
-		for (int i = 0; i < COLLECTION_SIZE; i++)
+		for (int i = 0; i < MAX_SUPPORTED_PARALLEL_RANGE; i++)
 		{
 			printf("RangesInLoadingArray[%d]:\n", i);
 			PrintRange(prefetchSeqCollection_CB->RangesInLoadingArray[i]);
@@ -108,9 +107,9 @@ extern "C" {
 		TestControlBlock[6].bottomRight = { 0,0 };
 		TestControlBlock[6].topLeft = { 3,3 };
 
-		TestControlBlock[7] = GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[4], UP, 1), UP, 2);
-		TestControlBlock[8] = GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[3], LEFT, 1), LEFT, 2);
-		TestControlBlock[9] = GetNextRangeByDirection(TestControlBlock[7], UP, 1);
+		TestControlBlock[7] = GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[4], UP), UP);
+		TestControlBlock[8] = GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[3], LEFT), LEFT);
+		TestControlBlock[9] = GetNextRangeByDirection(TestControlBlock[7], UP);
 
 		topLeftX = rand() % 100 + 1;
 		topLeftY = rand() % 100 + 1;
@@ -119,9 +118,9 @@ extern "C" {
 		dir =Range_Direction_t( rand() % 4);
 		TestControlBlock[10].bottomRight = { bottomRightX,bottomRightY };
 		TestControlBlock[10].topLeft = { topLeftX,topLeftY };
-		TestControlBlock[11] = GetNextRangeByDirection(TestControlBlock[10], dir, 1);
-		TestControlBlock[12] = GetNextRangeByDirection(TestControlBlock[11], dir, 1);
-		TestControlBlock[13] = GetNextRangeByDirection(TestControlBlock[12], dir, 1);
+		TestControlBlock[11] = GetNextRangeByDirection(TestControlBlock[10], dir);
+		TestControlBlock[12] = GetNextRangeByDirection(TestControlBlock[11], dir);
+		TestControlBlock[13] = GetNextRangeByDirection(TestControlBlock[12], dir);
 
 		topLeftX = rand() % 100 + 1;
 		topLeftY = rand() % 100 + 1;
@@ -131,9 +130,9 @@ extern "C" {
 
 		TestControlBlock[14].bottomRight = { bottomRightX,bottomRightY };
 		TestControlBlock[14].topLeft = { topLeftX,topLeftY };
-		TestControlBlock[15] = GetNextRangeByDirection(TestControlBlock[14], dir, 1);
-		TestControlBlock[16] = GetNextRangeByDirection(TestControlBlock[15], dir, 1);
-		TestControlBlock[17] = GetNextRangeByDirection(TestControlBlock[16], dir, 1);
+		TestControlBlock[15] = GetNextRangeByDirection(TestControlBlock[14], dir);
+		TestControlBlock[16] = GetNextRangeByDirection(TestControlBlock[15], dir);
+		TestControlBlock[17] = GetNextRangeByDirection(TestControlBlock[16], dir);
 
 		topLeftX = rand() % 100 + 1;
 		topLeftY = rand() % 100 + 1;
@@ -143,9 +142,9 @@ extern "C" {
 
 		TestControlBlock[18].bottomRight = { bottomRightX,bottomRightY };
 		TestControlBlock[18].topLeft = { topLeftX,topLeftY };
-		TestControlBlock[19] = GetNextRangeByDirection(TestControlBlock[18], dir, 1);
-		TestControlBlock[20] = GetNextRangeByDirection(TestControlBlock[19], dir, 1);
-		TestControlBlock[21] = GetNextRangeByDirection(TestControlBlock[20], dir, 1);
+		TestControlBlock[19] = GetNextRangeByDirection(TestControlBlock[18], dir);
+		TestControlBlock[20] = GetNextRangeByDirection(TestControlBlock[19], dir);
+		TestControlBlock[21] = GetNextRangeByDirection(TestControlBlock[20], dir);
 
 		topLeftX = rand() % 100 + 1;
 		topLeftY = rand() % 100 + 1;
@@ -155,9 +154,9 @@ extern "C" {
 
 		TestControlBlock[22].bottomRight = { bottomRightX,bottomRightY };
 		TestControlBlock[22].topLeft = { topLeftX,topLeftY };
-		TestControlBlock[23] = GetNextRangeByDirection(TestControlBlock[22], dir, 1);
-		TestControlBlock[24] = GetNextRangeByDirection(TestControlBlock[23], dir, 1);
-		TestControlBlock[25] = GetNextRangeByDirection(TestControlBlock[24], dir, 1);
+		TestControlBlock[23] = GetNextRangeByDirection(TestControlBlock[22], dir);
+		TestControlBlock[24] = GetNextRangeByDirection(TestControlBlock[23], dir);
+		TestControlBlock[25] = GetNextRangeByDirection(TestControlBlock[24], dir);
 	}
 
 	void TestIsRangeContainedInOtherRange() {
@@ -181,14 +180,14 @@ extern "C" {
 
 		PrintRange(GetNextRangeByDirection(TestControlBlock[3], UP, 1));*/
 
-		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[3], UP, 1), TestControlBlock[4]));
-		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[4], DOWN, 1), TestControlBlock[3]));
-		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[5], LEFT, 1), TestControlBlock[3]) );
-		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[3], RIGHT, 1), TestControlBlock[5]));
-		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], UP, 1), TestControlBlock[3]) == UP  );
-		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], DOWN, 1), TestControlBlock[3]) == DOWN);
-		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], RIGHT, 1), TestControlBlock[3]) == RIGHT);
-		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], LEFT, 1), TestControlBlock[3]) == LEFT );
+		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[3], UP), TestControlBlock[4]));
+		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[4], DOWN), TestControlBlock[3]));
+		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[5], LEFT), TestControlBlock[3]) );
+		CHECK(IsEqualRanges(GetNextRangeByDirection(TestControlBlock[3], RIGHT), TestControlBlock[5]));
+		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], UP), TestControlBlock[3]) == UP  );
+		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], DOWN), TestControlBlock[3]) == DOWN);
+		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], RIGHT), TestControlBlock[3]) == RIGHT);
+		CHECK(IsRangeCompleteSingleRangeToSequence(GetNextRangeByDirection(TestControlBlock[3], LEFT), TestControlBlock[3]) == LEFT );
 
 	}
 
@@ -199,22 +198,22 @@ extern "C" {
 
 	}
 
-	void TestRemoveRangeFromLoadingRangesAPI() {
+	void TestPrefetch_RemoveRangeFromLoadingRanges() {
 
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 3);
 
-		RemoveRangeFromLoadingRangesAPI(TestControlBlock[8]);
-		CHECK_FALSE(IsRangeInLoadingAPI(TestControlBlock[8]));
+		Prefetch_RemoveRangeFromLoadingRanges(TestControlBlock[8]);
+		CHECK_FALSE(Prefetch_IsRangeInLoading(TestControlBlock[8]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[8]) ==-1);
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 2);
 
-		RemoveRangeFromLoadingRangesAPI(TestControlBlock[7]);
-		CHECK_FALSE(IsRangeInLoadingAPI(TestControlBlock[7]));
+		Prefetch_RemoveRangeFromLoadingRanges(TestControlBlock[7]);
+		CHECK_FALSE(Prefetch_IsRangeInLoading(TestControlBlock[7]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[7]) == -1);
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 0);
 
-		RemoveRangeFromLoadingRangesAPI(TestControlBlock[9]);
-		CHECK_FALSE(IsRangeInLoadingAPI(TestControlBlock[9]));
+		Prefetch_RemoveRangeFromLoadingRanges(TestControlBlock[9]);
+		CHECK_FALSE(Prefetch_IsRangeInLoading(TestControlBlock[9]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[9]) == -1);
 		CHECK(GetNextEmptyIndexOfRangesInLoadingArray() == 0);
 
@@ -225,7 +224,7 @@ extern "C" {
 #pragma region 	the first insert has to insert to the singleRangeArray[0]
 
 		CHECK(InsertNewRange(TestControlBlock[3]) == INSERT_TO_SINGLE_RANGES_ARRAY );
-		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray[0], TestControlBlock[3]));
+		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray.array[0], TestControlBlock[3]));
 		printf("CHECK(InsertNewRange(TestControlBlock[3])== INSERT_TO_SINGLE_RANGES_ARRAY\n\n");
 
 		PrintSeqCollection();
@@ -238,8 +237,8 @@ extern "C" {
 		// with the current and prev ranges and delete the prev insert from the singleRangeArray[0]
 
 		CHECK(InsertNewRange(TestControlBlock[4]) == CREATE_SEQ );
-		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray[3], GetDefaultRange()));
-		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterLength == 2);
+		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray.array[3], GetDefaultRange()));
+		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counter == 2);
 		printf("CHECK(InsertNewRange(TestControlBlock[4]) == CREATE_SEQ\n\n");
 
 		PrintSeqCollection();
@@ -249,11 +248,11 @@ extern "C" {
 
 #pragma region the third insert has to update the seqRangeinfoArray[0]
 
-		CHECK(InsertNewRange(GetNextRangeByDirection(TestControlBlock[4], UP, 1)) == CONTINUE_SEQ );
-		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterLength == 3);
+		CHECK(InsertNewRange(GetNextRangeByDirection(TestControlBlock[4], UP)) == CONTINUE_SEQ );
+		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counter == 3);
 		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterUse == 0);
-		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[1]->counterLength == -1);
-		CHECK(IsRangeInLoadingAPI(TestControlBlock[7]));
+		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[1]->counter == -1);
+		CHECK(Prefetch_IsRangeInLoading(TestControlBlock[7]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[7]) != -1);
 
 		printf("InsertNewRange(TestControlBlock[7]) == CONTINUE_SEQ\n");
@@ -265,9 +264,9 @@ extern "C" {
 #pragma region 	the fourth insert has to insert to the singleRangeArray[0]
 
 		CHECK(InsertNewRange(TestControlBlock[5]) == INSERT_TO_SINGLE_RANGES_ARRAY );
-		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterLength == 3);
+		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counter == 3);
 		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterUse == 0);//stay 0 because seqRangeInfoArray wasn't changed
-		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray[1], TestControlBlock[5]));//singleRangeCurrentIndex was up
+		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray.array[1], TestControlBlock[5]));//singleRangeCurrentIndex was up
 
 		printf("InsertNewRange(TestControlBlock[4]) == INSERT_TO_SINGLE_RANGES_ARRAY\n\n");
 
@@ -279,11 +278,11 @@ extern "C" {
 #pragma region 	the fiveth insert has to update  the seqRangeinfoArray[0]
 
 
-		CHECK(InsertNewRange(GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[4], UP, 1), UP, 1)) == CONTINUE_SEQ   );
-		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterLength == 4);
+		CHECK(InsertNewRange(GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[4], UP), UP)) == CONTINUE_SEQ   );
+		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counter == 4);
 		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterUse == 0);
-		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray[0], GetDefaultRange()));
-		CHECK(IsRangeInLoadingAPI(TestControlBlock[9]));
+		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray.array[0], GetDefaultRange()));
+		CHECK(Prefetch_IsRangeInLoading(TestControlBlock[9]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[9]) != -1);
 		printf("InsertNewRange(GetNextRangeByDirection(GetNextRangeByDirection(TestControlBlock[3], UP, 1), UP, 1)) == CONTINUE_SEQ\n\n");
 
@@ -298,8 +297,8 @@ extern "C" {
 
 		CHECK(InsertNewRange(TestControlBlock[3]) == CREATE_SEQ);
 		PrintSeqCollection();
-		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray[1], GetDefaultRange()));
-		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[1]->counterLength == 2);
+		CHECK(IsEqualRanges(prefetchSeqCollection_CB->singleRangesArray.array[1], GetDefaultRange()));
+		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[1]->counter == 2);
 		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[1]->counterUse == 0);
 		CHECK(prefetchSeqCollection_CB->seqRangeInfoArray[0]->counterUse > 0);
 		printf("InsertNewRange(TestControlBlock[0]) == CREATE_SEQ\n\n");
@@ -308,11 +307,11 @@ extern "C" {
 
 
 #pragma region the seventh insert has to update the seqRangeinfoArray[1]
-		CHECK(InsertNewRange(GetNextRangeByDirection(TestControlBlock[3], LEFT, 1)) == CONTINUE_SEQ );
+		CHECK(InsertNewRange(GetNextRangeByDirection(TestControlBlock[3], LEFT)) == CONTINUE_SEQ );
 		//change the next expected range of TestControlBlock[3], to be valid value
 		TestControlBlock[8].topLeft.x = 0;
 		PrintSeqCollection();
-		CHECK(IsRangeInLoadingAPI(TestControlBlock[8]));
+		CHECK(Prefetch_IsRangeInLoading(TestControlBlock[8]));
 		CHECK(FindRangeInLoadingRangesArray(TestControlBlock[8]) != -1);
 		printf("InsertNewRange(GetNextRangeByDirection(TestControlBlock[3], LEFT, 1)== CONTINUE_SEQ\n\n");
 		PrintSeqCollection();
@@ -361,8 +360,8 @@ extern "C" {
 		range.bottomRight = TestControlBlock[0].bottomRight;
 		range.topLeft = TestControlBlock[1].topLeft;
 
-		InsertNewRangeAPI(GetDefaultRange());
-		InsertNewRangeAPI(range);
+		Prefetch_InsertNewRange(GetDefaultRange());
+		Prefetch_InsertNewRange(range);
 
 	}
 
@@ -384,7 +383,7 @@ extern "C" {
 	}
 
 	TEST_CASE("TestInsertNewRange") {
-		INIT();
+		Prefetch_INIT();
 		TestInsertNewRange();
 	}
 	TEST_CASE("TestInsertNewRange") {
