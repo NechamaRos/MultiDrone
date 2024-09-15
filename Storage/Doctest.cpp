@@ -811,7 +811,7 @@ TEST_CASE("test_disk_mng_isTheMapInRange") {
     Point_t rangeBottomRight = { x4, y4 };
     //MapRange_t* range = mapRange_create(rangeBottomRight, rangeTopLeft);
     MapRange_t* range = mapRange_create({ 224,140 }, { 148,160 });
-    MapRange_t* rangeFromCache = mapRange_create({250,130}, {170,170});
+    MapRange_t* rangeFromCache = mapRange_create({300,100}, {230,120});
 
     printMapRange("Range From Cache", rangeFromCache);
     printMapRange("Range To Check", range);
@@ -907,7 +907,69 @@ TEST_CASE("test_disk_mng_loadMapFromDiskToCache") {
 //
 //    int count = disk_mng_getMapsIdsInRange(mapRange, arrayOfMapsInRange, CACHE_SIZE);
 //}
+int isEmpty(DiskFreeIndexesInArray_t* stack) {
+    return stack->top == NULL;
+}
 
+// פונקציית push - דוחפת ערך למחסנית
+void push(DiskFreeIndexesInArray_t* stack, int freeIndex) {
+    StackNode_t* newNode = (StackNode_t*)malloc(sizeof(StackNode_t));
+    if (newNode == NULL) {
+        printf("Error: Unable to allocate memory for new stack node.\n");
+        exit(1);
+    }
+
+    newNode->freeIndex = freeIndex;
+    newNode->next = stack->top;
+    stack->top = newNode;
+    stack->size++;
+}
+
+// פונקציית pop - מוציאה ערך מהמחסנית
+int pop(DiskFreeIndexesInArray_t* stack) {
+    if (isEmpty(stack)) {
+        printf("Error: Stack is empty, cannot pop.\n");
+        exit(1);
+    }
+
+    StackNode_t* temp = stack->top;
+    int poppedValue = temp->freeIndex;
+    stack->top = stack->top->next;
+    stack->size--;
+    free(temp);
+
+    return poppedValue;
+}
+// פונקציית top - מחזירה את הערך העליון במחסנית מבלי להסיר אותו
+int top(DiskFreeIndexesInArray_t* stack) {
+    if (isEmpty(stack)) {
+        printf("Error: Stack is empty, cannot get top value.\n");
+        exit(1);
+    }
+
+    return stack->top->freeIndex;
+}
+
+DiskFreeIndexesInArray_t* copyStack()
+{
+    DiskFreeIndexesInArray_t* stack= (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    stack->top = NULL;
+    stack->size = 0;
+    DiskFreeIndexesInArray_t* help = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    help->top = NULL;
+    help->size = 0;
+    while (!stack_is_empty())
+    {
+        push(help, stack_pop());
+    }
+    while (!isEmpty(help))
+    {
+        push(stack, top(help));
+        stack_push(pop(help));
+    }
+    return stack;
+
+}
 TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
 
     SUBCASE("check the first initialize") {
@@ -935,13 +997,15 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
         disk_mng_addMap(mapRange, size, map);
 
+        DiskFreeIndexesInArray_t* stack = copyStack();
+
         disk_mng_saveData();
 
         int stackSize;
         int startAddressForStackSize = sizeof(int);
         int lengthStackSize = sizeof(int);
         disk_loadDataForInitializeDataStructers(&stackSize, &startAddressForStackSize, &lengthStackSize);
-        CHECK(stackSize == disk_mng_CB->diskFreeIndexesInArray->size);
+        CHECK(stackSize == stack->size);
 
         int avlSize;
         int startAddressForAVL = 2*sizeof(int);
@@ -960,18 +1024,8 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         int lengthmapIdIndex = sizeof(int);
         disk_loadDataForInitializeDataStructers(&mapIdIndex, &startAddressFormapIdIndex, &lengthmapIdIndex);
         CHECK(mapIdIndex == disk_mng_CB->mapIdIndex);
-
-        DiskFreeIndexesInArray_t* stackForTest = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
-        stackForTest->top = (StackNode_t*)allocate_memory(sizeof(StackNode_t) * stackSize, "Failed to allocate memory for stack ", "stack_normalInitialize");
-        
-        int startAddressForStack = 5* sizeof(int);
-        int lengthStack = sizeof(StackNode_t*) * stackSize;
-        printf(" %d\n\n", lengthStack);
-
-        //disk_loadDataForInitializeDataStructers(&stackForTest, &startAddressForStack, &lengthStack);
-        //printf(" %d\n\n", lengthStack);
-
-        //CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == stackForTest->top->freeIndex);
+        stack_normalInitialize();
+        CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == stack->top->freeIndex);
 
 
         //ArrayInfo_t** arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");

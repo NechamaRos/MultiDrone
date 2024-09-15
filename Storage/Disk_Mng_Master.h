@@ -11,6 +11,8 @@
 #define DISK_SIZE 10
 #define CACHE_SIZE 100
 
+
+
 // Forward declarations
 typedef struct AVLNode_s AVLNode_t;
 typedef struct DiskSortByMapSize_s DiskSortByMapSize_t;
@@ -126,6 +128,8 @@ bool disk_mng_loadMapFromDiskToCache(int mapId,int offset, int size, int* freeAd
 
 //disk_mng_searchForSuitableMapInLoadingArray-Search for a suitable map in the loading array
 int disk_mng_searchForSuitableMapInLoadingArray(int mapId);
+
+
 
 //initialize
 
@@ -298,6 +302,4 @@ bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress);
 //cache_deleteMap- delete map from the cache
 void cache_deleteMap(int mapId);
 
-//int disk_mng_getMapsIdsInRange(MapRange_t* rangeFromCache, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize)
-
-
+//int disk_mng_getMapsIdsInRange(MapRange_t* rangeFromCache, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize);
