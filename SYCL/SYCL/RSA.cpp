@@ -39,7 +39,6 @@ cpp_int RSA::mod_exp(cpp_int base, cpp_int exp, cpp_int mod) {
     // Parallel modular exponentiation
     q.submit([&](sycl::handler& h) {
         h.parallel_for(sycl::nd_range<1>(global_range, local_range), [=](sycl::nd_item<1> item) {
-            //h.single_task([=]() {
             cpp_int local_result = 1;
             cpp_int local_base = *device_base;
             cpp_int local_exp = *device_exp;
@@ -95,7 +94,6 @@ bool RSA::miller_rabin_test(const cpp_int& number_to_test, int num_tests) {
 
     q.submit([&](handler& h) {
         h.single_task([=]() {
-          /*  int index = item.get_global_id(0);*/
             cpp_int local_number = *device_number;
             cpp_int local_d_value = *device_d_value;
 
