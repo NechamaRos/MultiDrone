@@ -237,6 +237,15 @@ int stack_pop();
 // Get the value of the top element of the stack without popping it
 int stack_top();
 
+int isEmpty(DiskFreeIndexesInArray_t* stack);
+
+void push(DiskFreeIndexesInArray_t* stack, int freeIndex);
+
+int pop(DiskFreeIndexesInArray_t* stack);
+
+int top(DiskFreeIndexesInArray_t* stack);
+DiskFreeIndexesInArray_t* copyStack();
+
 
 //array functions 
 

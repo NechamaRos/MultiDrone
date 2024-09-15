@@ -106,17 +106,21 @@ void stack_firstInitialize() {
 }
 
 void stack_normalInitialize() {
-    int index;
-    int  startSructers = 5 * sizeof(int);
+    
     int size = 0;//stack size
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the second address in disk with stack size
     disk_loadDataForInitializeDataStructers(&size, &startAdress, &howManyToLoad);
+
+    //initilaize the structers
     disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     disk_mng_CB->diskFreeIndexesInArray->top = NULL;
-    howManyToLoad =sizeof(int);
+
+    int index;
+    int  startSructers = 5 * sizeof(int);
+    //fill the stack with the indexes from the disk
     for (int i = 0; i < size; i++)
     {
         disk_loadDataForInitializeDataStructers(&(index), &startSructers, &howManyToLoad);
@@ -127,21 +131,33 @@ void stack_normalInitialize() {
 
 void stack_saveData()
 {
-    int startSructers = 5 * sizeof(int);
+
+    //save data in help stack
+    DiskFreeIndexesInArray_t* stack = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    stack->top = NULL;
+    stack->size = 0;
+
     int index;
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //save size of stack in the second address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray->size), &startAdress, &howManyToLoad);
 
-    howManyToLoad =sizeof(int);
-    //save all the data from stack
+    int startSructers = 5 * sizeof(int);
+    //save all the data from stack to disk
     while (!stack_is_empty())
     {
+        push(stack, stack_top());
         index = stack_pop();
         disk_saveDataFromStructersToDisk(&index, &startSructers, &howManyToLoad);
         startSructers += howManyToLoad;
     }
+
+    while (!isEmpty(stack))
+    {
+        push(disk_mng_CB->diskFreeIndexesInArray, pop(stack));
+    }
+
 }
 
 bool stack_is_empty() {
@@ -181,6 +197,69 @@ int stack_top() {
         return -1;
     }
     return disk_mng_CB->diskFreeIndexesInArray->top->freeIndex;
+}
+
+int isEmpty(DiskFreeIndexesInArray_t* stack) {
+    return stack->top == NULL;
+}
+
+// פונקציית push - דוחפת ערך למחסנית
+void push(DiskFreeIndexesInArray_t* stack, int freeIndex) {
+    StackNode_t* newNode = (StackNode_t*)malloc(sizeof(StackNode_t));
+    if (newNode == NULL) {
+        printf("Error: Unable to allocate memory for new stack node.\n");
+        exit(1);
+    }
+
+    newNode->freeIndex = freeIndex;
+    newNode->next = stack->top;
+    stack->top = newNode;
+    stack->size++;
+}
+
+// פונקציית pop - מוציאה ערך מהמחסנית
+int pop(DiskFreeIndexesInArray_t* stack) {
+    if (isEmpty(stack)) {
+        printf("Error: Stack is empty, cannot pop.\n");
+        exit(1);
+    }
+
+    StackNode_t* temp = stack->top;
+    int poppedValue = temp->freeIndex;
+    stack->top = stack->top->next;
+    stack->size--;
+    free(temp);
+
+    return poppedValue;
+}
+// פונקציית top - מחזירה את הערך העליון במחסנית מבלי להסיר אותו
+int top(DiskFreeIndexesInArray_t* stack) {
+    if (isEmpty(stack)) {
+        printf("Error: Stack is empty, cannot get top value.\n");
+        exit(1);
+    }
+
+    return stack->top->freeIndex;
+}
+
+DiskFreeIndexesInArray_t* copyStack()
+{
+    DiskFreeIndexesInArray_t* stack = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    stack->top = NULL;
+    stack->size = 0;
+    DiskFreeIndexesInArray_t* help = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    help->top = NULL;
+    help->size = 0;
+    while (!stack_is_empty())
+    {
+        push(help, stack_pop());
+    }
+    while (!isEmpty(help))
+    {
+        push(stack, top(help));
+        stack_push(pop(help));
+    }
+    return stack;
 }
 
 //array fuctions

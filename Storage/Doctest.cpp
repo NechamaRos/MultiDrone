@@ -907,69 +907,8 @@ TEST_CASE("test_disk_mng_loadMapFromDiskToCache") {
 //
 //    int count = disk_mng_getMapsIdsInRange(mapRange, arrayOfMapsInRange, CACHE_SIZE);
 //}
-int isEmpty(DiskFreeIndexesInArray_t* stack) {
-    return stack->top == NULL;
-}
 
-// פונקציית push - דוחפת ערך למחסנית
-void push(DiskFreeIndexesInArray_t* stack, int freeIndex) {
-    StackNode_t* newNode = (StackNode_t*)malloc(sizeof(StackNode_t));
-    if (newNode == NULL) {
-        printf("Error: Unable to allocate memory for new stack node.\n");
-        exit(1);
-    }
 
-    newNode->freeIndex = freeIndex;
-    newNode->next = stack->top;
-    stack->top = newNode;
-    stack->size++;
-}
-
-// פונקציית pop - מוציאה ערך מהמחסנית
-int pop(DiskFreeIndexesInArray_t* stack) {
-    if (isEmpty(stack)) {
-        printf("Error: Stack is empty, cannot pop.\n");
-        exit(1);
-    }
-
-    StackNode_t* temp = stack->top;
-    int poppedValue = temp->freeIndex;
-    stack->top = stack->top->next;
-    stack->size--;
-    free(temp);
-
-    return poppedValue;
-}
-// פונקציית top - מחזירה את הערך העליון במחסנית מבלי להסיר אותו
-int top(DiskFreeIndexesInArray_t* stack) {
-    if (isEmpty(stack)) {
-        printf("Error: Stack is empty, cannot get top value.\n");
-        exit(1);
-    }
-
-    return stack->top->freeIndex;
-}
-
-DiskFreeIndexesInArray_t* copyStack()
-{
-    DiskFreeIndexesInArray_t* stack= (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
-    stack->top = NULL;
-    stack->size = 0;
-    DiskFreeIndexesInArray_t* help = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
-    help->top = NULL;
-    help->size = 0;
-    while (!stack_is_empty())
-    {
-        push(help, stack_pop());
-    }
-    while (!isEmpty(help))
-    {
-        push(stack, top(help));
-        stack_push(pop(help));
-    }
-    return stack;
-
-}
 TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
 
     SUBCASE("check the first initialize") {
@@ -997,7 +936,6 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
         disk_mng_addMap(mapRange, size, map);
 
-        DiskFreeIndexesInArray_t* stack = copyStack();
 
         disk_mng_saveData();
 
@@ -1005,7 +943,7 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         int startAddressForStackSize = sizeof(int);
         int lengthStackSize = sizeof(int);
         disk_loadDataForInitializeDataStructers(&stackSize, &startAddressForStackSize, &lengthStackSize);
-        CHECK(stackSize == stack->size);
+        CHECK(stackSize == disk_mng_CB->diskFreeIndexesInArray->size);
 
         int avlSize;
         int startAddressForAVL = 2*sizeof(int);
@@ -1025,41 +963,41 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         disk_loadDataForInitializeDataStructers(&mapIdIndex, &startAddressFormapIdIndex, &lengthmapIdIndex);
         CHECK(mapIdIndex == disk_mng_CB->mapIdIndex);
         stack_normalInitialize();
-        CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == stack->top->freeIndex);
+        CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == disk_mng_CB->diskFreeIndexesInArray->top->freeIndex);
 
 
-        //ArrayInfo_t** arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
+        ArrayInfo_t** arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
         //for (size_t i = 0; i < DISK_SIZE; i++)
         //{
         //    arrayForTest[i] = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for array ", "array_normalInitialize");
         //}
-        //int startAddressForArray = 5* sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
-        //int lengthForArray = DISK_SIZE* sizeof(ArrayInfo_t*);
-        //disk_loadDataForInitializeDataStructers(&arrayForTest, &startAddressForArray, &lengthForArray);
-        //printf("-------------------");
+        ////int startAddressForArray = 5* sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
+        ////int lengthForArray = DISK_SIZE* sizeof(ArrayInfo_t*);
+        ////disk_loadDataForInitializeDataStructers(&arrayForTest, &startAddressForArray, &lengthForArray);
+        ////printf("-------------------");
+        array_normalInitialize();
 
-        //for (int i = 96; i < DISK_SIZE; i++)
-        //{
-        //    if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL) {
-        //        ArrayInfo_t* a = disk_mng_CB->arrayForAllMApsInformation[i];
-        //        ArrayInfo_t* a2= arrayForTest[i];   
-        //        printf(" %d\n\n", a2->mapid);
-        //        CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->mapid == arrayForTest[i]->mapid);
-        //        CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->size == arrayForTest[i]->size);
-        //        //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->avlNodeInfo == arrayForTest[i]->avlNodeInfo);
-        //        //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->diskPointer == arrayForTest[i]->diskPointer);
-        //        //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->range == arrayForTest[i]->range);
-        //    }
-        //}
-        //DiskSortByMapSize_t* avlTreeForTest = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
+        for (int i = 96; i < DISK_SIZE; i++)
+        {
+            if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL) {
+                ArrayInfo_t* a = disk_mng_CB->arrayForAllMApsInformation[i];
+                ArrayInfo_t* a2= arrayForTest[i];   
+                printf(" %d\n\n", a2->mapid);
+                CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->mapid == arrayForTest[i]->mapid);
+                CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->size == arrayForTest[i]->size);
+                //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->avlNodeInfo == arrayForTest[i]->avlNodeInfo);
+                //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->diskPointer == arrayForTest[i]->diskPointer);
+                //CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->range == arrayForTest[i]->range);
+            }
+        }
+        DiskSortByMapSize_t* avlTreeForTest = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
 
-
-        //avlTreeForTest->root = (AVLNode_t*)allocate_memory(sizeof(AVLNode_t) * avlSize, "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
 
         //int startAddressForAVLTree = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * sizeof(ArrayInfo_t*);
         //int lengthforAVLTree = avlSize * sizeof(AVLNode_t*);
         //disk_loadDataForInitializeDataStructers(&avlTreeForTest, &startAddressForAVLTree, &lengthforAVLTree);
-        //CHECK(avlTreeForTest->root->avlNodeInfo->arrayIndex == disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->arrayIndex);
+        avlTree_normalInitialize();
+        CHECK(avlTreeForTest->root->avlNodeInfo->arrayIndex == disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->arrayIndex);
 
     }
 }
