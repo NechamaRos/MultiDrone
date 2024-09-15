@@ -80,7 +80,9 @@ void arrayInLoaded_initialize()
     disk_mng_CB->disk_MapsInLoadedToCache = (DiskMapsInLoadedToCache_t**)allocate_memory(CACHE_SIZE * sizeof(DiskMapsInLoadedToCache_t*), "Failed to allocate memory for array in loaded ", "arrayInLoaded_initialize");
     if (disk_mng_CB->disk_MapsInLoadedToCache != NULL) {
         for (int i = 0; i < CACHE_SIZE; i++) {
-            disk_mng_CB->disk_MapsInLoadedToCache[i] = NULL;
+            disk_mng_CB->disk_MapsInLoadedToCache[i] =(DiskMapsInLoadedToCache_t*) allocate_memory(sizeof(DiskMapsInLoadedToCache_t), "Failed to allocate memory for array in loade info","arrayInLoaded_initialize");
+            disk_mng_CB->disk_MapsInLoadedToCache[i]->index = -1;
+            disk_mng_CB->disk_MapsInLoadedToCache[i]->mapId = -1;
         }
     }
 }
@@ -95,7 +97,7 @@ DiskMapsInLoadedToCache_t* arrayInLoaded_create(int mapId, int index)
 
 //initialize on the first time we turn o the computer the stack will initialize with all the indexes.
 void stack_firstInitialize() {
-    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t)*DISK_SIZE, "Failed to allocate memory for stack ", "stack_firstInitialize");
+    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_firstInitialize");
     disk_mng_CB->diskFreeIndexesInArray->top = NULL;
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     for (size_t i = 0; i < DISK_SIZE; i++)
@@ -105,12 +107,15 @@ void stack_firstInitialize() {
 }
 
 void stack_normalInitialize() {
-    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t)*DISK_SIZE, "Failed to allocate memory for stack ", "stack_normalInitialize");
+
     int size = 0;//stack size
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the second address in disk with stack size
     disk_loadDataForInitializeDataStructers(&size, &startAdress, &howManyToLoad);
+    disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
+    disk_mng_CB->diskFreeIndexesInArray->top= (StackNode_t*)allocate_memory(sizeof(StackNode_t)*size, "Failed to allocate memory for stack ", "stack_normalInitialize");
+
     howManyToLoad = size * sizeof(StackNode_t*);
     //load all the data from stack
     disk_loadDataForInitializeDataStructers(&(disk_mng_CB->diskFreeIndexesInArray), &startSructers, &howManyToLoad);
@@ -179,7 +184,11 @@ void array_firstInitialize() {
     }
 }
 void array_normalInitialize() {
-    disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*), "Failed to allocate memory for array ", "array_normalInitialize");
+    disk_mng_CB->arrayForAllMApsInformation = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
+    for (size_t i = 0; i < DISK_SIZE; i++)
+    {
+        disk_mng_CB->arrayForAllMApsInformation[i]= (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for array ", "array_normalInitialize");
+    }
     startSructers =5* sizeof(int)+ disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
     int howManyToLoad = DISK_SIZE * sizeof(ArrayInfo_t*);
     //load all the data from array
@@ -383,7 +392,7 @@ void avlTree_firstInitialize() {
 
 void avlTree_normalInitialize()
 {
-    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
+
     int length = 0;
     int startAdress = 2 * sizeof(int);;
     int howManyToLoad = sizeof(int);
@@ -395,6 +404,11 @@ void avlTree_normalInitialize()
     howManyToLoad = sizeof(int);
     //load the forth address in disk with avlTree lru
     disk_loadDataForInitializeDataStructers(&length, &startAdress, &howManyToLoad);
+
+    disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
+
+
+    disk_mng_CB->disk_SortByMapSize->root= (AVLNode_t*)allocate_memory(sizeof(AVLNode_t)*length, "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
 
     startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
     howManyToLoad = length * sizeof(AVLNode_t*);
@@ -699,7 +713,8 @@ bool disk_mng_loadMapFromDiskToCache(int mapId, int offset, int size, int* freeA
     if (index != -1)//Checking whether the map was found in the loading array
     {
         diskPointer = disk_mng_CB->arrayForAllMApsInformation[index]->diskPointer;//Finding the appropriate disk pointer
-        disk_mng_CB->arrayForAllMApsInformation[index] = NULL;
+        disk_mng_CB->disk_MapsInLoadedToCache[index]->index = -1;
+        disk_mng_CB->disk_MapsInLoadedToCache[index]->mapId = -1;
         startAddress = diskPointer + (offset * sizeof(int));
         isLoadedSuccess = disk_loadMapToCache(startAddress, size, freeAddress);
         if (!isLoadedSuccess)
@@ -717,7 +732,7 @@ int disk_mng_searchForSuitableMapInLoadingArray(int mapId)
     for (int i = 0; i < CACHE_SIZE; i++)
     {
         map = disk_mng_CB->disk_MapsInLoadedToCache[i];
-        if (map != NULL && mapId == map->mapId)
+        if (map->index!=-1&&map->mapId!=-1 && mapId == map->mapId)
         {
             return map->index;
         }

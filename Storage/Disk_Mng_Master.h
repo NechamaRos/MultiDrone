@@ -1,3 +1,4 @@
+//#include "C:\Users\שיפי וינגרטן\Pictures\Saved Pictures\סמינר\כיתה יד\תכנות\פרקטיקום\Sycl_DLL\Sycl_DLL/Disk_Mng_Master.h"
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +8,7 @@
 
 #define POINT_BR_RANGE (Point_t){100, 100}
 #define POINT_TL_RANGE (Point_t){0, 0}
-#define DISK_SIZE 100
+#define DISK_SIZE 10
 #define CACHE_SIZE 100
 
 // Forward declarations
@@ -298,3 +299,5 @@ bool disk_loadMapToCache(int startAddress, int length, int* chacheFreeAddress);
 void cache_deleteMap(int mapId);
 
 //int disk_mng_getMapsIdsInRange(MapRange_t* rangeFromCache, ArrayInfo_t** arrayOfMapsIdsInRange, int arraySize)
+
+
