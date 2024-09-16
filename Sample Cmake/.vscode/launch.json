@@ -1,0 +1,87 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "enter program name, for example ${workspaceFolder}/a.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/path/to/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": " ${workspaceFolder}/build/SampleCmake.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/Program Files (x86)/Intel/oneAPI/debugger/2024.2/opt/debugger/bin/gdb-oneapi.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/SampleCmake.exe", // הנתיב לקובץ הביצוע שלך
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}", // תיקיית העבודה שלך
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build", // ודאי שיש משימת build שמוגדרת
+            "miDebuggerPath": "C:/Program Files (x86)/Intel/oneAPI/debugger/2024.2/opt/debugger/bin/gdb-oneapi.exe", // נתיב ל-GDB של Intel oneAPI
+            "serverLaunchTimeout": 10000,
+            "filterStderr": true,
+            "filterStdout": false,
+            "sourceFileMap": {
+                "C:/path/to/mapped/dir": "C:\\path\\to\\source\\dir" // מפת מקורות אם נדרש
+            },
+            "logging": {
+                "engineLogging": true
+            }
+        }
+    ]
+}

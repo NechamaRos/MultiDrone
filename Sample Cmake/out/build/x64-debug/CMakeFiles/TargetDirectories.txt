@@ -1,0 +1,5 @@
+C:/Users/chava/Documents/practicum/Sample Project/Sample Cmake/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/chava/Documents/practicum/Sample Project/Sample Cmake/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/chava/Documents/practicum/Sample Project/Sample Cmake/out/build/x64-debug/Sample Cmake/CMakeFiles/SampleCmake.dir
+C:/Users/chava/Documents/practicum/Sample Project/Sample Cmake/out/build/x64-debug/Sample Cmake/CMakeFiles/edit_cache.dir
+C:/Users/chava/Documents/practicum/Sample Project/Sample Cmake/out/build/x64-debug/Sample Cmake/CMakeFiles/rebuild_cache.dir
