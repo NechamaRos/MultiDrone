@@ -2657,3 +2657,141 @@ disk_mng_checkDataStructures_range:
 Error: Error worng map range.
 disk_mng_checkDataStructures_range:
 Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_mapSize:
+Error: Error worng size variable.
+disk_mng_checkDataStructures_range:
+Error: Error worng map range.

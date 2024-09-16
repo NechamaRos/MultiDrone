@@ -1024,20 +1024,30 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         int lengthmapIdIndex = sizeof(int);
         disk_loadDataForInitializeDataStructers(&mapIdIndex, &startAddressFormapIdIndex, &lengthmapIdIndex);
         CHECK(mapIdIndex == disk_mng_CB->mapIdIndex);
-        stack_normalInitialize();
-        CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == stack->top->freeIndex);
+        int* intDisk = (int*)disk_mng_CB->mockDisk;
 
+        // הדפסת 15 האיברים הראשונים
+        for (int i = 0; i < 15; i++) {
+            printf("Element %d: %d\n", i, intDisk[i]);
+        }
 
-        //ArrayInfo_t** arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
+        //stack_normalInitialize();
+        ////disk_mng_normalInitialize();
+
+        ////CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == stack->top->freeIndex);
+        //ArrayInfo_t** arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*) * DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
+        //int howManyToLoad = sizeof(ArrayInfo_t*);
+        //int startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int);
+        //arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*) * DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
         //for (size_t i = 0; i < DISK_SIZE; i++)
         //{
         //    arrayForTest[i] = (ArrayInfo_t*)allocate_memory(sizeof(ArrayInfo_t), "Failed to allocate memory for array ", "array_normalInitialize");
+        //    disk_loadDataForInitializeDataStructers(&(arrayForTest[i]), &startSructers, &howManyToLoad);
+        //    startSructers += howManyToLoad;
+        //    CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->mapid == arrayForTest[i]->mapid);
+        //    CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->size == arrayForTest[i]->size);
         //}
-        //int startAddressForArray = 5* sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*);
-        //int lengthForArray = DISK_SIZE* sizeof(ArrayInfo_t*);
-        //disk_loadDataForInitializeDataStructers(&arrayForTest, &startAddressForArray, &lengthForArray);
-        //printf("-------------------");
-
+        disk_mng_normalInitialize();
         //for (int i = 96; i < DISK_SIZE; i++)
         //{
         //    if (disk_mng_CB->arrayForAllMApsInformation[i] != NULL) {

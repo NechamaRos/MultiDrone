@@ -106,17 +106,21 @@ void stack_firstInitialize() {
 }
 
 void stack_normalInitialize() {
-    int index;
-    int  startSructers = 5 * sizeof(int);
+    
     int size = 0;//stack size
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the second address in disk with stack size
     disk_loadDataForInitializeDataStructers(&size, &startAdress, &howManyToLoad);
+
+    //initilaize the structers
     disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     disk_mng_CB->diskFreeIndexesInArray->top = NULL;
-    howManyToLoad =sizeof(int);
+
+    int index;
+    int  startSructers = 5 * sizeof(int);
+    //fill the stack with the indexes from the disk
     for (int i = 0; i < size; i++)
     {
         disk_loadDataForInitializeDataStructers(&(index), &startSructers, &howManyToLoad);
@@ -127,15 +131,14 @@ void stack_normalInitialize() {
 
 void stack_saveData()
 {
-    int startSructers = 5 * sizeof(int);
-    int index;
+    int index=0;
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //save size of stack in the second address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray->size), &startAdress, &howManyToLoad);
 
-    howManyToLoad =sizeof(int);
-    //save all the data from stack
+    int startSructers = 5 * sizeof(int);
+    //save all the data from stack to disk
     while (!stack_is_empty())
     {
         index = stack_pop();
