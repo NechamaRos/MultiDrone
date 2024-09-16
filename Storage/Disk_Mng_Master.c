@@ -106,17 +106,21 @@ void stack_firstInitialize() {
 }
 
 void stack_normalInitialize() {
-    int index;
-    int  startSructers = 5 * sizeof(int);
+    
     int size = 0;//stack size
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //load the second address in disk with stack size
     disk_loadDataForInitializeDataStructers(&size, &startAdress, &howManyToLoad);
+
+    //initilaize the structers
     disk_mng_CB->diskFreeIndexesInArray = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "stack_normalInitialize");
     disk_mng_CB->diskFreeIndexesInArray->size = 0;
     disk_mng_CB->diskFreeIndexesInArray->top = NULL;
-    howManyToLoad =sizeof(int);
+
+    int index;
+    int  startSructers = 5 * sizeof(int);
+    //fill the stack with the indexes from the disk
     for (int i = 0; i < size; i++)
     {
         disk_loadDataForInitializeDataStructers(&(index), &startSructers, &howManyToLoad);
@@ -127,21 +131,32 @@ void stack_normalInitialize() {
 
 void stack_saveData()
 {
-    int startSructers = 5 * sizeof(int);
+    //save data in help stack
+    DiskFreeIndexesInArray_t* stack = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    stack->top = NULL;
+    stack->size = 0;
+
     int index;
     int startAdress = sizeof(int);;
     int howManyToLoad = sizeof(int);
     //save size of stack in the second address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->diskFreeIndexesInArray->size), &startAdress, &howManyToLoad);
 
-    howManyToLoad =sizeof(int);
-    //save all the data from stack
+    int startSructers = 5 * sizeof(int);
+    //save all the data from stack to disk
     while (!stack_is_empty())
     {
+        push(stack, stack_top());
         index = stack_pop();
         disk_saveDataFromStructersToDisk(&index, &startSructers, &howManyToLoad);
         startSructers += howManyToLoad;
     }
+
+    while (!isEmpty(stack))
+    {
+        push(disk_mng_CB->diskFreeIndexesInArray, pop(stack));
+    }
+
 }
 
 bool stack_is_empty() {
@@ -181,6 +196,67 @@ int stack_top() {
         return -1;
     }
     return disk_mng_CB->diskFreeIndexesInArray->top->freeIndex;
+}
+
+int isEmpty(DiskFreeIndexesInArray_t* stack) {
+    return stack->top == NULL;
+}
+
+// פונקציית push - דוחפת ערך למחסנית
+void push(DiskFreeIndexesInArray_t* stack, int freeIndex) {
+    StackNode_t* newNode = (StackNode_t*)malloc(sizeof(StackNode_t));
+    if (newNode == NULL) {
+        printf("Error: Unable to allocate memory for new stack node.\n");
+        exit(1);
+    }
+
+    newNode->freeIndex = freeIndex;
+    newNode->next = stack->top;
+    stack->top = newNode;
+    stack->size++;
+}
+
+int pop(DiskFreeIndexesInArray_t* stack) {
+    if (isEmpty(stack)) {
+        printf("Error: Stack is empty, cannot pop.\n");
+        exit(1);
+    }
+
+    StackNode_t* temp = stack->top;
+    int poppedValue = temp->freeIndex;
+    stack->top = stack->top->next;
+    stack->size--;
+    free(temp);
+
+    return poppedValue;
+}
+int top(DiskFreeIndexesInArray_t* stack) {
+    if (isEmpty(stack)) {
+        printf("Error: Stack is empty, cannot get top value.\n");
+        exit(1);
+    }
+
+    return stack->top->freeIndex;
+}
+
+DiskFreeIndexesInArray_t* copyStack()
+{
+    DiskFreeIndexesInArray_t* stack = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    stack->top = NULL;
+    stack->size = 0;
+    DiskFreeIndexesInArray_t* help = (DiskFreeIndexesInArray_t*)allocate_memory(sizeof(DiskFreeIndexesInArray_t), "Failed to allocate memory for stack ", "copy stack");
+    help->top = NULL;
+    help->size = 0;
+    while (!stack_is_empty())
+    {
+        push(help, stack_pop());
+    }
+    while (!isEmpty(help))
+    {
+        push(stack, top(help));
+        stack_push(pop(help));
+    }
+    return stack;
 }
 
 //array fuctions
@@ -332,6 +408,9 @@ int avlNode_height(AVLNode_t* N) {
 
 
 AVLNode_t* avlTree_rightRotate(AVLNode_t* y) {
+    if (y == NULL || y->left == NULL) {
+        return y;
+    }
     AVLNode_t* x = y->left;
     AVLNode_t* T2 = x->right;
     x->right = y;
@@ -433,8 +512,8 @@ void avlTree_saveData() {
     //save lruCounter of avlTree in the forth address in the disk
     disk_saveDataFromStructersToDisk(&(disk_mng_CB->disk_SortByMapSize->lruCounter), &startAdress, &howManyToLoad);
     
-    int startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
-    int howManyToSave = sizeof(AVLNodeInfo_t*);
+    int startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int) + DISK_SIZE * (sizeof(ArrayInfo_t*));
+    int howManyToSave = sizeof(AVLNodeInfo_t);
     // Save the AVL tree nodes to disk
     avlTree_saveNodeToDisk(disk_mng_CB->disk_SortByMapSize->root, &startSructers, &howManyToSave);
 }
@@ -465,8 +544,8 @@ void avlTree_normalInitialize()
     disk_mng_CB->disk_SortByMapSize = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
     disk_mng_CB->disk_SortByMapSize->totalElements = length;
     disk_mng_CB->disk_SortByMapSize->lruCounter = lru;
-    int startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * (sizeof(ArrayInfo_t*));
-    howManyToLoad =sizeof(AVLNode_t*);
+    int startSructers = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int) + DISK_SIZE * (sizeof(ArrayInfo_t*));
+    howManyToLoad =sizeof(AVLNodeInfo_t);
     for (int i = 0; i < length; i++) {
         AVLNodeInfo_t* nodeInfo = avlTree_loadNodeFromDisk(&startSructers, &howManyToLoad);
         // Insert the node into the AVL tree
