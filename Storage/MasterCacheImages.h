@@ -87,7 +87,7 @@ void insertData(UnitNode_LRU_t* node, int* imgData);
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
 LinkedList_LRU_t* initLinkedList();
-void insertInToLinedList(UnitNode_LRU_t* node);
+void insertInToLinkedList(UnitNode_LRU_t* node);
 void moveToTheBeginning(UnitNode_LRU_t* node);
 void removefromLinkedList();
 void removeTenPercentFromCache();
@@ -110,7 +110,7 @@ void throwExcptionToFile(ERRORS);
 
 //insertBuffer
 void insertBufferInToCache(SlaveImgInfo_t** slave, int size);
-void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size);
+void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size, int amountOfBuffers);
 
 //search
 ImgInfo_t* searchByImgId(int imgId, int slaveId);

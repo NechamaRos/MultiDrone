@@ -59,7 +59,7 @@ int* init_imgData()
     {
         errno = ALLOCATE_ERROR;
         throwExcptionToFile(ALLOCATE_ERROR);
-        return;
+        return NULL;
     }
     // Generate a random number
     *imgData = rand() % 1000;
@@ -83,7 +83,7 @@ ImgInfo_t* createImgInfo(int imgId, int slaveId, Point_t TL, Point_t BR)
     imgInfo->unitNodePtr = NULL;
     imgInfo->arrayIndexPtr = NULL;
     imgInfo->unitNodePtr = NULL;
-    int indexInCache = NULL;
+    //int indexInCache = NULL;
  
     return imgInfo;
 }
@@ -139,7 +139,7 @@ LinkedList_LRU_t* initLinkedList()
     }
 }
 
-void insertInToLinedList(UnitNode_LRU_t* node)
+void insertInToLinkedList(UnitNode_LRU_t* node)
 {
     //if it the first node in the linkedList
     if (masterCacheImg_cb->LRU->AmountOfLinks == 0)
@@ -285,14 +285,14 @@ void insertData(UnitNode_LRU_t* node, int* imgData)
     }
     insertTocache(imgData,node->imgInfoPtr);
     insertToImgArray(node->imgInfoPtr);
-    insertInToLinedList(node);
+    insertInToLinkedList(node);
 }
 
 void throwExcptionToFile(ERRORS err)
 {
     FILE file;
     //Attempt to open the file using fopen_s
-    errno_t error = fopen_s(&file, ".\\masterMoce\\Exceptions.txt", "a");
+    errno_t error = fopen_s(&file, ".\\masterMock\\Exceptions.txt", "a");
     //file didt open
     if (error!=0)
     {
@@ -324,14 +324,7 @@ SlaveImgInfo_t* createSlaveImgInfo(int imgId, int slaveId, Point_t TL, Point_t B
     return slaveImgInfo;
 }
 
-void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* slaveBufferSize,int amountOfBuffers)
-{
-    // runs on all buffers
-    for (int i = 0;i < amountOfBuffers;i++)
-    {
-        insertBufferInToCache(slave[i], slaveBufferSize[i]);
-    }
-}
+
 
 void insertBufferInToCache(SlaveImgInfo_t** slave, int slaveBufferSize)
 {
@@ -356,9 +349,16 @@ void insertBufferInToCache(SlaveImgInfo_t** slave, int slaveBufferSize)
     }
 }
 
-void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size)
+void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* slaveBufferSize, int amountOfBuffers)
 {
+    // runs on all buffers
+    for (int i = 0;i < amountOfBuffers;i++)
+    {
+        insertBufferInToCache(slave[i], slaveBufferSize[i]);
+    }
 }
+
+
 
 ImgInfo_t* searchByImgId(int imgId, int slaveId)
 {
