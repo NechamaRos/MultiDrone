@@ -925,6 +925,7 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
     }
     SUBCASE("check the normal initilaize")
     {
+        //add map to disk
         Point_t topLeft;
         topLeft.x = 148;
         topLeft.y = 160;
@@ -936,41 +937,36 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
         int* map = (int*)allocate_memory(sizeof(int*), "Failed to allocate memory for map", "test_disk_mng_addMap");
         disk_mng_addMap(mapRange, size, map);
 
-
+        //save data structers to disk
         disk_mng_saveData();
-
+        //load stack size
         int stackSize;
         int startAddressForStackSize = sizeof(int);
         int lengthStackSize = sizeof(int);
         disk_loadDataForInitializeDataStructers(&stackSize, &startAddressForStackSize, &lengthStackSize);
         CHECK(stackSize == disk_mng_CB->diskFreeIndexesInArray->size);
-
+        //load avl size
         int avlSize;
         int startAddressForAVL = 2*sizeof(int);
         int lengthAVLSize = sizeof(int);
         disk_loadDataForInitializeDataStructers(&avlSize, &startAddressForAVL, &lengthAVLSize);
         CHECK(avlSize == disk_mng_CB->disk_SortByMapSize->totalElements);
-
+        //load avl counter
         int avllruCounter;
         int startAddressForAVLLruCounter = 3* sizeof(int);;
         int lengthAVLLruCounter = sizeof(int);
         disk_loadDataForInitializeDataStructers(&avllruCounter, &startAddressForAVLLruCounter, &lengthAVLLruCounter);
         CHECK(avllruCounter == disk_mng_CB->disk_SortByMapSize->lruCounter);
-
+        //load map id index
         int mapIdIndex;
         int startAddressFormapIdIndex = 4* sizeof(int);;
         int lengthmapIdIndex = sizeof(int);
         disk_loadDataForInitializeDataStructers(&mapIdIndex, &startAddressFormapIdIndex, &lengthmapIdIndex);
         CHECK(mapIdIndex == disk_mng_CB->mapIdIndex);
-
+        //load stack
         stack_normalInitialize();
         CHECK(disk_mng_CB->diskFreeIndexesInArray->top->freeIndex == disk_mng_CB->diskFreeIndexesInArray->top->freeIndex);
-
-        //print the mock disk
-        int* intDisk = (int*)disk_mng_CB->mockDisk;
-        for (int i = 0; i <15 ; i++) {
-            printf("Element %d: %d\n", i, intDisk[i]);
-        }
+        //load array
         ArrayInfo_t** arrayForTest = (ArrayInfo_t**)allocate_memory(sizeof(ArrayInfo_t*)*DISK_SIZE, "Failed to allocate memory for array ", "array_normalInitialize");
         int startAddressForArray = 5* sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(int);
         int lengthForArray =sizeof(ArrayInfo_t*);
@@ -984,13 +980,7 @@ TEST_CASE("Test if disk is initialized correctly after disk_mng_initialize") {
                 CHECK(disk_mng_CB->arrayForAllMApsInformation[i]->size == arrayForTest[i]->size);
             }
         }
-        //DiskSortByMapSize_t* avlTreeForTest = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
-        //int startAddressForAVLTree = 5 * sizeof(int) + disk_mng_CB->diskFreeIndexesInArray->size * sizeof(StackNode_t*) + DISK_SIZE * sizeof(ArrayInfo_t*);
-        //int lengthforAVLTree = avlSize * sizeof(AVLNode_t*);
-        //disk_loadDataForInitializeDataStructers(&avlTreeForTest, &startAddressForAVLTree, &lengthforAVLTree);
-        //avlTree_normalInitialize();
-        //CHECK(avlTreeForTest->root->avlNodeInfo->arrayIndex == disk_mng_CB->disk_SortByMapSize->root->avlNodeInfo->arrayIndex);
-        
+        //load avl tree
         DiskSortByMapSize_t* avlTreeForTest = (DiskSortByMapSize_t*)allocate_memory(sizeof(DiskSortByMapSize_t), "Failed to allocate memory for AVL Tree ", "avlTree_normalInitialize");
         avlTreeForTest->totalElements = avlSize;
         avlTreeForTest->lruCounter = avllruCounter;
