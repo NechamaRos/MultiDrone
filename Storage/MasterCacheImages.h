@@ -11,7 +11,6 @@ typedef struct ImgInfo_s ImgInfo_t;
 typedef struct Stack_emptyPlace_s Stack_emptyPlace_t;
 typedef struct UnitNode_LRU_s UnitNode_LRU_t;
 typedef struct LinkedList_LRU_s LinkedList_LRU_t;
-typedef struct UnitNode_emptyPlaceInCache_s UnitNode_emptyPlaceInCache_t;
 typedef struct Queue_emptyPlaceInCache_s Queue_emptyPlaceInCache_t;
 typedef struct MasterCacheImg_cb_s MasterCacheImg_cb_t;
 
@@ -42,25 +41,12 @@ struct UnitNode_LRU_s
 	ImgInfo_t* imgInfoPtr;
 };
 
- struct LinkedList_LRU_s
+struct LinkedList_LRU_s
 {
 	UnitNode_LRU_t* head;
 	UnitNode_LRU_t* tail;
 	int AmountOfLinks;
 };
-
-struct UnitNode_emptyPlaceInCache_s
-{
-  int emptyPlaceInCache;
-  UnitNode_emptyPlaceInCache_t* next;
-
-};
-
-struct queue_emptyPlaceInCache_s
-{
-	UnitNode_emptyPlaceInCache_t* head;
-	UnitNode_emptyPlaceInCache_t* tail;
-} ;
 
 struct MasterCacheImg_cb_s
 {
