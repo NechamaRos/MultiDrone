@@ -11,7 +11,6 @@ typedef struct ImgInfo_s ImgInfo_t;
 typedef struct Stack_emptyPlace_s Stack_emptyPlace_t;
 typedef struct UnitNode_LRU_s UnitNode_LRU_t;
 typedef struct LinkedList_LRU_s LinkedList_LRU_t;
-typedef struct UnitNode_emptyPlaceInCache_s UnitNode_emptyPlaceInCache_t;
 typedef struct Queue_emptyPlaceInCache_s Queue_emptyPlaceInCache_t;
 typedef struct MasterCacheImg_cb_s MasterCacheImg_cb_t;
 
@@ -42,25 +41,12 @@ struct UnitNode_LRU_s
 	ImgInfo_t* imgInfoPtr;
 };
 
- struct LinkedList_LRU_s
+struct LinkedList_LRU_s
 {
 	UnitNode_LRU_t* head;
 	UnitNode_LRU_t* tail;
 	int AmountOfLinks;
 };
-
-struct UnitNode_emptyPlaceInCache_s
-{
-  int emptyPlaceInCache;
-  UnitNode_emptyPlaceInCache_t* next;
-
-};
-
-struct queue_emptyPlaceInCache_s
-{
-	UnitNode_emptyPlaceInCache_t* head;
-	UnitNode_emptyPlaceInCache_t* tail;
-} ;
 
 struct MasterCacheImg_cb_s
 {
@@ -87,7 +73,7 @@ void insertData(UnitNode_LRU_t* node, int* imgData);
 UnitNode_LRU_t* createUnitNode_LRU(ImgInfo_t* imgInfo);
 void connectBetweenBothDatas(UnitNode_LRU_t* node, ImgInfo_t* imgInfo);
 LinkedList_LRU_t* initLinkedList();
-void insertInToLinedList(UnitNode_LRU_t* node);
+void insertInToLinkedList(UnitNode_LRU_t* node);
 void moveToTheBeginning(UnitNode_LRU_t* node);
 void removefromLinkedList();
 void removeTenPercentFromCache();
@@ -110,7 +96,7 @@ void throwExcptionToFile(ERRORS);
 
 //insertBuffer
 void insertBufferInToCache(SlaveImgInfo_t** slave, int size);
-void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size);
+void insertBuffresInToCache(SlaveImgInfo_t*** slave, int* size, int amountOfBuffers);
 
 //search
 ImgInfo_t* searchByImgId(int imgId, int slaveId);
