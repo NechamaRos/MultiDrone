@@ -5,10 +5,13 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <CL/sycl.hpp>
+using namespace sycl;
 using namespace std;
 //word=NUM_WORDS bytes
 #define WORD 4
 #define NUM_WORDS 4
+
 namespace MyAES
 {
     enum class AESKeyLength { AES_128, AES_192, AES_256 };
@@ -20,32 +23,33 @@ namespace MyAES
         unsigned char* CheckLength(const unsigned char in[], unsigned int& inLen);
         unsigned char xtime(unsigned char b);
         void XorBlocks(const unsigned char* a, const unsigned char* b, unsigned char* c, unsigned int len);
-        void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
+        //void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
         void InvSubBytes(unsigned char state[NUM_WORDS][WORD]);
         void InvMixColumns(unsigned char state[NUM_WORDS][WORD]);
         void InvShiftRows(unsigned char state[NUM_WORDS][WORD]);
         void DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
         unsigned char* RemovePadding(const unsigned char* in, unsigned int& outLen);
         void KeyExpansion(const unsigned char key[], unsigned char w[]);
-        void SubBytes(unsigned char state[NUM_WORDS][WORD]);
-        void FindInSBox(int r, int c);
+        //void SubBytes(unsigned char state[NUM_WORDS][WORD]);
         void RotWord(unsigned char* a);
         void SubWord(unsigned char* a);
-        void AddRoundKey(unsigned char state[NUM_WORDS][WORD], unsigned char* key);
-        void MixColumns(unsigned char state[NUM_WORDS][WORD]);
-        void ShiftRows(unsigned char state[NUM_WORDS][WORD]);
-        void ShiftRow(unsigned char state[NUM_WORDS][WORD], unsigned int i, unsigned int j);
         void XorWords(unsigned char* a, unsigned char* b, unsigned char* c);
         void Rcon(unsigned char* a, unsigned int n);
     public:
         AES(const AESKeyLength keyLength = AESKeyLength::AES_256);
+        static void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
+        static void AddRoundKey(unsigned char state[NUM_WORDS][WORD], unsigned char* key);
+        static void MixColumns(unsigned char state[NUM_WORDS][WORD]);
+        static void ShiftRows(unsigned char state[NUM_WORDS][WORD]);
+        static void ShiftRow(unsigned char state[NUM_WORDS][WORD], unsigned int i, unsigned int j);
+        static void SubBytes(unsigned char state[NUM_WORDS][WORD]);
         unsigned char* EncryptCBC(const unsigned char in[], unsigned int& inLen, const unsigned char key[], const unsigned char* iv);
         unsigned char* DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
         unsigned char* EncryptECB(const unsigned char in[], unsigned int& inLen, const unsigned char key[]);
         unsigned char* DecryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]);
     };
 }
-    unsigned const char sbox[16][16] = {
+    unsigned static const char sbox[16][16] = {
     {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b,
      0xfe, 0xd7, 0xab, 0x76},
     {0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf,

@@ -5,6 +5,9 @@
 #include <cstring>
 #include "AES.h"
 #include "API.h"
+#include <CL/sycl.hpp>
+using namespace sycl;
+
 namespace MyAES {
 
     AES::AES(const AESKeyLength keyLength)
@@ -30,15 +33,15 @@ namespace MyAES {
     }
     unsigned char* AES::EncryptCBC(const unsigned char in[], unsigned int& inLen, const unsigned char key[], const unsigned char* iv) {
         API::writeLog("AES::EncryptCBC");
-        // Adjust the input length and get the padded input
+         //Adjust the input length and get the padded input
         unsigned char* paddedIn = CheckLength(in, inLen);
         unsigned char* out = new unsigned char[inLen];
         unsigned char block[blockBytesLen];
         unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
-        // Initialize block with IV
+         //Initialize block with IV
         memcpy(block, iv, blockBytesLen);
-        // Encrypt each block
+         //Encrypt each block
         for (unsigned int i = 0; i < inLen; i += blockBytesLen) {
             XorBlocks(block, paddedIn + i, block, blockBytesLen);
             EncryptBlock(block, out + i, roundKeys);
@@ -66,7 +69,6 @@ namespace MyAES {
         // Remove padding from the decrypted output
         unsigned char* unpaddedOut = RemovePadding(out, inLen);
         delete[] out;
-
         return unpaddedOut;
     }
     unsigned char* AES::EncryptECB(const unsigned char in[], unsigned int& inLen, const unsigned char key[])
@@ -78,13 +80,28 @@ namespace MyAES {
         unsigned char* out = new unsigned char[inLen];
         unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
-        // Encrypt each block
-        for (unsigned int i = 0; i < inLen; i += blockBytesLen) {
-            EncryptBlock(paddedIn + i, out + i, roundKeys);
-        }
-        delete[] roundKeys;
-        delete[] paddedIn; // Clean up padded input
-        return out;
+
+        //// SYCL setup
+        queue q;
+        buffer<unsigned char, 1> bufIn(paddedIn, range<1>(inLen));
+        buffer<unsigned char, 1> bufOut(out, range<1>(inLen));
+        buffer<unsigned char, 1> bufRoundKeys(roundKeys, range<1>(NUM_WORDS * WORD * (14 + 1)));
+
+        // Encrypt each block in parallel using SYCL
+        q.submit([&](handler& h) {
+
+            auto inAcc = bufIn.get_access<access::mode::read>(h);
+            auto outAcc = bufOut.get_access<access::mode::write>(h);
+            auto roundKeysAcc = bufRoundKeys.get_access<access::mode::read>(h);
+            h.parallel_for(range<1>(inLen / blockBytesLen), [=](id<1> idx) {
+                unsigned int i = idx[0] * blockBytesLen;
+                AES::EncryptBlock(inAcc.get_pointer() + i, outAcc.get_pointer() + i, roundKeysAcc.get_pointer());
+                });
+            }).wait();
+
+            delete[] roundKeys;
+            delete[] paddedIn; // Clean up padded input
+            return out;
     }
     unsigned char* AES::DecryptECB(const unsigned char in[], unsigned int inLen, const unsigned char key[]) {
         API::writeLog("AES::DecryptECB");
@@ -232,6 +249,7 @@ namespace MyAES {
     }
     void AES::EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys)
     {
+        int nr = 14, nk = 8;
         unsigned char state[NUM_WORDS][WORD];
         unsigned int i, j, round;
         for (i = 0; i < NUM_WORDS; i++)
@@ -239,7 +257,7 @@ namespace MyAES {
                 state[i][j] = in[i + WORD * j];
         AddRoundKey(state, roundKeys);
         //In every round except the last, the following steps are performed:
-        for (round = 1; round <= NR - 1; round++)
+        for (round = 1; round <= nr - 1; round++)
         {
             SubBytes(state);
             ShiftRows(state);
@@ -247,13 +265,16 @@ namespace MyAES {
             AddRoundKey(state, roundKeys + round * NUM_WORDS * WORD);
         }
         //the last round:
+        //SubBytes(state,sbox);
         SubBytes(state);
         ShiftRows(state);
-        AddRoundKey(state, roundKeys + NR * NUM_WORDS * WORD);
+        AddRoundKey(state, roundKeys + nr * NUM_WORDS * WORD);
         for (i = 0; i < NUM_WORDS; i++)
             for (j = 0; j < WORD; j++)
                 out[i + NUM_WORDS * j] = state[i][j];
     }
+    
+
     void AES::DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys) {
         unsigned char state[NUM_WORDS][WORD];
         unsigned int i, j, round;
@@ -330,7 +351,8 @@ namespace MyAES {
             for (j = 0; j < WORD; j++)
             {
                 t = state[i][j];
-                state[i][j] = sbox[t / 16][t % 16];
+                //state[i][j] = sbox[t];
+                state[i][j] = sbox[t/16][t%16];
             }
     }
     //The function receives the state matrix and moves the rows. Second row-1, third row-2, fourth row-3
@@ -366,8 +388,9 @@ namespace MyAES {
             memset(temp_state[i], 0, NUM_WORDS);
         for (size_t i = 0; i < NUM_WORDS; ++i) {
             for (size_t k = 0; k < NUM_WORDS; ++k) {
-                for (size_t j = 0; j < NUM_WORDS; ++j) {
-                    if (CMDS[i][k] == 1)
+                for (size_t j = 0; j < WORD; ++j) {
+                    unsigned char cmd = CMDS[i][k];
+                    if (cmd == 1)
                         temp_state[i][j] ^= state[k][j];
                     else
                         temp_state[i][j] ^= GF_MUL_TABLE[CMDS[i][k]][state[k][j]];
