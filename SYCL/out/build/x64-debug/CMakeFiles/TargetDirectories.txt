@@ -1,0 +1,8 @@
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/SYCL/CMakeFiles/SyclSearch.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/SYCL/CMakeFiles/cpu-gpu.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/SYCL/CMakeFiles/SYCL_DLL.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/SYCL/CMakeFiles/cpu-gpuDLL.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/SYCL/CMakeFiles/edit_cache.dir
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug/SYCL/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,103 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "SYCL",
+					"jsonFile" : "directory-SYCL-Debug-9aeb1ab0e021c12836c2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "SYCL",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "masterCache",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "SYCL_DLL::@7367826171e9fe52287f",
+					"jsonFile" : "target-SYCL_DLL-Debug-dff3683751fcb214abb5.json",
+					"name" : "SYCL_DLL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "SyclSearch::@7367826171e9fe52287f",
+					"jsonFile" : "target-SyclSearch-Debug-fdaddab786de45256a6b.json",
+					"name" : "SyclSearch",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "cpu-gpu::@7367826171e9fe52287f",
+					"jsonFile" : "target-cpu-gpu-Debug-4cc473d94442958f256e.json",
+					"name" : "cpu-gpu",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "cpu-gpuDLL::@7367826171e9fe52287f",
+					"jsonFile" : "target-cpu-gpuDLL-Debug-a53a67ccab76183e454d.json",
+					"name" : "cpu-gpuDLL",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/chava/Documents/practicum/masterCmake/SYCL/out/build/x64-debug",
+		"source" : "C:/Users/chava/Documents/practicum/masterCmake/SYCL"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

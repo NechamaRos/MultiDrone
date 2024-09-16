@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "all",
+			"command": "$val=Test-Path -Path 'build'; if($val -ne $true) {New-Item -ItemType directory -Path 'build'}; cmake  -S . -B 'build' -G 'NMake Makefiles'; cd build; nmake all",
+			"type": "shell",
+			"options": {
+				"cwd": "c:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages"
+			}
+		},
+		{
+			"label": "all",
+			"command": "$val=Test-Path -Path 'build'; if($val -ne $true) {New-Item -ItemType directory -Path 'build'}; cmake  -S . -B 'build' -G 'NMake Makefiles'; cd build; nmake all",
+			"type": "shell",
+			"options": {
+				"cwd": "c:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages"
+			}
+		}
+	]
+}

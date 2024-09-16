@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/SYCL/MasterCacheImages.h
+Mock.h
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/SYCL/Mock.h
+
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/SYCL/Mock.h
+
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/SYCL/SyclSearch.cpp
+sycl/sycl.hpp
+-
+dpct/dpct.hpp
+-
+vector
+-
+cstdlib
+-
+iostream
+-
+MasterCacheImages.h
+C:/Users/chava/Documents/practicum/masterCmake/SYCL/SYCL/MasterCacheImages.h
+

@@ -1,0 +1,6 @@
+# ninja log v5
+4	205	7481129386132128	build.ninja	174429001f602703
+4	715	7476620495463216	MasterCacheImages/CMakeFiles/MasterCacheImages.dir/MasterCacheImages.c.obj	2268908f34f04aeb
+22	2497	7476620513273365	MasterCacheImages/CMakeFiles/MasterCacheImages.dir/Doctest.cpp.obj	2d8b3fbb0789033
+2433	3225	7474898836092551	MasterCacheImages/MasterCacheImages.exe	8e1c56f6401e55aa
+2498	3028	7476620516350137	MasterCacheImages.exe	525089e8ff8ef354

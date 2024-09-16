@@ -1,0 +1,5 @@
+C:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages/out/build/x64-debug/MasterCacheImages/CMakeFiles/MasterCacheImages.dir
+C:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages/out/build/x64-debug/MasterCacheImages/CMakeFiles/edit_cache.dir
+C:/Users/chava/Documents/practicum/masterCmake/MasterCacheImages/out/build/x64-debug/MasterCacheImages/CMakeFiles/rebuild_cache.dir
