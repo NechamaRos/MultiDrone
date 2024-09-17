@@ -23,26 +23,24 @@ namespace MyAES
         unsigned char* CheckLength(const unsigned char in[], unsigned int& inLen);
         unsigned char xtime(unsigned char b);
         void XorBlocks(const unsigned char* a, const unsigned char* b, unsigned char* c, unsigned int len);
-        //void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
-        void InvSubBytes(unsigned char state[NUM_WORDS][WORD]);
-        void InvMixColumns(unsigned char state[NUM_WORDS][WORD]);
-        void InvShiftRows(unsigned char state[NUM_WORDS][WORD]);
-        void DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
-        unsigned char* RemovePadding(const unsigned char* in, unsigned int& outLen);
-        void KeyExpansion(const unsigned char key[], unsigned char w[]);
-        //void SubBytes(unsigned char state[NUM_WORDS][WORD]);
-        void RotWord(unsigned char* a);
-        void SubWord(unsigned char* a);
-        void XorWords(unsigned char* a, unsigned char* b, unsigned char* c);
-        void Rcon(unsigned char* a, unsigned int n);
-    public:
-        AES(const AESKeyLength keyLength = AESKeyLength::AES_256);
+        static void InvSubBytes(unsigned char state[NUM_WORDS][WORD]);
+        static void InvMixColumns(unsigned char state[NUM_WORDS][WORD]);
+        static void InvShiftRows(unsigned char state[NUM_WORDS][WORD]);
+        static void DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
         static void EncryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys);
         static void AddRoundKey(unsigned char state[NUM_WORDS][WORD], unsigned char* key);
         static void MixColumns(unsigned char state[NUM_WORDS][WORD]);
         static void ShiftRows(unsigned char state[NUM_WORDS][WORD]);
         static void ShiftRow(unsigned char state[NUM_WORDS][WORD], unsigned int i, unsigned int j);
         static void SubBytes(unsigned char state[NUM_WORDS][WORD]);
+        unsigned char* RemovePadding(const unsigned char* in, unsigned int& outLen);
+        void KeyExpansion(const unsigned char key[], unsigned char w[]);
+        void RotWord(unsigned char* a);
+        void SubWord(unsigned char* a);
+        void XorWords(unsigned char* a, unsigned char* b, unsigned char* c);
+        void Rcon(unsigned char* a, unsigned int n);
+    public:
+        AES(const AESKeyLength keyLength = AESKeyLength::AES_256);
         unsigned char* EncryptCBC(const unsigned char in[], unsigned int& inLen, const unsigned char key[], const unsigned char* iv);
         unsigned char* DecryptCBC(const unsigned char in[], unsigned int inLen, const unsigned char key[], const unsigned char* iv);
         unsigned char* EncryptECB(const unsigned char in[], unsigned int& inLen, const unsigned char key[]);

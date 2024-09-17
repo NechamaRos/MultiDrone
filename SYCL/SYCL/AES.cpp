@@ -80,13 +80,11 @@ namespace MyAES {
         unsigned char* out = new unsigned char[inLen];
         unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
-
         //// SYCL setup
         queue q;
         buffer<unsigned char, 1> bufIn(paddedIn, range<1>(inLen));
         buffer<unsigned char, 1> bufOut(out, range<1>(inLen));
         buffer<unsigned char, 1> bufRoundKeys(roundKeys, range<1>(NUM_WORDS * WORD * (14 + 1)));
-
         // Encrypt each block in parallel using SYCL
         q.submit([&](handler& h) {
 
@@ -108,10 +106,22 @@ namespace MyAES {
         unsigned char* out = new unsigned char[inLen];
         unsigned char* roundKeys = new unsigned char[NUM_WORDS * WORD * (NR + 1)];
         KeyExpansion(key, roundKeys);
-        // Decrypt each block
-        for (unsigned int i = 0; i < inLen; i += blockBytesLen) {
-            DecryptBlock(in + i, out + i, roundKeys);
-        }
+        //// SYCL setup
+        queue q;
+        buffer<unsigned char, 1> bufIn(in, range<1>(inLen));
+        buffer<unsigned char, 1> bufOut(out, range<1>(inLen));
+        buffer<unsigned char, 1> bufRoundKeys(roundKeys, range<1>(NUM_WORDS * WORD * (14 + 1)));
+        // Encrypt each block in parallel using SYCL
+        q.submit([&](handler& h) {
+
+            auto inAcc = bufIn.get_access<access::mode::read>(h);
+            auto outAcc = bufOut.get_access<access::mode::write>(h);
+            auto roundKeysAcc = bufRoundKeys.get_access<access::mode::read>(h);
+            h.parallel_for(range<1>(inLen / blockBytesLen), [=](id<1> idx) {
+                unsigned int i = idx[0] * blockBytesLen;
+                AES::DecryptBlock(inAcc.get_pointer() + i, outAcc.get_pointer() + i, roundKeysAcc.get_pointer());
+                });
+            }).wait();
         delete[] roundKeys;
         // Remove padding from the decrypted output
         unsigned char* unpaddedOut = RemovePadding(out, inLen);
@@ -265,7 +275,6 @@ namespace MyAES {
             AddRoundKey(state, roundKeys + round * NUM_WORDS * WORD);
         }
         //the last round:
-        //SubBytes(state,sbox);
         SubBytes(state);
         ShiftRows(state);
         AddRoundKey(state, roundKeys + nr * NUM_WORDS * WORD);
@@ -276,6 +285,7 @@ namespace MyAES {
     
 
     void AES::DecryptBlock(const unsigned char in[], unsigned char out[], unsigned char* roundKeys) {
+        int nr = 14;
         unsigned char state[NUM_WORDS][WORD];
         unsigned int i, j, round;
 
@@ -285,9 +295,9 @@ namespace MyAES {
             }
         }
 
-        AddRoundKey(state, roundKeys + NR * NUM_WORDS * WORD);
+        AddRoundKey(state, roundKeys + nr * NUM_WORDS * WORD);
 
-        for (round = NR - 1; round >= 1; round--) {
+        for (round = nr - 1; round >= 1; round--) {
             InvSubBytes(state);
             InvShiftRows(state);
             AddRoundKey(state, roundKeys + round * NUM_WORDS * WORD);
