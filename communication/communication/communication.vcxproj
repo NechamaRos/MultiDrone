@@ -140,6 +140,8 @@
     <ClCompile Include="..\Data_Compression\ImageConversions.cpp" />
     <ClCompile Include="..\Data_Compression\ImageConversionTests.cpp" />
     <ClCompile Include="..\Data_Compression\RescueTests.cpp" />
+    <ClCompile Include="..\Socket_communication\SlaveDroneCommunicationManager.cpp" />
+    <ClCompile Include="..\Socket_communication\SlaveDroneCommunicationManager_main.cpp" />
     <ClCompile Include="..\Validation\Convert.cpp" />
     <ClCompile Include="..\Validation\Convert_test.cpp" />
     <ClCompile Include="..\Validation\CRCalgoritm.cpp" />
@@ -167,6 +169,7 @@
     <ClInclude Include="..\Data_Compression\HuffmanRescue.h" />
     <ClInclude Include="..\Data_Compression\Image.h" />
     <ClInclude Include="..\Data_Compression\ImageConversions.h" />
+    <ClInclude Include="..\Socket_communication\SlaveDroneCommunicationManager.h" />
     <ClInclude Include="..\Validation\Convert.h" />
     <ClInclude Include="..\Validation\CRCalgoritm.h" />
     <ClInclude Include="..\Validation\D3Validation.h" />
