@@ -26,7 +26,7 @@ struct Message
 			reqId = other.reqId;
 			messageType = other.messageType;
 			droneId = other.droneId;
-			messageParams = other.messageParams; // Assuming proper copy behavior in MessageParams
+			messageParams = other.messageParams; 
 			priority = other.priority;
 		}
 		return *this;

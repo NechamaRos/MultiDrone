@@ -11,7 +11,7 @@
  * @return true If all queues are empty and all weights are zero.
  * @return false If any queue is not empty or any weight is not zero.
  */
-bool CheckQueueIsEmptyAndWeightZeroForAll(std::list<Queue>& listOfTaskQueues) {
+bool CheckQueueIsEmptyAndWeightNotZeroForAll(std::list<Queue>& listOfTaskQueues) {
 	for (auto& qm : listOfTaskQueues) {
 		if (!qm.isEmpty() || qm.GetCurrentWeight() > 0)
 			return false;
@@ -52,7 +52,7 @@ void addAdditionalTasks(std::list<Queue>& listOfTaskQueues) {
 void WeightedRoundRobin(std::list<Queue>* listOfTaskQueues, bool addTasks) {
 	while (true) {
 		// Loop until all queues are empty
-		while (CheckQueueIsEmptyAndWeightZeroForAll(*listOfTaskQueues) == false) {
+		while (CheckQueueIsEmptyAndWeightNotZeroForAll(*listOfTaskQueues) == false) {
 			bool allWeightsZero = true;
 			bool allQueuesEmpty = true;
 			// Iterate through each QueueManagement object in the list

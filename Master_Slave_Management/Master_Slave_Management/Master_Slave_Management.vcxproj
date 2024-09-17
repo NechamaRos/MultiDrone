@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dataOfMessage.h" />
+    <ClInclude Include="doctest.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="ImageFromSlave.h" />
     <ClInclude Include="mapRequest.h" />
@@ -148,6 +150,7 @@
     <ClCompile Include="MessageType.cpp" />
     <ClCompile Include="Queue.cpp" />
     <ClCompile Include="Scheduling.cpp" />
+    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
