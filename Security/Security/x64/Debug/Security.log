@@ -1,0 +1,18 @@
+﻿  KeyPair.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\Point.h(2,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  Logger.cpp
+  Point.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\Point.h(2,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  test_ECC.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\EllipticCurve.h(3,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  test_EllipticCurve.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\EllipticCurve.h(3,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  test_KeyPair.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\Point.h(2,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  test_Point.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\Point.h(2,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  test_Utils.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\Utils.h(3,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  Utils.cpp
+C:\Users\The user\Desktop\פרקטיקום\MultiDrone\Security\Security\Utils.h(3,10): fatal  error C1083: Cannot open include file: 'boost/multiprecision/cpp_int.hpp': No such file or directory
+  Generating Code...

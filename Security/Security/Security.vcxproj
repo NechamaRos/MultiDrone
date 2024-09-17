@@ -132,7 +132,6 @@
   <ItemGroup>
     <ClCompile Include="AES.cpp" />
     <ClCompile Include="API.cpp" />
-    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AES.h" />
@@ -147,7 +146,6 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ECC.cpp" />
     <ClCompile Include="EllipticCurve.cpp" />
     <ClCompile Include="KeyPair.cpp" />
     <ClCompile Include="Logger.cpp" />

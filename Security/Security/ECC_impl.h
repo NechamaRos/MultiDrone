@@ -78,7 +78,7 @@ EncryptionResult ECC::encrypt(const T* data, const Point& publicKey) const {
 }
 
 // Function to decrypt data using ECC
-template<typename T>
+template<typename T>  
 T* ECC::decrypt(const EncryptionResult& encryptedMessage, cpp_int privateKey) const {
     // Check if the encrypted message and the point R are valid
     if (encryptedMessage.ciphertext.empty() || encryptedMessage.R.isInfinity()) {

@@ -27,11 +27,19 @@ void Logger::log(const std::string& message) {
     std::time_t currentTime = std::time(nullptr);  // Get current time
     std::tm localTime;
 
+#ifdef _WIN32
+    // Use localtime_s to get the local time
+    if (localtime_s(&localTime, &currentTime) != 0) {
+        // Handle error
+        return;
+    }
+#else
     // Use localtime_r to get the local time
     if (localtime_r(&currentTime, &localTime) == nullptr) {
         // Handle error
         return;
     }
+#endif
 
     logFile_
         << localTime.tm_mday << '/'

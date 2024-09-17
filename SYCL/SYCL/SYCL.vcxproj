@@ -43,14 +43,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\The user\Downloads\boost_1_85_0\boost_1_85_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader></PrecompiledHeader>
-      <PrecompiledHeaderFile></PrecompiledHeaderFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
       <SYCLWarningLevel>Level3</SYCLWarningLevel>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -59,12 +62,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\The user\Downloads\boost_1_85_0\boost_1_85_0\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader></PrecompiledHeader>
-      <PrecompiledHeaderFile></PrecompiledHeaderFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
       <SYCLWarningLevel>Level3</SYCLWarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -78,7 +84,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Security\Security\AES.cpp" />
+    <ClCompile Include="..\..\Security\Security\API.cpp" />
+    <ClCompile Include="..\..\Security\Security\EllipticCurve.cpp" />
+    <ClCompile Include="..\..\Security\Security\KeyPair.cpp" />
+    <ClCompile Include="..\..\Security\Security\Logger.cpp" />
+    <ClCompile Include="..\..\Security\Security\Point.cpp" />
+    <ClCompile Include="..\..\Security\Security\RSA.cpp" />
+    <ClCompile Include="..\..\Security\Security\test_ECC.cpp" />
+    <ClCompile Include="..\..\Security\Security\test_EllipticCurve.cpp" />
+    <ClCompile Include="..\..\Security\Security\test_KeyPair.cpp" />
+    <ClCompile Include="..\..\Security\Security\test_Point.cpp" />
+    <ClCompile Include="..\..\Security\Security\test_Utils.cpp" />
+    <ClCompile Include="..\..\Security\Security\Utils.cpp" />
     <ClCompile Include="SYCL.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Security\Security\AES.h" />
+    <ClInclude Include="..\..\Security\Security\API.h" />
+    <ClInclude Include="..\..\Security\Security\doctest.h" />
+    <ClInclude Include="..\..\Security\Security\ECC.h" />
+    <ClInclude Include="..\..\Security\Security\ECC_impl.h" />
+    <ClInclude Include="..\..\Security\Security\EllipticCurve.h" />
+    <ClInclude Include="..\..\Security\Security\EncryptionResult.h" />
+    <ClInclude Include="..\..\Security\Security\KeyPair.h" />
+    <ClInclude Include="..\..\Security\Security\Logger.h" />
+    <ClInclude Include="..\..\Security\Security\Point.h" />
+    <ClInclude Include="..\..\Security\Security\RSA.h" />
+    <ClInclude Include="..\..\Security\Security\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

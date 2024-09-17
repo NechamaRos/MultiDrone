@@ -1,0 +1,338 @@
+﻿  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(67,61): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+     67 |         cipherAcc[i] = dataAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                             ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(67,61): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+     67 |         cipherAcc[i] = dataAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                             ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(66,54): note: while substituting into a lambda expression here
+     66 |     h.parallel_for(range<1>(sizeof(T)), [=](id<1> i) {
+        |                                                      ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(61,30): note: while substituting into a lambda expression here
+     61 |     q.submit([&](handler& h) {
+        |                              ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(19,39): note: in instantiation of function template specialization 'ECC::encrypt<char>' requested here
+     19 |         EncryptionResult result = ecc.encrypt(data, keyPair.getPublicKey());
+        |                                       ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(19,39): note: in instantiation of function template specialization 'ECC::encrypt<char>' requested here
+     19 |         EncryptionResult result = ecc.encrypt(data, keyPair.getPublicKey());
+        |                                       ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(123,66): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+    123 |         decryptedAcc[i] = cipherAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                                  ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(123,66): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+    123 |         decryptedAcc[i] = cipherAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                                  ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(122,54): note: while substituting into a lambda expression here
+    122 |     h.parallel_for(range<1>(sizeof(T)), [=](id<1> i) {
+        |                                                      ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(117,30): note: while substituting into a lambda expression here
+    117 |     q.submit([&](handler& h) {
+        |                              ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(27,35): note: in instantiation of function template specialization 'ECC::decrypt<char>' requested here
+     27 |         char* decryptedData = ecc.decrypt<char>(result, keyPair.getPrivateKey());
+        |                                   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(27,35): note: in instantiation of function template specialization 'ECC::decrypt<char>' requested here
+     27 |         char* decryptedData = ecc.decrypt<char>(result, keyPair.getPrivateKey());
+        |                                   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  12 warnings generated.
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(67,61): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+     67 |         cipherAcc[i] = dataAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                             ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(67,61): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+     67 |         cipherAcc[i] = dataAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                             ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(66,54): note: while substituting into a lambda expression here
+     66 |     h.parallel_for(range<1>(sizeof(T)), [=](id<1> i) {
+        |                                                      ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(61,30): note: while substituting into a lambda expression here
+     61 |     q.submit([&](handler& h) {
+        |                              ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(19,39): note: in instantiation of function template specialization 'ECC::encrypt<char>' requested here
+     19 |         EncryptionResult result = ecc.encrypt(data, keyPair.getPublicKey());
+        |                                       ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(19,39): note: in instantiation of function template specialization 'ECC::encrypt<char>' requested here
+     19 |         EncryptionResult result = ecc.encrypt(data, keyPair.getPublicKey());
+        |                                       ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(72,44): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+     72 |         auto ciphertextAcc = ciphertextBuf.get_access<access::mode::read>();
+        |                                            ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(123,66): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+    123 |         decryptedAcc[i] = cipherAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                                  ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(123,66): : warning : 'get_count' is deprecated: get_count() is deprecated, please use size() instead [-Wdeprecated-declarations]
+    123 |         decryptedAcc[i] = cipherAcc[i] ^ xBytesAcc[i % xBytesAcc.get_count()];
+        |                                                                  ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(122,54): note: while substituting into a lambda expression here
+    122 |     h.parallel_for(range<1>(sizeof(T)), [=](id<1> i) {
+        |                                                      ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(117,30): note: while substituting into a lambda expression here
+    117 |     q.submit([&](handler& h) {
+        |                              ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(27,35): note: in instantiation of function template specialization 'ECC::decrypt<char>' requested here
+     27 |         char* decryptedData = ecc.decrypt<char>(result, keyPair.getPrivateKey());
+        |                                   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\accessor.hpp(2300,3): note: 'get_count' has been explicitly marked deprecated here
+   2300 |   __SYCL2020_DEPRECATED("get_count() is deprecated, please use size() instead")
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp(27,35): note: in instantiation of function template specialization 'ECC::decrypt<char>' requested here
+     27 |         char* decryptedData = ecc.decrypt<char>(result, keyPair.getPrivateKey());
+        |                                   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(526,37): note: 'get_access' has been explicitly marked deprecated here
+    526 |           accessor_property_list<>> get_access(const detail::code_location
+        |                                     ^
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\test_ECC.cpp:4:
+  In file included from C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC.h:26:
+C:\Users\The user\Desktop\╫ñ╫¿╫º╫ר╫ש╫º╫ץ╫¥\MultiDrone\Security\Security\ECC_impl.h(128,42): : warning : 'get_access<sycl::access::mode::read>' is deprecated: get_access for host_accessor is deprecated, please use get_host_access instead [-Wdeprecated-declarations]
+    128 |         auto decryptedAcc = decryptedBuf.get_access<access::mode::read>();
+        |                                          ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\buffer.hpp(520,3): note: 'get_access<sycl::access::mode::read>' has been explicitly marked deprecated here
+    520 |   __SYCL2020_DEPRECATED("get_access for host_accessor is deprecated, please "
+        |   ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(53,40): note: expanded from macro '__SYCL2020_DEPRECATED'
+     53 | #define __SYCL2020_DEPRECATED(message) __SYCL_DEPRECATED(message)
+        |                                        ^
+  C:\Program Files (x86)\Intel\oneAPI\compiler\2024.2\include\sycl\detail\defines_elementary.hpp(44,38): note: expanded from macro '__SYCL_DEPRECATED'
+     44 | #define __SYCL_DEPRECATED(message) [[deprecated(message)]]
+        |                                      ^
+  12 warnings generated.
