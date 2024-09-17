@@ -1,6 +1,11 @@
 #include "RSA.h"
-#include "Logger.h"
+
 #include <boost/lexical_cast.hpp>
+
+#include <CL/sycl.hpp>
+#include "KeyPair.h"
+#include "Logger.h"
+using namespace sycl;
 
 // Standard random number generator
 std::mt19937 gen(static_cast<unsigned long>(time(0)));
@@ -9,16 +14,57 @@ RSA::RSA(const KeyPair& keyPair) : keyPair1(keyPair) {
    
 }
 // Function to perform modular exponentiation
+//this function is requierd to miller_rabin_test
 cpp_int RSA::mod_exp(cpp_int base, cpp_int exp, cpp_int mod) {
     cpp_int result = 1;
     base = base % mod;
-    while (exp > 0) {
-        if (exp % 2 == 1) {
-            result = (result * base) % mod;
-        }
-        exp = exp >> 1;
-        base = (base * base) % mod;
-    }
+
+    // Create a SYCL queue to offload computations to the accelerator
+    sycl::queue q;
+
+    // Allocate space for results on the host and device
+    cpp_int* device_result = malloc_device<cpp_int>(1, q);
+    cpp_int* device_base = malloc_device<cpp_int>(1, q);
+    cpp_int* device_exp = malloc_device<cpp_int>(1, q);
+    cpp_int* device_mod = malloc_device<cpp_int>(1, q);
+
+    q.memcpy(device_base, &base, sizeof(cpp_int)).wait();
+    q.memcpy(device_exp, &exp, sizeof(cpp_int)).wait();
+    q.memcpy(device_mod, &mod, sizeof(cpp_int)).wait();
+
+    // Use nd_range for parallel processing
+    sycl::range<1> global_range(1);  // Global range
+    sycl::range<1> local_range(1);   // Local range
+
+    // Parallel modular exponentiation
+    q.submit([&](sycl::handler& h) {
+        h.parallel_for(sycl::nd_range<1>(global_range, local_range), [=](sycl::nd_item<1> item) {
+            cpp_int local_result = 1;
+            cpp_int local_base = *device_base;
+            cpp_int local_exp = *device_exp;
+            cpp_int local_mod = *device_mod;
+
+            while (local_exp > 0) {
+                if (local_exp % 2 == 1) {
+                    local_result = (local_result * local_base) % local_mod;
+                }
+                local_exp = local_exp >> 1;
+                local_base = (local_base * local_base) % local_mod;
+            }
+
+            *device_result = local_result;
+            });
+        }).wait();
+
+        // Copy the result back to host
+        q.memcpy(&result, device_result, sizeof(cpp_int)).wait();
+
+        // Free memory on the device
+        sycl::free(device_result, q);
+        sycl::free(device_base, q);
+        sycl::free(device_exp, q);
+        sycl::free(device_mod, q);
+
     return result;
 }
 
@@ -33,26 +79,58 @@ bool RSA::miller_rabin_test(const cpp_int& number_to_test, int num_tests) {
         d_value /= 2;
         two_power_count++;
     }
+   
+    // SYCL setup
+    queue q;
+    bool is_prime = true;
 
-    for (int i = 0; i < num_tests; i++) {
-        cpp_int random_base = 2 + rand() % (number_to_test - 4); // Random integer in [2, n-2]
-        cpp_int power_mod_result = mod_exp(random_base, d_value, number_to_test);
-        if (power_mod_result == 1 || power_mod_result == number_to_test - 1) continue;
+    //// Memory allocation
+    // Allocate memory on device
+    cpp_int* device_number = malloc_device<cpp_int>(1, q);
+    cpp_int* device_d_value = malloc_device<cpp_int>(1, q);
+    bool* device_is_prime = malloc_device<bool>(1, q);
+    q.memcpy(device_number, &number_to_test, sizeof(cpp_int)).wait();
+    q.memcpy(device_d_value, &d_value, sizeof(cpp_int)).wait();
 
+    q.submit([&](handler& h) {
+        h.single_task([=]() {
+            cpp_int local_number = *device_number;
+            cpp_int local_d_value = *device_d_value;
+
+            cpp_int random_base = 2 + rand() % (local_number - 4);
+            cpp_int power_mod_result = mod_exp(random_base, local_d_value, local_number);
+            if (power_mod_result == 1 || power_mod_result == local_number - 1) return;
+
+            bool continue_outer_loop = false;
+
+  
         bool continue_outer_loop = false;
         for (int j = 0; j < two_power_count - 1; j++) {
-            power_mod_result = (power_mod_result * power_mod_result) % number_to_test;
-            if (power_mod_result == 1) return false;
-            if (power_mod_result == number_to_test - 1) {
+            power_mod_result = (power_mod_result * power_mod_result) % local_number;
+            if (power_mod_result == 1){
+                *device_is_prime = false;
+                return;
+            }
+        
+            if (power_mod_result == local_number - 1) {
                 continue_outer_loop = true;
                 break;
             }
         }
 
-        if (!continue_outer_loop) return false;
-    }
+        if (!continue_outer_loop) {
+            *device_is_prime = false;
+        }
+            });
+        }).wait();
+        q.memcpy(&is_prime, device_is_prime, sizeof(bool)).wait();
 
-    return true;
+        free(device_number, q);
+        free(device_d_value, q);
+        free(device_is_prime, q);
+
+
+        return is_prime;
 }
 
 // Function to generate a random cpp_int of a given bit length
@@ -73,9 +151,39 @@ cpp_int RSA::generate_random_cpp_int(int bit_length) {
 // Function to generate a prime number with a specified bit length
 cpp_int RSA::generate_prime(int bit_length) {
     cpp_int prime;
-    do {
-        prime = generate_random_cpp_int(bit_length);
-    } while (!miller_rabin_test(prime, num_tests)); // Using Miller-Rabin primality test
+    
+    bool is_prime = false;
+
+    // SYCL setup
+    queue q;
+
+    while (!is_prime) {
+        cpp_int* device_prime = malloc_device<cpp_int>(1, q);
+        bool* device_is_prime = malloc_device<bool>(1, q);
+
+        // Generate a random number and copy to device
+        cpp_int random_prime = generate_random_cpp_int(bit_length);
+        q.memcpy(device_prime, &random_prime, sizeof(cpp_int)).wait();
+
+        // Check primality on the device
+        q.submit([&](handler& h) {
+            h.single_task([=]() {
+                cpp_int local_prime = *device_prime;
+                bool local_is_prime = miller_rabin_test(local_prime, num_tests);
+                *device_is_prime = local_is_prime;
+                });
+            }).wait();
+
+            q.memcpy(&is_prime, device_is_prime, sizeof(bool)).wait();
+
+            free(device_prime, q);
+            free(device_is_prime, q);
+
+            if (is_prime) {
+                prime = random_prime;
+            }
+    }
+
     return prime;
 }
 
