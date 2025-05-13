@@ -3,7 +3,7 @@
 MultiDrone – Real-Time Embedded System for Autonomous UAVs
 A collaborative project for developing a real-time embedded system for unmanned aerial vehicles (UAVs). The system was implemented in C/C++ and utilized OpenCV for computer vision tasks. Focus was placed on writing stable, secure, and efficient code modules to support flight operations, target detection, and inter-drone communication.
 
-Main Highlights:https://github.com/NechamaRos/MultiDrone/blob/main/README.md
+Main Highlights:
 
 Developed performance-critical code in C/C++ for drone control in real-time environments.
 
